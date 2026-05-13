@@ -1,0 +1,65 @@
+TRpsyDB Database Content License
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+
+Copyright (c) 2026 TRpsyDB contributors
+
+═══════════════════════════════════════════════════════════════════════════════
+WHAT THIS LICENSE COVERS
+═══════════════════════════════════════════════════════════════════════════════
+
+This license applies to the CURATED DATABASE CONTENT of TRpsyDB, including:
+
+  - Curated tandem repeat loci and their coordinates
+  - Evidence tiers and scoring assigned by TRpsyDB curators
+  - Compiled study evidence (extracted from published literature)
+  - Psychiatric gene set annotations and mappings
+  - Pathway annotations compiled for TRpsyDB
+  - Any bulk data downloads from trpsydb.org
+
+It does NOT apply to the software code (covered by MIT License in LICENSE).
+
+═══════════════════════════════════════════════════════════════════════════════
+YOU ARE FREE TO
+═══════════════════════════════════════════════════════════════════════════════
+
+  Share  — copy and redistribute the database in any medium or format
+  Adapt  — remix, transform, and build upon the database
+
+Under the following terms:
+
+  Attribution      — You must give appropriate credit to TRpsyDB, provide a
+                     link to the license, and indicate if changes were made.
+                     Suggested citation:
+
+                     "[Authors] TRpsyDB: A curated neuropsychiatric tandem
+                     repeat database. [Journal] [Year]. trpsydb.org"
+
+  NonCommercial    — You may not use the database content for commercial
+                     purposes without explicit written permission.
+
+═══════════════════════════════════════════════════════════════════════════════
+COMMERCIAL USE
+═══════════════════════════════════════════════════════════════════════════════
+
+Commercial use of the database content (including use in commercial pipelines,
+products, or services) requires a separate license agreement.
+
+For commercial licensing enquiries: [your email]
+
+═══════════════════════════════════════════════════════════════════════════════
+THIRD-PARTY DATA SOURCES
+═══════════════════════════════════════════════════════════════════════════════
+
+TRpsyDB integrates data from third-party sources, each with their own terms:
+
+  GTEx v10          CC BY 4.0         gtexportal.org
+  SCHEMA            CC BY 4.0         schema.broadinstitute.org
+  BipEx             CC BY 4.0         bioinformatics.ox.ac.uk/BipEx
+  gnomAD            CC BY 4.0         gnomad.broadinstitute.org
+  TRxQTL atlas      see citation      wlcb.oit.uci.edu/TRxQTL
+  EBI Anatomogram   Apache 2.0        github.com/ebi-gene-expression-group
+  g:Profiler        CC BY 4.0         biit.cs.ut.ee/gprofiler
+
+Users of TRpsyDB data must comply with the terms of these upstream sources.
+
+Full CC BY-NC 4.0 legal text: https://creativecommons.org/licenses/by-nc/4.0/
