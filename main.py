@@ -12,7 +12,7 @@ from backend.routers import loci, analysis, meta, expression
 
 # ── App ──────────────────────────────────────────────────────
 app = FastAPI(
-    title="psyTRdb",
+    title="TRpsyDB",
     description="Neuropsychiatric Tandem Repeat Database",
     version="0.1.0",
 )
