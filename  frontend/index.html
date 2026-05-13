@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRpsyDB — Neuropsychiatric Tandem Repeat Database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;font-size:14px;background:#f5f3ef;color:#0e2340;min-height:100vh}
+.hdr{position:sticky;top:0;z-index:100;background:#0e2340;border-bottom:2px solid #2563a8;height:50px;display:flex;align-items:center;padding:0 24px;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.logo-mark{width:30px;height:30px;background:#2563a8;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:18px;height:18px}
+.logo-text{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:#f5f3ef;letter-spacing:0.02em}
+.logo-text em{color:#7ab8f5;font-style:normal}
+.nav{display:flex;gap:2px}
+.nav-btn{background:transparent;border:none;color:rgba(245,243,239,0.5);font-size:12px;padding:6px 12px;border-radius:4px;cursor:pointer;font-family:'DM Sans',system-ui;font-weight:400;transition:all 0.15s}
+.nav-btn.on,.nav-btn:hover{background:rgba(255,255,255,0.08);color:#f5f3ef}
+.strip{background:#0b1d33;padding:3px 24px;display:flex;gap:20px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,243,239,0.3);letter-spacing:0.04em;border-bottom:1px solid rgba(255,255,255,0.05)}
+.strip em{color:#7ab8f5;font-style:normal}
+main{max-width:1100px;margin:0 auto;padding:24px}
+.view{display:none}.view.on{display:block}
+.hero{text-align:center;padding:28px 0 20px;border-bottom:0.5px solid #ddd9d2;margin-bottom:24px}
+.hero-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#2563a8;margin-bottom:8px}
+.hero-title{font-size:26px;font-weight:300;color:#0e2340;line-height:1.25;margin-bottom:6px;letter-spacing:-0.02em}
+.hero-title strong{font-weight:500}
+.hero-desc{font-size:12px;color:#7a7468;margin-bottom:20px;line-height:1.7;max-width:500px;margin-left:auto;margin-right:auto}
+.search-wrap{display:flex;max-width:520px;margin:0 auto;border:1.5px solid #0e2340;background:#fff;overflow:hidden}
+.search-wrap input{flex:1;border:none;outline:none;padding:10px 14px;font-family:'DM Mono',monospace;font-size:13px;color:#0e2340;background:transparent}
+.search-wrap input::placeholder{color:#b0a99e;font-family:'DM Sans',system-ui}
+.search-wrap button{background:#0e2340;color:#f5f3ef;border:none;padding:0 18px;font-family:'DM Sans',system-ui;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:background 0.15s}
+.search-wrap button:hover{background:#2563a8}
+.search-hint{font-size:11px;color:#b0a99e;margin-top:6px;font-family:'DM Mono',monospace}
+.mode-row{display:flex;max-width:520px;margin:14px auto 0;border:0.5px solid #ddd9d2;overflow:hidden}
+.mode-btn{flex:1;padding:7px;text-align:center;font-size:11px;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;background:#fff;color:#7a7468;border:none;font-family:'DM Sans',system-ui;font-weight:500;border-right:0.5px solid #ddd9d2;transition:all 0.15s}
+.mode-btn:last-child{border-right:none}
+.mode-btn.on{background:#0e2340;color:#f5f3ef}
+.mode-btn:hover:not(.on){background:#f5f3ef;color:#0e2340}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#ddd9d2;border:0.5px solid #ddd9d2;margin-top:20px}
+.stat-box{background:#fff;padding:14px;text-align:center}
+.stat-num{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:#0e2340;display:block;letter-spacing:-0.02em}
+.stat-lbl{font-size:10px;color:#7a7468;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px}
+.results-label{font-size:11px;color:#7a7468;margin-bottom:8px;font-family:'DM Mono',monospace}
+.cards{display:grid;gap:1px;background:#ddd9d2;border:0.5px solid #ddd9d2}
+.card{background:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer;transition:background 0.12s}
+.card:hover{background:#f5f3ef}
+.c-gene{font-size:17px;font-weight:500;color:#0e2340;letter-spacing:-0.01em}
+.c-id{font-family:'DM Mono',monospace;font-size:10px;color:#b0a99e;margin-top:2px}
+.c-meta{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;font-size:11px;color:#7a7468}
+.c-meta b{color:#0e2340;font-weight:500}
+.ptag{display:inline-block;background:#edf2fb;color:#2563a8;border:0.5px solid #bdd3f5;padding:1px 6px;font-size:10px;border-radius:100px;font-weight:500}
+.tier{display:inline-block;padding:3px 9px;font-size:10px;font-weight:500;letter-spacing:0.04em;border-radius:100px;white-space:nowrap}
+.t1{background:#e8f5ee;color:#1a6b3c;border:0.5px solid #a8d5bc}
+.t2{background:#edf2fb;color:#1a4a8a;border:0.5px solid #bdd3f5}
+.t3{background:#fef5e7;color:#7a4f1a;border:0.5px solid #f5d5a0}
+.t4{background:#f1eeea;color:#7a7468;border:0.5px solid #ddd9d2}
+.t5{background:#f5f3ef;color:#b0a99e;border:0.5px solid #e0dcd6}
+.back-btn{display:inline-flex;align-items:center;gap:5px;color:#7a7468;cursor:pointer;font-size:12px;background:none;border:none;font-family:'DM Sans',system-ui;margin-bottom:16px;padding:0}
+.back-btn:hover{color:#0e2340}
+.detail-top{padding-bottom:16px;border-bottom:0.5px solid #ddd9d2;margin-bottom:20px;display:flex;gap:16px;align-items:flex-start}
+.d-gene{font-size:36px;font-weight:300;color:#0e2340;line-height:1;letter-spacing:-0.03em}
+.d-name{font-size:12px;color:#7a7468;margin-top:4px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.dsec{background:#fff;border:0.5px solid #ddd9d2;padding:14px;margin-bottom:0}
+.dsec-title{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#b0a99e;margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid #f0ede8;font-weight:500}
+.kv{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f5f3ef;font-size:12px}
+.kv:last-child{border-bottom:none}
+.kk{color:#7a7468}
+.kval{font-family:'DM Mono',monospace;font-weight:500;color:#0e2340;font-size:11px}
+.flag{display:inline-block;background:#e8f5ee;border:0.5px solid #a8d5bc;color:#1a6b3c;padding:2px 7px;font-size:10px;border-radius:100px;margin:2px;font-weight:500}
+.study-table{width:100%;border-collapse:collapse;font-size:11px}
+.study-table th{text-align:left;padding:5px 8px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#b0a99e;border-bottom:1px solid #ddd9d2;font-weight:500}
+.study-table td{padding:6px 8px;border-bottom:0.5px solid #f5f3ef;font-family:'DM Mono',monospace}
+.study-table tr:hover td{background:#f5f3ef}
+.pos{color:#1a6b3c;font-weight:500}
+.ncol{color:#b0a99e}
+.atlas-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.atlas-panel{background:#fff;border:0.5px solid #ddd9d2;padding:12px}
+.atlas-ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.atlas-pt{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#b0a99e}
+.atlas-ps{font-size:10px;color:#b0a99e;font-family:'DM Mono',monospace}
+.svg-wrap{display:flex;justify-content:center;min-height:200px;align-items:center}
+.svg-wrap svg{max-width:100%;height:auto}
+.ltxt{color:#b0a99e;font-size:11px;font-family:'DM Mono',monospace}
+.leg-bar{height:7px;background:linear-gradient(to right,#f5f0eb,#dce8f8,#9fc8ee,#2563a8,#0e2340);border-radius:1px;margin:6px 0 3px}
+.leg-lbl{display:flex;justify-content:space-between;font-size:9px;color:#b0a99e;font-family:'DM Mono',monospace}
+.tlist{margin-top:8px;padding-top:6px;border-top:0.5px solid #f0ede8;display:grid;gap:3px}
+.trow{display:flex;align-items:center;gap:5px;font-size:10px}
+.tdot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.tname{color:#0e2340;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbw{flex:0 0 44px;height:4px;background:#f0ede8}
+.tbf{height:100%}
+.tval{font-family:'DM Mono',monospace;color:#7a7468;font-size:10px;min-width:36px;text-align:right}
+.qtl-box{background:#fff;border:0.5px solid #ddd9d2;padding:12px;margin-bottom:14px}
+.qtl-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.qtl-title{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#b0a99e}
+.nb{background:#fef5e7;color:#7a4f1a;border:0.5px solid #f5d5a0;padding:2px 7px;border-radius:100px;font-size:9px;font-weight:500}
+.qtl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.qtl-card{background:#f5f3ef;border:0.5px solid #ddd9d2;padding:8px;text-align:center}
+.qtl-type{font-size:10px;font-weight:500;color:#0e2340;margin-bottom:2px}
+.qtl-desc{font-size:9px;color:#7a7468;line-height:1.4}
+.qdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-bottom:3px}
+.qtis{font-size:9px;color:#2563a8;font-family:'DM Mono',monospace;margin-top:3px}
+.browse-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.browse-title{font-size:20px;font-weight:300;color:#0e2340;letter-spacing:-0.02em}
+.pill-group{display:flex;gap:4px;flex-wrap:wrap}
+.pill{border:0.5px solid #ddd9d2;background:#fff;color:#7a7468;padding:4px 10px;font-size:11px;cursor:pointer;border-radius:100px;font-weight:500;transition:all 0.15s}
+.pill.on{background:#0e2340;color:#f5f3ef;border-color:#0e2340}
+.pill:hover:not(.on){border-color:#0e2340;color:#0e2340}
+.an-box{background:#fff;border:0.5px solid #ddd9d2;padding:20px;margin-bottom:14px}
+.an-title{font-size:18px;font-weight:400;color:#0e2340;margin-bottom:4px}
+.an-desc{font-size:12px;color:#7a7468;margin-bottom:12px;line-height:1.7}
+.pipeline-badge{display:inline-flex;align-items:center;gap:6px;background:#edf2fb;border:0.5px solid #bdd3f5;color:#1a4a8a;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:500;margin-bottom:12px}
+.pipeline-badge span{font-family:'DM Mono',monospace}
+textarea{width:100%;height:110px;border:0.5px solid #ddd9d2;padding:10px;font-family:'DM Mono',monospace;font-size:11px;background:#f5f3ef;color:#0e2340;resize:none;outline:none}
+textarea:focus{border-color:#2563a8}
+.fmt-hint{font-size:10px;color:#b0a99e;margin-top:4px;font-family:'DM Mono',monospace}
+.run-btn{background:#0e2340;color:#f5f3ef;border:none;padding:9px 22px;margin-top:10px;font-family:'DM Sans',system-ui;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-weight:500;transition:background 0.15s}
+.run-btn:hover{background:#2563a8}
+.run-btn:disabled{background:#b0a99e;cursor:not-allowed}
+.summ{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#ddd9d2;border:0.5px solid #ddd9d2;margin-bottom:14px}
+.summ-box{background:#fff;padding:14px;text-align:center}
+.summ-num{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:#2563a8;display:block}
+.summ-lbl{font-size:10px;color:#7a7468;letter-spacing:0.07em;text-transform:uppercase;margin-top:2px}
+.rsec{background:#fff;border:0.5px solid #ddd9d2;margin-bottom:12px}
+.rs-hdr{padding:10px 16px;border-bottom:0.5px solid #f0ede8;display:flex;align-items:center;justify-content:space-between}
+.rs-title{font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#b0a99e}
+.rs-meta{font-size:10px;color:#b0a99e;font-family:'DM Mono',monospace}
+.rs-body{padding:14px 16px}
+.enrich-table{width:100%;border-collapse:collapse;font-size:11px}
+.enrich-table th{text-align:left;padding:5px 8px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#b0a99e;border-bottom:1px solid #ddd9d2;font-weight:500}
+.enrich-table td{padding:6px 8px;border-bottom:0.5px solid #f5f3ef;font-family:'DM Mono',monospace;font-size:11px}
+.enrich-table tr:hover td{background:#f5f3ef}
+.nrow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:0.5px solid #f5f3ef;font-size:11px}
+.nrow:last-child{border-bottom:none}
+.ndot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ngene{font-family:'DM Mono',monospace;font-weight:500;color:#0e2340;width:70px;flex-shrink:0}
+.nloc{font-family:'DM Mono',monospace;font-size:10px;color:#b0a99e;flex:1}
+.nbadge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:100px}
+.bk{background:#e8f5ee;color:#1a6b3c}
+.bn{background:#fef5e7;color:#7a4f1a}
+.top-terms{display:grid;gap:5px}
+.tterm{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#f5f3ef;border:0.5px solid #f0ede8}
+.ttn{font-size:11px;color:#0e2340;font-weight:500;width:200px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ttbw{flex:1;height:5px;background:#e8e4de}
+.ttbf{height:100%}
+.ttp{font-family:'DM Mono',monospace;font-size:10px;color:#1a6b3c;width:55px;flex-shrink:0;text-align:right}
+.ttsrc{font-size:10px;font-weight:500;padding:1px 6px;border-radius:100px;flex-shrink:0}
+.about-wrap{max-width:640px}
+.empty{text-align:center;color:#b0a99e;padding:2rem;border:0.5px dashed #ddd9d2;margin-top:12px;font-size:12px}
+.loading{text-align:center;color:#b0a99e;padding:2rem;font-size:12px;font-family:'DM Mono',monospace}
+.tooltip{position:fixed;background:#0e2340;color:#f5f3ef;padding:5px 9px;border-radius:4px;font-size:11px;font-family:'DM Mono',monospace;pointer-events:none;z-index:9999;display:none;white-space:nowrap}
+.dl-btn{background:none;border:0.5px solid #ddd9d2;color:#7a7468;padding:6px 14px;font-size:11px;cursor:pointer;font-family:'DM Sans',system-ui;border-radius:4px}
+.dl-btn:hover{border-color:#0e2340;color:#0e2340}
+.prox-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.prox-card{background:#f5f3ef;border:0.5px solid #ddd9d2;padding:12px}
+.prox-lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b0a99e;margin-bottom:6px;font-weight:500}
+.prox-stat{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:#0e2340}
+.corr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.corr-card{background:#f5f3ef;border:0.5px solid #ddd9d2;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+.corr-feat{font-size:11px;color:#0e2340;font-weight:500}
+.corr-sub{font-size:10px;color:#b0a99e;margin-top:1px}
+.corr-or{font-family:'DM Mono',monospace;font-size:13px;font-weight:500}
+.orp{color:#1a6b3c}.orn{color:#c0392b}.ore{color:#7a7468}
+.corp{font-size:10px;color:#b0a99e;font-family:'DM Mono',monospace;text-align:right;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="tooltip" id="tt"></div>
+
+<header class="hdr">
+  <div class="logo" onclick="goView('home')">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" fill="none">
+        <rect x="2" y="4" width="3" height="10" rx="1" fill="#7ab8f5"/>
+        <rect x="7" y="2" width="3" height="14" rx="1" fill="#f5f3ef"/>
+        <rect x="12" y="6" width="3" height="6" rx="1" fill="#7ab8f5"/>
+      </svg>
+    </div>
+    <div class="logo-text">TR<em>psy</em>DB</div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn on" id="nav-home"     onclick="goView('home')">Search</button>
+    <button class="nav-btn"    id="nav-browse"   onclick="goView('browse')">Browse</button>
+    <button class="nav-btn"    id="nav-analysis" onclick="goView('analysis')">Analyse</button>
+    <button class="nav-btn"    id="nav-about"    onclick="goView('about')">About</button>
+  </nav>
+</header>
+
+<div class="strip" id="stats-strip">Loading…</div>
+
+<main>
+
+<!-- HOME -->
+<div class="view on" id="view-home">
+  <div class="hero">
+    <div class="hero-eyebrow">Neuropsychiatric genomics resource</div>
+    <div class="hero-title">The tandem repeat database for<br><strong>psychiatric genetics</strong></div>
+    <div class="hero-desc">Curated, evidence-tiered TR loci in schizophrenia, bipolar disorder, autism, depression and ADHD — with integrated annotation and enrichment tools.</div>
+    <div class="search-wrap">
+      <input id="search-input" type="text" placeholder="RFC1, FMR1, HTT, chr4:3074876…" onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="search-hint">gene symbol · locus ID · hg38 coordinates</div>
+    <div class="mode-row">
+      <button class="mode-btn on" onclick="setMode('gene',this)">Gene / locus lookup</button>
+      <button class="mode-btn" onclick="setMode('list',this)">TR list analysis</button>
+    </div>
+  </div>
+  <div id="home-results">
+    <div class="results-label">Recently added</div>
+    <div class="cards" id="recent-cards"><div class="loading">Loading…</div></div>
+    <div class="stats-grid" id="stats-boxes"></div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="view" id="view-detail">
+  <button class="back-btn" onclick="goBack()">← Back</button>
+  <div id="detail-content"><div class="loading">Loading locus…</div></div>
+</div>
+
+<!-- BROWSE -->
+<div class="view" id="view-browse">
+  <div class="browse-top">
+    <div class="browse-title">All loci</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div class="pill-group" id="tier-pills">
+        <div class="pill on" onclick="fTier(null,this)">All tiers</div>
+        <div class="pill" onclick="fTier(1,this)">Tier 1</div>
+        <div class="pill" onclick="fTier(2,this)">Tier 2</div>
+        <div class="pill" onclick="fTier(3,this)">Tier 3</div>
+        <div class="pill" onclick="fTier(4,this)">Tier 4</div>
+      </div>
+      <div class="pill-group" id="pheno-pills">
+        <div class="pill on" onclick="fPheno(null,this)">All</div>
+        <div class="pill" onclick="fPheno('SCZ',this)">SCZ</div>
+        <div class="pill" onclick="fPheno('BPD',this)">BPD</div>
+        <div class="pill" onclick="fPheno('ASD',this)">ASD</div>
+        <div class="pill" onclick="fPheno('MDD',this)">MDD</div>
+        <div class="pill" onclick="fPheno('ADHD',this)">ADHD</div>
+      </div>
+    </div>
+  </div>
+  <div id="browse-results"><div class="loading">Loading…</div></div>
+</div>
+
+<!-- ANALYSIS -->
+<div class="view" id="view-analysis">
+  <div class="an-box">
+    <div class="an-title">TR list analysis</div>
+    <div class="an-desc">Paste TR coordinates from your pipeline output. TRpsyDB runs five analyses: database matching, TSS and splice junction proximity, genomic feature correlation, psychiatric gene set enrichment, and pathway ORA via g:Profiler.</div>
+    <div class="pipeline-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="2.5" height="8" rx="0.5" fill="#2563a8"/><rect x="5" y="1" width="2.5" height="12" rx="0.5" fill="#2563a8"/><rect x="9" y="5" width="2.5" height="5" rx="0.5" fill="#2563a8"/></svg>
+      Compatible with <span>TRex</span> pipeline · ExpansionHunterDenovo · GangSTR · TRGT
+    </div>
+    <textarea id="tr-input" placeholder="chr3	63912684	63912714	AAGG	0.003
+chr7	117548628	117548656	CAG	0.041
+chrX	147912051	147912110	CGG	0.001"></textarea>
+    <div class="fmt-hint">chrom · start · end · motif (optional) · p-value (optional) — tab separated, no header</div>
+    <button class="run-btn" id="run-btn" onclick="runAnalysis()">Run analysis</button>
+  </div>
+  <div id="analysis-results"></div>
+</div>
+
+<!-- ABOUT -->
+<div class="view" id="view-about">
+  <div class="about-wrap">
+    <div style="font-size:26px;font-weight:300;color:#0e2340;letter-spacing:-0.02em;margin-bottom:8px">About TRpsyDB</div>
+    <div style="font-size:13px;color:#7a7468;line-height:1.9;margin-bottom:16px">TRpsyDB is a curated, evidence-tiered database of tandem repeat loci with relevance to neuropsychiatric disorders — schizophrenia, bipolar disorder, autism spectrum disorder, major depressive disorder, and ADHD.</div>
+    <div style="font-size:13px;color:#7a7468;line-height:1.9;margin-bottom:16px">Unlike general TR resources (STRipy, STRchive, WebSTR), TRpsyDB focuses specifically on the psychiatric TR landscape — including candidate and uncertain loci — and provides integrated annotation against SCHEMA, BipEx, and GWAS gene sets, plus an interactive analysis tool powered by the TRex pipeline.</div>
+    <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#b0a99e;margin-bottom:10px;font-weight:500">Evidence tiers</div>
+    <div class="cards" style="margin-bottom:20px">
+      <div class="card" style="cursor:default"><div><div class="c-gene" style="font-size:13px">Tier 1 — Established</div><div class="c-meta">Replicated · functional evidence · clinical validity</div></div><span class="tier t1">Tier 1</span></div>
+      <div class="card" style="cursor:default"><div><div class="c-gene" style="font-size:13px">Tier 2 — Strong candidate</div><div class="c-meta">Multiple cohorts or strong functional prior</div></div><span class="tier t2">Tier 2</span></div>
+      <div class="card" style="cursor:default"><div><div class="c-gene" style="font-size:13px">Tier 3 — Moderate candidate</div><div class="c-meta">Single large cohort or functional evidence only</div></div><span class="tier t3">Tier 3</span></div>
+      <div class="card" style="cursor:default"><div><div class="c-gene" style="font-size:13px">Tier 4 — Exploratory</div><div class="c-meta">Statistical signal · no replication yet</div></div><span class="tier t4">Tier 4</span></div>
+      <div class="card" style="cursor:default"><div><div class="c-gene" style="font-size:13px">Tier 5 — Negative</div><div class="c-meta">Tested and not significant — still tracked</div></div><span class="tier t5">Tier 5</span></div>
+    </div>
+    <div style="font-size:12px;color:#7a7468;line-height:1.9">
+      Code: <a href="https://github.com" style="color:#2563a8">GitHub (MIT)</a> ·
+      Database: <a href="data/LICENSE_DATABASE.txt" style="color:#2563a8">CC BY-NC 4.0</a> ·
+      Preprint: <em>coming soon</em>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+const API = '';
+const EBI = 'https://unpkg.com/@ebi-gene-expression-group/organ-anatomogram@1.2.0/lib/svg/';
+const TL  = {1:'Tier 1 — Established',2:'Tier 2 — Strong',3:'Tier 3 — Moderate',4:'Tier 4 — Exploratory',5:'Tier 5 — Negative'};
+const TC  = {1:'t1',2:'t2',3:'t3',4:'t4',5:'t5'};
+let prevView = 'home';
+let bodySVG = null, brainSVG = null;
+const ttEl = document.getElementById('tt');
+
+/* ── Navigation ─────────────────────────────────────────── */
+function goView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('view-' + v).classList.add('on');
+  const nb = document.getElementById('nav-' + v);
+  if (nb) nb.classList.add('on');
+  if (v === 'browse') loadBrowse();
+  window.scrollTo(0, 0);
+}
+function goBack() { goView(prevView || 'home'); }
+function setMode(m, btn) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  if (m === 'list') goView('analysis');
+}
+
+/* ── Helpers ─────────────────────────────────────────────── */
+function tierBadge(t) { return `<span class="tier ${TC[t]||'t4'}">${TL[t]||'Tier '+t}</span>`; }
+function kv(label, val) { return `<div class="kv"><span class="kk">${label}</span><span class="kval">${val??'—'}</span></div>`; }
+async function apiFetch(path, opts={}) {
+  const r = await fetch(API + path, opts);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+function locusCard(l) {
+  const tags = (l.phenotypes||'').split(',').filter(Boolean).map(p => `<span class="ptag">${p.trim()}</span>`).join('');
+  return `<div class="card" onclick="openDetail('${l.locus_id}')">
+    <div>
+      <div class="c-gene">${l.gene_symbol||'—'}</div>
+      <div class="c-id">${l.locus_id}</div>
+      <div class="c-meta">
+        <span>Motif: <b>${l.motif||'?'}</b></span>
+        ${l.rexprt_score!=null?`<span>RExPRT: <b>${(+l.rexprt_score).toFixed(2)}</b></span>`:''}
+        ${l.common_name?`<span>${l.common_name}</span>`:''}
+        ${tags}
+      </div>
+    </div>
+    ${tierBadge(l.evidence_tier)}
+  </div>`;
+}
+
+/* ── Stats ───────────────────────────────────────────────── */
+async function loadStats() {
+  try {
+    const d = await apiFetch('/api/meta/');
+    document.getElementById('stats-strip').innerHTML =
+      `DB v${d.schema_version} &nbsp;·&nbsp; <em>${d.n_loci}</em> loci &nbsp;·&nbsp; <em>${d.n_studies}</em> studies &nbsp;·&nbsp; <em>${d.n_tier1_established}</em> established &nbsp;·&nbsp; <em>${d.n_tier2_strong}</em> strong candidates`;
+    document.getElementById('stats-boxes').innerHTML =
+      `<div class="stat-box"><span class="stat-num">${d.n_loci}</span><span class="stat-lbl">Total loci</span></div>
+       <div class="stat-box"><span class="stat-num">${d.n_tier1_established}</span><span class="stat-lbl">Established</span></div>
+       <div class="stat-box"><span class="stat-num">${d.n_studies}</span><span class="stat-lbl">Studies</span></div>
+       <div class="stat-box"><span class="stat-num">5</span><span class="stat-lbl">Disorders</span></div>`;
+  } catch { document.getElementById('stats-strip').textContent = 'TRpsyDB'; }
+}
+
+async function loadRecent() {
+  try {
+    const d = await apiFetch('/api/loci/?limit=4');
+    document.getElementById('recent-cards').innerHTML =
+      d.results.length ? d.results.map(locusCard).join('') : '<div class="empty">No loci yet — add data to get started.</div>';
+  } catch { document.getElementById('recent-cards').innerHTML = '<div class="empty">Server not running. Start with: uvicorn main:app --reload</div>'; }
+}
+
+/* ── Search ──────────────────────────────────────────────── */
+async function doSearch() {
+  const q = document.getElementById('search-input').value.trim();
+  if (!q) return;
+  const el = document.getElementById('home-results');
+  el.innerHTML = '<div class="loading">Searching…</div>';
+  try {
+    const d = await apiFetch(`/api/loci/search?q=${encodeURIComponent(q)}`);
+    if (!d.results.length) {
+      el.innerHTML = `<div class="empty">No TR loci found for "<b>${q}</b>".<br><small>Try RFC1, FMR1, HTT, COMT, KANSL1</small></div>`;
+      return;
+    }
+    el.innerHTML = `<div class="results-label">${d.n} result${d.n!==1?'s':''} for "${q}"</div>
+      <div class="cards">${d.results.map(locusCard).join('')}</div>`;
+  } catch { el.innerHTML = '<div class="empty">Search failed. Is the server running?</div>'; }
+}
+
+/* ── Locus detail ────────────────────────────────────────── */
+async function openDetail(locusId) {
+  prevView = document.querySelector('.view.on').id.replace('view-', '');
+  goView('detail');
+  const el = document.getElementById('detail-content');
+  el.innerHTML = '<div class="loading">Loading locus…</div>';
+  try {
+    const d = await apiFetch(`/api/loci/${encodeURIComponent(locusId)}`);
+    const l = d.locus;
+    const flags = ['in_schema','in_bipex','in_scz_gwas','in_bpd_gwas','in_asd_gwas','in_mdd_gwas','in_adhd_gwas']
+      .filter(f => l[f]).map(f => `<span class="flag">${f.replace('in_','').replace(/_gwas/,' GWAS').toUpperCase()}</span>`).join('');
+    const studyRows = (d.evidence||[]).map(e =>
+      `<tr><td>${e.first_author||'?'}, ${e.year||'?'}</td><td style="color:#7a7468">${e.journal||'—'}</td>
+       <td>${e.phenotype||'—'}</td><td>${e.cohort_size_cases?.toLocaleString()||'—'}</td>
+       <td class="${e.result==='positive'?'pos':e.result==='negative'?'ncol':''}">${e.result||'—'}</td>
+       <td>${e.p_value!=null?e.p_value.toExponential(2):'—'}</td>
+       <td>${e.odds_ratio!=null?(+e.odds_ratio).toFixed(2):'—'}</td></tr>`).join('');
+
+    el.innerHTML = `
+      <div class="detail-top">
+        <div>
+          <div class="d-gene">${l.gene_symbol||'Unknown'}</div>
+          <div class="d-name">${l.common_name||''} &nbsp;·&nbsp; <span style="font-family:'DM Mono',monospace;font-size:11px">${l.locus_id}</span></div>
+          <div style="margin-top:6px">${tierBadge(l.evidence_tier)}</div>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <div class="dsec"><div class="dsec-title">Genomic position (hg38)</div>
+          ${kv('Chromosome',l.chrom)}${kv('Motif',l.motif)}
+          ${kv('Reference copies',l.reference_copies??'—')}
+          ${kv('Normal max',l.normal_max??'—')}${kv('Pathogenic min',l.path_min??'—')}
+          ${kv('TSS distance',l.tss_distance!=null?l.tss_distance.toLocaleString()+' bp':'—')}
+          ${kv('Splice distance',l.splice_distance!=null?l.splice_distance.toLocaleString()+' bp':'—')}
+          ${kv('Gene region',l.gene_region??'—')}
+        </div>
+        <div class="dsec"><div class="dsec-title">Functional evidence</div>
+          ${kv('RExPRT score',l.rexprt_score!=null?(+l.rexprt_score).toFixed(3):'—')}
+          ${kv('ENCODE cCRE',l.encode_ccre??'—')}
+          ${kv('Brain chromatin state',l.roadmap_brain_state??'—')}
+          ${kv('eQTL gene',l.eqtl_evidence??'—')}
+          ${kv('pLI',l.pli??'—')}${kv('LOEUF',l.loeuf??'—')}
+          ${kv('gnomAD mean copies',l.gnomad_mean_copies??'—')}
+        </div>
+        <div class="dsec"><div class="dsec-title">Psychiatric gene sets</div>
+          ${flags||'<span style="color:#b0a99e;font-size:11px">No gene set membership recorded</span>'}
+          <div style="margin-top:8px"></div>
+          ${l.schema_or?kv('SCHEMA OR',(+l.schema_or).toFixed(2)):''}
+          ${l.bipex_or?kv('BipEx OR',(+l.bipex_or).toFixed(2)):''}
+          ${kv('Studies tested',l.n_studies_tested)}
+          ${kv('Replication',l.replication_status||'—')}
+        </div>
+        <div class="dsec"><div class="dsec-title">Evidence summary</div>
+          ${kv('Studies positive',l.n_studies_positive)}
+          ${kv('Phenotypes',l.phenotypes||'—')}
+          ${l.notes?`<div style="margin-top:8px;font-size:11px;line-height:1.8;color:#7a7468">${l.notes}</div>`:''}
+        </div>
+      </div>
+      ${d.evidence?.length?`
+      <div class="dsec" style="margin-bottom:12px">
+        <div class="dsec-title">Published studies (${d.evidence.length})</div>
+        <table class="study-table">
+          <thead><tr><th>Author, year</th><th>Journal</th><th>Phenotype</th><th>N cases</th><th>Result</th><th>p-value</th><th>OR</th></tr></thead>
+          <tbody>${studyRows}</tbody>
+        </table>
+      </div>`:''}
+      <div class="dsec" style="margin-bottom:12px">
+        <div class="dsec-title">6 · Expression atlas — GTEx v10</div>
+        <div id="expr-loading" class="loading" style="padding:1rem">Loading expression data from GTEx…</div>
+        <div id="expr-content" style="display:none">
+          <div class="atlas-grid">
+            <div class="atlas-panel">
+              <div class="atlas-ph"><div class="atlas-pt">Body tissues</div><div class="atlas-ps" id="body-max-lbl">GTEx v10</div></div>
+              <div class="svg-wrap" id="body-svg-wrap"><div class="ltxt">Loading anatomogram…</div></div>
+              <div class="leg-bar"></div><div class="leg-lbl"><span>0 TPM</span><span>Low</span><span>Med</span><span>High</span></div>
+              <div class="tlist" id="body-tlist"></div>
+            </div>
+            <div class="atlas-panel">
+              <div class="atlas-ph"><div class="atlas-pt">Brain regions</div><div class="atlas-ps">13 GTEx regions</div></div>
+              <div class="svg-wrap" id="brain-svg-wrap"><div class="ltxt">Loading brain atlas…</div></div>
+              <div class="leg-bar"></div><div class="leg-lbl"><span>0 TPM</span><span>Low</span><span>Med</span><span>High</span></div>
+              <div class="tlist" id="brain-tlist"></div>
+            </div>
+          </div>
+          <div class="qtl-box">
+            <div class="qtl-hdr"><div class="qtl-title">TR-xQTL evidence</div><span class="nb">Brain TR-xQTLs atlas · Cui et al. 2024</span></div>
+            <div class="qtl-grid" id="qtl-grid">
+              ${['TR-eQTL','TR-sQTL','TR-3aQTL'].map(t=>`<div class="qtl-card"><div class="qdot" style="background:#ddd9d2"></div><div class="qtl-type">${t}</div><div class="qtl-desc">No data yet</div></div>`).join('')}
+            </div>
+            <div style="font-size:10px;color:#b0a99e;margin-top:8px;font-family:'DM Mono',monospace">
+              eQTL = expression · sQTL = splicing · 3aQTL = polyadenylation &nbsp;·&nbsp;
+              <a href="https://wlcb.oit.uci.edu/TRxQTL/" style="color:#2563a8" target="_blank">TRxQTL atlas →</a>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    if (l.gene_symbol) loadExpression(l.gene_symbol);
+  } catch(e) { el.innerHTML = `<div class="empty">Error loading locus: ${e.message}</div>`; }
+}
+
+/* ── Expression atlas ────────────────────────────────────── */
+const UBERON_BODY = {
+  'UBERON_0000955':{name:'Brain',gtex:'Brain'},
+  'UBERON_0002048':{name:'Lung',gtex:'Lung'},
+  'UBERON_0002084':{name:'Heart (LV)',gtex:'Heart_Left_Ventricle'},
+  'UBERON_0000948':{name:'Heart',gtex:'Heart_Left_Ventricle'},
+  'UBERON_0002107':{name:'Liver',gtex:'Liver'},
+  'UBERON_0001134':{name:'Kidney cortex',gtex:'Kidney_Cortex'},
+  'UBERON_0001159':{name:'Colon',gtex:'Colon_Sigmoid'},
+  'UBERON_0001155':{name:'Colon',gtex:'Colon_Transverse'},
+  'UBERON_0014892':{name:'Muscle',gtex:'Muscle_Skeletal'},
+  'UBERON_0000014':{name:'Skin',gtex:'Skin_Sun_Exposed_Lower_leg'},
+  'UBERON_0002190':{name:'Adipose',gtex:'Adipose_Subcutaneous'},
+  'UBERON_0001013':{name:'Adipose',gtex:'Adipose_Subcutaneous'},
+  'UBERON_0002046':{name:'Thyroid',gtex:'Thyroid'},
+  'UBERON_0000473':{name:'Testis',gtex:'Testis'},
+  'UBERON_0000178':{name:'Whole blood',gtex:'Whole_Blood'},
+  'UBERON_0000945':{name:'Stomach',gtex:'Stomach'},
+  'UBERON_0002106':{name:'Spleen',gtex:'Spleen'},
+  'UBERON_0001264':{name:'Pancreas',gtex:'Pancreas'},
+  'UBERON_0002369':{name:'Adrenal gland',gtex:'Adrenal_Gland'},
+  'UBERON_0000007':{name:'Pituitary',gtex:'Pituitary'},
+  'UBERON_0001321':{name:'Nerve (tibial)',gtex:'Nerve_Tibial'},
+  'UBERON_0000310':{name:'Breast',gtex:'Breast_Mammary_Tissue'},
+  'UBERON_0002367':{name:'Prostate',gtex:'Prostate'},
+  'UBERON_0001043':{name:'Esophagus',gtex:'Esophagus_Mucosa'},
+};
+const UBERON_BRAIN = {
+  'UBERON_0001870':{name:'Frontal cortex (BA9)',gtex:'Brain_Frontal_Cortex_Ba9'},
+  'UBERON_0001954':{name:'Hippocampus',gtex:'Brain_Hippocampus'},
+  'UBERON_0001876':{name:'Amygdala',gtex:'Brain_Amygdala'},
+  'UBERON_0001873':{name:'Caudate',gtex:'Brain_Caudate_basal_ganglia'},
+  'UBERON_0001874':{name:'Putamen',gtex:'Brain_Putamen_basal_ganglia'},
+  'UBERON_0001882':{name:'Nucleus accumbens',gtex:'Brain_Nucleus_accumbens_basal_ganglia'},
+  'UBERON_0001898':{name:'Hypothalamus',gtex:'Brain_Hypothalamus'},
+  'UBERON_0002037':{name:'Cerebellum',gtex:'Brain_Cerebellum'},
+  'UBERON_0001871':{name:'Anterior cingulate (BA24)',gtex:'Brain_Anterior_cingulate_cortex_Ba24'},
+  'UBERON_0000956':{name:'Cortex',gtex:'Brain_Cortex'},
+  'UBERON_0000451':{name:'Prefrontal cortex',gtex:'Brain_Frontal_Cortex_Ba9'},
+  'UBERON_0002240':{name:'Spinal cord (C1)',gtex:'Brain_Spinal_cord_cervical_c_1'},
+  'UBERON_0002038':{name:'Substantia nigra',gtex:'Brain_Substantia_nigra'},
+  'UBERON_0002245':{name:'Cerebellar hemisphere',gtex:'Brain_Cerebellar_Hemisphere'},
+  'UBERON_0001875':{name:'Globus pallidus',gtex:'Brain_Caudate_basal_ganglia'},
+  'UBERON_0002360':{name:'Striatum',gtex:'Brain_Putamen_basal_ganglia'},
+  'UBERON_0001905':{name:'Thalamus',gtex:'Brain_Hypothalamus'},
+  'UBERON_0001897':{name:'Midbrain',gtex:'Brain_Substantia_nigra'},
+  'UBERON_0002148':{name:'Olfactory bulb',gtex:'Brain_Cortex'},
+  'UBERON_0002702':{name:'Temporal lobe',gtex:'Brain_Cortex'},
+  'UBERON_0003027':{name:'Parietal lobe',gtex:'Brain_Cortex'},
+  'UBERON_0001896':{name:'Medulla oblongata',gtex:'Brain_Cortex'},
+  'UBERON_0001894':{name:'Pons',gtex:'Brain_Cortex'},
+  'UBERON_0002285':{name:'Entorhinal cortex',gtex:'Brain_Hippocampus'},
+  'UBERON_0002421':{name:'Hippocampal formation',gtex:'Brain_Hippocampus'},
+  'UBERON_0002363':{name:'Basal ganglia',gtex:'Brain_Caudate_basal_ganglia'},
+  'UBERON_0002771':{name:'Middle temporal gyrus',gtex:'Brain_Cortex'},
+  'UBERON_0001872':{name:'Occipital lobe',gtex:'Brain_Cortex'},
+};
+
+function tpmColor(v, mx) {
+  const t = Math.min(v/mx, 1);
+  if(t<0.05)return'#f0ede8';if(t<0.15)return'#dce8f8';
+  if(t<0.3)return'#b8d4f0';if(t<0.5)return'#7ab0e0';
+  if(t<0.7)return'#3a7dc4';if(t<0.85)return'#1a4a8a';
+  return'#0c2350';
+}
+
+async function loadEBISvg(filename, wrapperId) {
+  try {
+    const r = await fetch(EBI + filename);
+    const txt = await r.text();
+    const doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+    const svg = doc.querySelector('svg');
+    if(!svg) return null;
+    svg.style.width='100%'; svg.style.height='auto'; svg.style.maxHeight='240px';
+    const wrap = document.getElementById(wrapperId);
+    if(!wrap) return null;
+    wrap.innerHTML=''; wrap.appendChild(svg);
+    return svg;
+  } catch { return null; }
+}
+
+function colourOrgan(svg, uberonId, color, label, tpm) {
+  const el = svg.getElementById(uberonId);
+  if(!el) return;
+  const shapes = el.tagName==='g' ? el.querySelectorAll('path,ellipse,circle,polygon,rect') : [el];
+  shapes.forEach(s => {
+    s.style.fill=color;
+    s.style.stroke=color==='#f0ede8'?'#d8d4ce':'rgba(255,255,255,0.2)';
+    s.style.strokeWidth='0.3'; s.style.cursor='pointer'; s.style.transition='fill 0.3s';
+  });
+  el.addEventListener('mouseenter', e => { ttEl.style.display='block'; ttEl.textContent=`${label}: ${tpm.toFixed(1)} TPM`; });
+  el.addEventListener('mousemove',  e => { ttEl.style.left=(e.clientX+12)+'px'; ttEl.style.top=(e.clientY-28)+'px'; });
+  el.addEventListener('mouseleave', () => { ttEl.style.display='none'; });
+}
+
+function resetSvg(svg) {
+  if(!svg) return;
+  svg.querySelectorAll('path,ellipse,circle,polygon,rect').forEach(s => {
+    s.style.fill='#e8e8e8'; s.style.stroke='#d0d0d0'; s.style.strokeWidth='0.3';
+  });
+}
+
+async function loadExpression(geneSymbol) {
+  try {
+    const d = await apiFetch(`/api/expression/${geneSymbol}`);
+    document.getElementById('expr-loading').style.display='none';
+    document.getElementById('expr-content').style.display='block';
+    const bodyData=d.body||[], brainData=d.brain||[];
+    const maxB=Math.max(...bodyData.map(x=>x.median_tpm),1);
+    const maxBr=Math.max(...brainData.map(x=>x.median_tpm),1);
+    document.getElementById('body-max-lbl').textContent=`max: ${maxB.toFixed(1)} TPM`;
+
+    if(!bodySVG)  bodySVG  = await loadEBISvg('homo_sapiens.male.svg','body-svg-wrap');
+    if(!brainSVG) brainSVG = await loadEBISvg('homo_sapiens.brain.svg','brain-svg-wrap');
+
+    if(bodySVG) {
+      resetSvg(bodySVG);
+      Object.entries(UBERON_BODY).forEach(([u,info]) => {
+        const e=bodyData.find(x=>x.tissue_gtex===info.gtex);
+        colourOrgan(bodySVG, u, tpmColor(e?.median_tpm||0,maxB), info.name, e?.median_tpm||0);
+      });
+    }
+    if(brainSVG) {
+      resetSvg(brainSVG);
+      Object.entries(UBERON_BRAIN).forEach(([u,info]) => {
+        const e=brainData.find(x=>x.tissue_gtex===info.gtex);
+        colourOrgan(brainSVG, u, tpmColor(e?.median_tpm||0,maxBr), info.name, e?.median_tpm||0);
+      });
+    }
+
+    const top5Body=[...bodyData].sort((a,b)=>b.median_tpm-a.median_tpm).slice(0,5);
+    document.getElementById('body-tlist').innerHTML=top5Body.map(t=>`
+      <div class="trow"><div class="tdot" style="background:${tpmColor(t.median_tpm,maxB)}"></div>
+      <div class="tname">${t.tissue_name}</div>
+      <div class="tbw"><div class="tbf" style="width:${Math.round(t.median_tpm/maxB*100)}%;background:${tpmColor(t.median_tpm,maxB)}"></div></div>
+      <div class="tval">${t.median_tpm.toFixed(1)}</div></div>`).join('');
+
+    const top5Brain=[...brainData].sort((a,b)=>b.median_tpm-a.median_tpm).slice(0,5);
+    document.getElementById('brain-tlist').innerHTML=top5Brain.map(t=>`
+      <div class="trow"><div class="tdot" style="background:${tpmColor(t.median_tpm,maxBr)}"></div>
+      <div class="tname">${t.tissue_name}</div>
+      <div class="tbw"><div class="tbf" style="width:${Math.round(t.median_tpm/maxBr*100)}%;background:${tpmColor(t.median_tpm,maxBr)}"></div></div>
+      <div class="tval">${t.median_tpm.toFixed(1)}</div></div>`).join('');
+
+  } catch {
+    const el=document.getElementById('expr-loading');
+    if(el) el.textContent='Expression data unavailable (add Ensembl ID to locus record).';
+  }
+}
+
+/* ── Browse ──────────────────────────────────────────────── */
+let bTier=null, bPheno=null;
+async function loadBrowse() {
+  const el=document.getElementById('browse-results');
+  el.innerHTML='<div class="loading">Loading…</div>';
+  let url='/api/loci/?limit=200';
+  if(bTier)  url+=`&tier=${bTier}`;
+  if(bPheno) url+=`&phenotype=${bPheno}`;
+  try {
+    const d=await apiFetch(url);
+    el.innerHTML=d.results.length
+      ?`<div class="results-label">Showing ${d.results.length} of ${d.total} loci</div><div class="cards">${d.results.map(locusCard).join('')}</div>`
+      :'<div class="empty">No loci match these filters.</div>';
+  } catch { el.innerHTML='<div class="empty">Could not load loci.</div>'; }
+}
+function fTier(t,btn){document.querySelectorAll('#tier-pills .pill').forEach(p=>p.classList.remove('on'));btn.classList.add('on');bTier=t;loadBrowse();}
+function fPheno(p,btn){document.querySelectorAll('#pheno-pills .pill').forEach(x=>x.classList.remove('on'));btn.classList.add('on');bPheno=p;loadBrowse();}
+
+/* ── Analysis ────────────────────────────────────────────── */
+async function runAnalysis() {
+  const raw=document.getElementById('tr-input').value.trim();
+  if(!raw) return;
+  const btn=document.getElementById('run-btn');
+  btn.disabled=true; btn.textContent='Running…';
+  const trs=raw.split('\n').map(l=>l.trim()).filter(Boolean).map(line=>{
+    const p=line.split(/[\t ]+/);
+    return{chrom:p[0],start:parseInt(p[1]),end:parseInt(p[2]),motif:p[3]||null,p_value:p[4]?parseFloat(p[4]):null};
+  }).filter(t=>!isNaN(t.start)&&!isNaN(t.end));
+  try {
+    const d=await apiFetch('/api/analysis/enrich',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({trs,label:'User submission'})});
+    renderAnalysis(d);
+  } catch(e) { document.getElementById('analysis-results').innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+  btn.disabled=false; btn.textContent='Run analysis';
+}
+
+function renderAnalysis(d) {
+  const s=d.summary;
+  const el=document.getElementById('analysis-results');
+  const matchRows=(d.matches||[]).map(m=>`
+    <div class="nrow">
+      <div class="ndot" style="background:${m.novel?'#e67e22':'#1a6b3c'}"></div>
+      <div class="ngene">${m.db_match?.gene_symbol||'—'}</div>
+      <div class="nloc">${m.input.chrom}:${m.input.start}-${m.input.end} · ${m.input.motif||'?'}</div>
+      <span class="nbadge ${m.novel?'bn':'bk'}">${m.novel?'Novel':TL[m.db_match?.evidence_tier]||'Known'}</span>
+    </div>`).join('');
+
+  const enrichRows=(d.gene_set_enrichment||[]).filter(e=>e.n_overlap>0).slice(0,8).map(e=>`
+    <tr><td>${e.gene_set}</td><td>${e.phenotype||'—'}</td><td>${e.n_overlap}</td>
+    <td>${(e.overlap_genes||[]).slice(0,4).join(', ')}${e.overlap_genes?.length>4?'…':''}</td>
+    <td>${(+e.odds_ratio).toFixed(2)}</td>
+    <td class="${e.significant?'pos':'ncol'}">${e.p_value<0.001?e.p_value.toExponential(2):(+e.p_value).toFixed(3)}</td></tr>`).join('');
+
+  const ora=d.ora||{};
+  const oraTerms=(ora.top_terms||[]).slice(0,8).map(t=>`
+    <div class="tterm">
+      <div class="ttn">${t.term_name}</div>
+      <div class="ttbw"><div class="ttbf" style="width:${Math.min(t.p_value_log10/8*100,100)}%;background:${t.source_color||'#2563a8'};opacity:0.75"></div></div>
+      <div class="ttp">${t.p_value.toExponential(1)}</div>
+      <span class="ttsrc" style="background:${t.source_color||'#2563a8'}22;color:${t.source_color||'#2563a8'}">${t.source}</span>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div class="summ">
+      <div class="summ-box"><span class="summ-num">${s.n_known_in_db}</span><span class="summ-lbl">Known in DB</span></div>
+      <div class="summ-box"><span class="summ-num">${s.n_novel}</span><span class="summ-lbl">Novel</span></div>
+      <div class="summ-box"><span class="summ-num">${s.n_tier1_2_overlap}</span><span class="summ-lbl">Tier 1–2</span></div>
+      <div class="summ-box"><span class="summ-num">${s.n_unique_genes}</span><span class="summ-lbl">Unique genes</span></div>
+    </div>
+    <div class="rsec">
+      <div class="rs-hdr"><div class="rs-title">1 · Database matching</div><span class="rs-meta">${d.n_input} loci submitted</span></div>
+      <div class="rs-body">${matchRows||'<div class="empty">No matches</div>'}</div>
+    </div>
+    <div class="rsec">
+      <div class="rs-hdr"><div class="rs-title">2 · TSS and splice junction proximity</div><span class="rs-meta">vs genome background</span></div>
+      <div class="rs-body">
+        <div class="prox-grid">
+          <div class="prox-card"><div class="prox-lbl">TSS annotation coverage</div><div class="prox-stat">${d.proximity?.n_with_tss_annotation||0} loci</div></div>
+          <div class="prox-card"><div class="prox-lbl">Note</div><div style="font-size:11px;color:#7a7468;margin-top:4px">${d.proximity?.note||'Full proximity requires genome annotation BED file'}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rsec">
+      <div class="rs-hdr"><div class="rs-title">4 · Psychiatric gene set enrichment</div><span class="rs-meta">Fisher's exact · genome background</span></div>
+      <div class="rs-body">
+        ${enrichRows?`<table class="enrich-table"><thead><tr><th>Gene set</th><th>Disorder</th><th>Overlap</th><th>Genes</th><th>OR</th><th>p-value</th></tr></thead><tbody>${enrichRows}</tbody></table>`:'<div class="empty">No gene set overlaps found.</div>'}
+      </div>
+    </div>
+    ${ora.status==='ok'?`
+    <div class="rsec">
+      <div class="rs-hdr"><div class="rs-title">5 · Pathway enrichment (ORA)</div><span class="rs-meta">g:Profiler · ${ora.n_significant||0} significant terms · FDR &lt; 0.05</span></div>
+      <div class="rs-body">
+        ${oraTerms?`<div class="top-terms">${oraTerms}</div><div style="font-size:10px;color:#b0a99e;margin-top:8px;font-family:'DM Mono',monospace">g:Profiler · hsapiens · Benjamini-Hochberg FDR</div>`:'<div class="empty">No significant pathways found.</div>'}
+      </div>
+    </div>`:''}
+    <div style="text-align:right;margin-top:8px"><button class="dl-btn">Download all results (TSV)</button></div>`;
+}
+
+/* ── Init ────────────────────────────────────────────────── */
+loadStats();
+loadRecent();
+</script>
+</body>
+</html>
