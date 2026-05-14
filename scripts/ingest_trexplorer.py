@@ -49,7 +49,7 @@ DEFAULT_OUT = ROOT / "data" / "raw" / "trexplorer_v2.json.gz"
 # The EH-annotated JSON is the richest format (has RExPRT, gene, mappability...)
 CATALOG_URL = (
     "https://github.com/broadinstitute/trexplorer-catalog/releases/download/v2.0/"
-    "repeat_catalog_v2.hg38.1_to_1000bp_motifs.EH.with_annotations.json.gz"
+    "TRExplorer.repeat_catalog_v2.hg38.1_to_1000bp_motifs.EH.with_annotations.json.gz"
 )
 
 # ── DB helpers ────────────────────────────────────────────────────────────────
