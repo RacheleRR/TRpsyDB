@@ -1,6 +1,9 @@
 """
 Expression router
-GET /api/expression/{gene_symbol}   → GTEx v10 expression per tissue, mapped to UBERON IDs
+GET /api/expression/{gene_symbol}   → GTEx v8 median expression per tissue, mapped to UBERON IDs
+
+Note: GTEx v10 returns empty results for medianGeneExpression endpoint.
+      GTEx v8 is stable and returns correct tissue expression data.
 """
 import requests
 from fastapi import APIRouter, HTTPException
@@ -10,66 +13,61 @@ router = APIRouter()
 
 GTEX_API = "https://gtexportal.org/api/v2"
 
-# ── GTEx tissue name → UBERON ID mapping ─────────────────────
-GTEX_TO_UBERON = {
-    "Brain"                                      : "UBERON_0000955",
-    "Lung"                                        : "UBERON_0002048",
-    "Heart - Left Ventricle"                      : "UBERON_0002084",
-    "Heart - Atrial Appendage"                    : "UBERON_0002079",
-    "Liver"                                       : "UBERON_0002107",
-    "Kidney - Cortex"                             : "UBERON_0002113",
-    "Kidney - Medulla"                            : "UBERON_0000014",
-    "Colon - Sigmoid"                             : "UBERON_0001155",
-    "Colon - Transverse"                          : "UBERON_0001153",
-    "Muscle - Skeletal"                           : "UBERON_0001134",
-    "Skin - Sun Exposed (Lower leg)"              : "UBERON_0001013",
-    "Adipose - Subcutaneous"                      : "UBERON_0002190",
-    "Adipose - Visceral (Omentum)"                : "UBERON_0010414",
-    "Thyroid"                                     : "UBERON_0002046",
-    "Testis"                                      : "UBERON_0000473",
-    "Whole Blood"                                 : "UBERON_0000178",
-    "Stomach"                                     : "UBERON_0000945",
-    "Spleen"                                      : "UBERON_0002106",
-    "Pancreas"                                    : "UBERON_0001264",
-    "Adrenal Gland"                               : "UBERON_0002369",
-    "Pituitary"                                   : "UBERON_0000007",
-    "Small Intestine - Terminal Ileum"            : "UBERON_0002116",
-    "Esophagus - Mucosa"                          : "UBERON_0001043",
-    "Esophagus - Muscularis"                      : "UBERON_0001045",
-    "Esophagus - Gastroesophageal Junction"       : "UBERON_0001047",
-    "Bladder"                                     : "UBERON_0001255",
-    "Nerve - Tibial"                              : "UBERON_0001021",
-    "Ovary"                                       : "UBERON_0000992",
-    "Uterus"                                      : "UBERON_0000995",
-    "Prostate"                                    : "UBERON_0002367",
-    "Breast - Mammary Tissue"                     : "UBERON_0001911",
-    "Vagina"                                      : "UBERON_0000996",
-    "Artery - Aorta"                              : "UBERON_0000947",
-    "Artery - Coronary"                           : "UBERON_0001621",
-    "Artery - Tibial"                             : "UBERON_0007610",
-    "Minor Salivary Gland"                        : "UBERON_0001830",
-    # Brain regions
-    "Brain - Frontal Cortex (BA9)"                : "UBERON_0001870",
-    "Brain - Anterior cingulate cortex (BA24)"    : "UBERON_0003027",
-    "Brain - Caudate (basal ganglia)"             : "UBERON_0001873",
-    "Brain - Cerebellar Hemisphere"               : "UBERON_0002245",
-    "Brain - Cerebellum"                          : "UBERON_0002285",
-    "Brain - Cortex"                              : "UBERON_0000956",
-    "Brain - Hippocampus"                         : "UBERON_0002421",
-    "Brain - Hypothalamus"                        : "UBERON_0001898",
-    "Brain - Nucleus accumbens (basal ganglia)"   : "UBERON_0001875",
-    "Brain - Putamen (basal ganglia)"             : "UBERON_0001874",
-    "Brain - Spinal cord (cervical c-1)"          : "UBERON_0002360",
-    "Brain - Substantia nigra"                    : "UBERON_0002038",
-    "Brain - Amygdala"                            : "UBERON_0001876",
+TISSUE_MAP = {
+    "Adipose_Subcutaneous":                  {"uberon": "UBERON_0002190", "name": "Adipose (subcutaneous)",     "brain": False},
+    "Adipose_Visceral_Omentum":              {"uberon": "UBERON_0010414", "name": "Adipose (visceral)",         "brain": False},
+    "Adrenal_Gland":                         {"uberon": "UBERON_0002369", "name": "Adrenal gland",             "brain": False},
+    "Artery_Aorta":                          {"uberon": "UBERON_0000947", "name": "Artery (aorta)",            "brain": False},
+    "Artery_Coronary":                       {"uberon": "UBERON_0001621", "name": "Artery (coronary)",         "brain": False},
+    "Artery_Tibial":                         {"uberon": "UBERON_0007610", "name": "Artery (tibial)",           "brain": False},
+    "Bladder":                               {"uberon": "UBERON_0001255", "name": "Bladder",                   "brain": False},
+    "Brain_Amygdala":                        {"uberon": "UBERON_0001876", "name": "Amygdala",                  "brain": True},
+    "Brain_Anterior_cingulate_cortex_Ba24":  {"uberon": "UBERON_0001871", "name": "Anterior cingulate (BA24)","brain": True},
+    "Brain_Caudate_basal_ganglia":           {"uberon": "UBERON_0001873", "name": "Caudate",                   "brain": True},
+    "Brain_Cerebellar_Hemisphere":           {"uberon": "UBERON_0002245", "name": "Cerebellar hemisphere",     "brain": True},
+    "Brain_Cerebellum":                      {"uberon": "UBERON_0002037", "name": "Cerebellum",                "brain": True},
+    "Brain_Cortex":                          {"uberon": "UBERON_0000956", "name": "Cortex",                    "brain": True},
+    "Brain_Frontal_Cortex_Ba9":              {"uberon": "UBERON_0001870", "name": "Frontal cortex (BA9)",      "brain": True},
+    "Brain_Hippocampus":                     {"uberon": "UBERON_0001954", "name": "Hippocampus",               "brain": True},
+    "Brain_Hypothalamus":                    {"uberon": "UBERON_0001898", "name": "Hypothalamus",              "brain": True},
+    "Brain_Nucleus_accumbens_basal_ganglia": {"uberon": "UBERON_0001882", "name": "Nucleus accumbens",        "brain": True},
+    "Brain_Putamen_basal_ganglia":           {"uberon": "UBERON_0001874", "name": "Putamen",                   "brain": True},
+    "Brain_Spinal_cord_cervical_c_1":        {"uberon": "UBERON_0002240", "name": "Spinal cord (C1)",          "brain": True},
+    "Brain_Substantia_nigra":               {"uberon": "UBERON_0002038", "name": "Substantia nigra",          "brain": True},
+    "Breast_Mammary_Tissue":                 {"uberon": "UBERON_0001911", "name": "Breast",                    "brain": False},
+    "Cells_Cultured_fibroblasts":            {"uberon": "UBERON_0015764", "name": "Fibroblasts",               "brain": False},
+    "Colon_Sigmoid":                         {"uberon": "UBERON_0001159", "name": "Colon (sigmoid)",           "brain": False},
+    "Colon_Transverse":                      {"uberon": "UBERON_0001153", "name": "Colon (transverse)",        "brain": False},
+    "Esophagus_Gastroesophageal_Junction":   {"uberon": "UBERON_0001047", "name": "Esophagus (GEJ)",           "brain": False},
+    "Esophagus_Mucosa":                      {"uberon": "UBERON_0001043", "name": "Esophagus (mucosa)",        "brain": False},
+    "Esophagus_Muscularis":                  {"uberon": "UBERON_0001045", "name": "Esophagus (muscularis)",    "brain": False},
+    "Heart_Atrial_Appendage":               {"uberon": "UBERON_0002079", "name": "Heart (atrial appendage)",  "brain": False},
+    "Heart_Left_Ventricle":                  {"uberon": "UBERON_0002084", "name": "Heart (left ventricle)",    "brain": False},
+    "Kidney_Cortex":                         {"uberon": "UBERON_0002113", "name": "Kidney cortex",             "brain": False},
+    "Liver":                                 {"uberon": "UBERON_0002107", "name": "Liver",                     "brain": False},
+    "Lung":                                  {"uberon": "UBERON_0002048", "name": "Lung",                      "brain": False},
+    "Minor_Salivary_Gland":                  {"uberon": "UBERON_0001830", "name": "Salivary gland",            "brain": False},
+    "Muscle_Skeletal":                       {"uberon": "UBERON_0001134", "name": "Skeletal muscle",           "brain": False},
+    "Nerve_Tibial":                          {"uberon": "UBERON_0001321", "name": "Nerve (tibial)",            "brain": False},
+    "Ovary":                                 {"uberon": "UBERON_0000992", "name": "Ovary",                     "brain": False},
+    "Pancreas":                              {"uberon": "UBERON_0001264", "name": "Pancreas",                  "brain": False},
+    "Pituitary":                             {"uberon": "UBERON_0000007", "name": "Pituitary",                 "brain": False},
+    "Prostate":                              {"uberon": "UBERON_0002367", "name": "Prostate",                  "brain": False},
+    "Skin_Not_Sun_Exposed_Suprapubic":       {"uberon": "UBERON_0036149", "name": "Skin (non-sun exposed)",    "brain": False},
+    "Skin_Sun_Exposed_Lower_leg":            {"uberon": "UBERON_0013756", "name": "Skin (sun exposed)",        "brain": False},
+    "Small_Intestine_Terminal_Ileum":        {"uberon": "UBERON_0002116", "name": "Small intestine",           "brain": False},
+    "Spleen":                                {"uberon": "UBERON_0002106", "name": "Spleen",                    "brain": False},
+    "Stomach":                               {"uberon": "UBERON_0000945", "name": "Stomach",                   "brain": False},
+    "Testis":                                {"uberon": "UBERON_0000473", "name": "Testis",                    "brain": False},
+    "Thyroid":                               {"uberon": "UBERON_0002046", "name": "Thyroid",                   "brain": False},
+    "Uterus":                                {"uberon": "UBERON_0000995", "name": "Uterus",                    "brain": False},
+    "Vagina":                                {"uberon": "UBERON_0000996", "name": "Vagina",                    "brain": False},
+    "Whole_Blood":                           {"uberon": "UBERON_0000178", "name": "Whole blood",               "brain": False},
 }
-
-BRAIN_TISSUES = {k for k in GTEX_TO_UBERON if k.startswith("Brain")}
 
 
 @lru_cache(maxsize=200)
-def get_ensembl_id(gene_symbol: str) -> str | None:
-    """Resolve gene symbol → Ensembl versioned ID via GTEx API."""
+def get_gencode_id(gene_symbol: str):
     try:
         r = requests.get(
             f"{GTEX_API}/reference/gene",
@@ -81,100 +79,71 @@ def get_ensembl_id(gene_symbol: str) -> str | None:
         data = r.json().get("data", [])
         if data:
             return data[0].get("gencodeId")
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"[GTEx] gene lookup failed for {gene_symbol}: {e}")
     return None
 
 
 @lru_cache(maxsize=200)
 def fetch_gtex_expression(gencode_id: str) -> list:
-    """Fetch median TPM per tissue from GTEx v10."""
     try:
         r = requests.get(
-            f"{GTEX_API}/expression/geneExpression",
-            params={"gencodeId": gencode_id, "datasetId": "gtex_v10"},
+            f"{GTEX_API}/expression/medianGeneExpression",
+            params={"gencodeId": gencode_id, "datasetId": "gtex_v8", "itemsPerPage": 300},
             timeout=15,
         )
         r.raise_for_status()
         return r.json().get("data", [])
-    except Exception:
+    except Exception as e:
+        print(f"[GTEx] expression fetch failed for {gencode_id}: {e}")
         return []
 
 
 @router.get("/{gene_symbol}")
 def get_expression(gene_symbol: str):
-    """
-    Returns GTEx v10 median TPM per tissue, mapped to UBERON IDs.
-    Separates body tissues and brain regions for frontend rendering.
-    """
     gene_symbol = gene_symbol.upper().strip()
 
-    gencode_id = get_ensembl_id(gene_symbol)
+    gencode_id = get_gencode_id(gene_symbol)
     if not gencode_id:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Gene '{gene_symbol}' not found in GTEx. Check the gene symbol."
-        )
+        raise HTTPException(status_code=404,
+            detail=f"Gene '{gene_symbol}' not found in GTEx.")
 
     raw = fetch_gtex_expression(gencode_id)
     if not raw:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No expression data found for '{gene_symbol}' in GTEx v10."
-        )
+        raise HTTPException(status_code=404,
+            detail=f"No expression data for '{gene_symbol}' in GTEx v8.")
 
-    body_data   = {}   # uberon_id → {tissue_name, median_tpm, unit}
-    brain_data  = {}
-
+    body, brain = [], []
     for entry in raw:
-        tissue_name = entry.get("tissueSiteDetailId", "").replace("_", " - ").replace("  ", " ")
-        # GTEx uses underscore-separated tissue IDs; try to match to our mapping
-        median_tpm  = entry.get("median", 0.0)
-
-        # Try direct match first, then normalised match
-        uberon = GTEX_TO_UBERON.get(tissue_name)
-        if not uberon:
-            # GTEx API returns IDs like "Brain_Frontal_Cortex_Ba9"
-            # try to find a close match
-            for gtex_name, uid in GTEX_TO_UBERON.items():
-                if gtex_name.lower().replace(" ", "_") == tissue_name.lower().replace(" ", "_"):
-                    uberon = uid
-                    tissue_name = gtex_name
-                    break
-
-        if not uberon:
+        tissue_id  = entry.get("tissueSiteDetailId", "")
+        median_tpm = entry.get("median", 0.0)
+        info       = TISSUE_MAP.get(tissue_id)
+        if not info:
             continue
-
         record = {
-            "tissue_name": tissue_name,
-            "uberon_id":   uberon,
-            "median_tpm":  round(median_tpm, 3),
+            "tissue_gtex": tissue_id,
+            "tissue_name": info["name"],
+            "uberon_id":   info["uberon"],
+            "median_tpm":  round(float(median_tpm), 3),
             "unit":        "TPM",
         }
-
-        if tissue_name in BRAIN_TISSUES:
-            brain_data[uberon] = record
+        if info["brain"]:
+            brain.append(record)
         else:
-            body_data[uberon] = record
+            body.append(record)
 
-    # Compute max TPM for normalisation (frontend uses this for colour scale)
-    all_tpms     = [v["median_tpm"] for v in {**body_data, **brain_data}.values()]
-    max_body_tpm = max((v["median_tpm"] for v in body_data.values()), default=0)
-    max_brain_tpm= max((v["median_tpm"] for v in brain_data.values()), default=0)
-
-    # Top expressed tissues (for the ranked list)
-    top_body  = sorted(body_data.values(),  key=lambda x: -x["median_tpm"])[:8]
-    top_brain = sorted(brain_data.values(), key=lambda x: -x["median_tpm"])[:8]
+    body.sort(key=lambda x: -x["median_tpm"])
+    brain.sort(key=lambda x: -x["median_tpm"])
 
     return {
         "gene_symbol":   gene_symbol,
         "gencode_id":    gencode_id,
-        "dataset":       "GTEx v10",
-        "n_tissues":     len(body_data) + len(brain_data),
-        "max_body_tpm":  round(max_body_tpm, 3),
-        "max_brain_tpm": round(max_brain_tpm, 3),
-        "body":          body_data,
-        "brain":         brain_data,
-        "top_body":      top_body,
-        "top_brain":     top_brain,
+        "dataset":       "GTEx v8",
+        "n_tissues":     len(body) + len(brain),
+        "max_body_tpm":  body[0]["median_tpm"]  if body  else 0,
+        "max_brain_tpm": brain[0]["median_tpm"] if brain else 0,
+        "body":          body,
+        "brain":         brain,
+        "top_body":      body[:8],
+        "top_brain":     brain[:8],
     }
