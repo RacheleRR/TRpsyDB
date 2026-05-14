@@ -41,3 +41,5 @@ logs/
 *.vcf.gz
 *.bed.gz
 *.tgz
+backend/db/*.sqlite-shm
+backend/db/*.sqlite-wal

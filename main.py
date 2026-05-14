@@ -38,7 +38,10 @@ if FRONTEND_DIR.exists():
 
 @app.get("/", include_in_schema=False)
 def serve_frontend():
-    return FileResponse(str(FRONTEND_DIR / "index.html"))
+    index = FRONTEND_DIR / "index.html"
+    if not index.exists():
+        return {"status": "ok", "message": "TRpsyDB API is running. See /docs for API documentation."}
+    return FileResponse(str(index))
 
 # ── Startup ──────────────────────────────────────────────────
 @app.on_event("startup")
