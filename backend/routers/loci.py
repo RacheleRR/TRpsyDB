@@ -133,4 +133,3 @@ def get_locus(locus_id: str):
         "evidence": [row_to_dict(e) for e in evidence],
     }
 
-
