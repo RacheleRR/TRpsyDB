@@ -112,6 +112,38 @@ def get_locus(locus_id: str):
     }
 
 
+# ── Full locus report card ───────────────────────────────────
+@router.get("/{locus_id:path}")
+def get_locus(locus_id: str):
+    """
+    Full report card for a single locus.
+    locus_id format: chrN:start-end   e.g. chr3:63912684-63912714
+    """
+    with get_connection() as conn:
+        locus = conn.execute(
+            "SELECT * FROM loci WHERE locus_id = ?", (locus_id,)
+        ).fetchone()
+
+        if not locus:
+            raise HTTPException(status_code=404, detail=f"Locus '{locus_id}' not found")
+
+        evidence = conn.execute(
+            """SELECT le.*, s.title, s.first_author, s.year, s.journal,
+                      s.pmid, s.cohort_size_cases, s.cohort_size_controls,
+                      s.phenotype, s.sequencing_type
+               FROM locus_evidence le
+               JOIN studies s ON le.study_id = s.id
+               WHERE le.locus_id = ?
+               ORDER BY s.year DESC""",
+            (locus_id,),
+        ).fetchall()
+
+    return {
+        "locus": row_to_dict(locus),
+        "evidence": [row_to_dict(e) for e in evidence],
+    }
+
+
 # ── All loci near a gene ─────────────────────────────────────
 @router.get("/gene/{gene_symbol}")
 def get_loci_by_gene(gene_symbol: str):
@@ -132,3 +164,5 @@ def get_loci_by_gene(gene_symbol: str):
         )
 
     return {"gene": gene_symbol.upper(), "n": len(rows), "loci": [row_to_dict(r) for r in rows]}
+
+
