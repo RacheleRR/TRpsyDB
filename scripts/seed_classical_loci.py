@@ -529,6 +529,13 @@ def seed():
                 n_loci += 1
             except Exception as e:
                 print(f"  ⚠ Locus {l['locus_id']}: {e}")
+        # Patch ensembl_gene_id into existing rows that were inserted without it
+        for l in LOCI:
+            conn.execute(
+                "UPDATE loci SET ensembl_gene_id=? WHERE locus_id=? AND ensembl_gene_id IS NULL",
+                (l["ensembl_gene_id"], l["locus_id"])
+            )
+        print("  ✓ Ensembl IDs patched")
 
         # Insert studies
         n_studies = 0
