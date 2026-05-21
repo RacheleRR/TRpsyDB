@@ -1,5 +1,15 @@
 
-to do list 
+to do list
+
+# things to add in version 2 
+-TF
+-enhancers from https://lcbb.swjtu.edu.cn/EnhancerDB/ maybe as well from fantome 
+
+
+
+
+
+
 
 okey so i was thinking we can start 
 
@@ -19,6 +29,9 @@ then i think we could add the data from the qtls like the tandem repeats for the
 
 3) not sure how i should get the Brain chromatin state
 4) and for the Pli etc should we get it from gnomad https://gnomad.broadinstitute.org/data#v4-constraint
+
+https://genome.ucsc.edu/cgi-bin/hgTrackUi?db=hg38&g=gnomadPLI
+
 
 5) for the TSS distance and splicing junction distance in my code i used this ( refflat and approns and exons  )  should i calculate it for all the trs but i think that would be hell or can i just see where the tss is etc and then see where that tr is and put see it this way ? 
  see code below 
@@ -148,3 +161,8 @@ for (name in names(distance_list_SJ)) {
 
 6) for finding the TRs associated with psychiatry i will mine pubmed etc for them and then give the articles or infos to you and then create a json or tsv file with those infos ? 
 
+7) probably should create a resource site in the website like they did in here 
+
+https://strchive.org/resources/
+
+8) add constraint from dazar after 
