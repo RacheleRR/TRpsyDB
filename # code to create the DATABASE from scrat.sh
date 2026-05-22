@@ -216,8 +216,11 @@ python 10_ingest_phenotype_assoc.py \
     --mukamel  data/raw/mukamel2021_supp.xlsx \
     --db       data/trs.db
 
-# 20. push to GitHub → Render redeploys
-cd ~/TRpsyDB
-git add scripts/data/trs.db
-git commit -m "populated trs.db with all annotation layers"
-git push
+# 20. create turso database
+turso db show trpsydb --url
+libsql://trpsydb-rachelerr.aws-eu-west-1.turso.io
+turso db tokens create trpsydb
+eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3Nzk0NTczODAsImlkIjoiMDE5ZTRmZWItODUwMS03MDMyLWJjYTctYzk5ODUyNzk3MGIwIiwicmlkIjoiYTI5ZDBlZDAtMmI3ZS00NGJiLWE5MjgtY2ZhYmQ3MGFmZTkzIn0.36gF-_GAIpAl0cOqz97lq36ppHFwoQyL9qlg5fbyrNpjE_eboFdN_y2lHIpC-W9RatRibkUFSxkvBFT3r9L8DQ
+
+
+
