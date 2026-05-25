@@ -11,7 +11,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
 nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;height:48px;gap:24px}
-.nav-logo{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--purple);letter-spacing:-.01em}
+.nav-logo{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--purple);cursor:pointer}
 .nav-link{font-size:13px;color:var(--text-2);text-decoration:none}
 .nav-back{margin-left:auto;font-size:12px;color:var(--purple);cursor:pointer;display:flex;align-items:center;gap:4px}
 .sh{position:sticky;top:48px;z-index:90;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:14px}
@@ -22,11 +22,9 @@ nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1p
 .sh-coord{font-family:var(--mono);font-size:11px;color:var(--text-2);margin-top:2px}
 .badges{margin-top:4px;display:flex;flex-wrap:wrap;gap:3px}
 .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:3px;font-weight:500}
-.b-purple{background:var(--purple-l);color:var(--purple-t)}
-.b-teal{background:var(--teal-l);color:var(--teal)}
-.b-coral{background:var(--coral-l);color:var(--coral)}
-.b-amber{background:var(--amber-l);color:var(--amber)}
-.b-blue{background:var(--blue-l);color:var(--blue)}
+.b-purple{background:var(--purple-l);color:var(--purple-t)}.b-teal{background:var(--teal-l);color:var(--teal)}
+.b-coral{background:var(--coral-l);color:var(--coral)}.b-amber{background:var(--amber-l);color:var(--amber)}
+.b-blue{background:var(--blue-l);color:var(--blue)}.b-gray{background:var(--gray-l);color:#444}
 .sh-stats{margin-left:auto;display:flex;gap:20px}
 .sh-stat{text-align:center}
 .sh-n{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);line-height:1}
@@ -34,14 +32,18 @@ nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1p
 .page{max-width:900px;margin:0 auto;padding:24px}
 .section{margin-bottom:20px;opacity:0;transform:translateY(10px);animation:fu .4s ease forwards}
 @keyframes fu{to{opacity:1;transform:translateY(0)}}
-.section:nth-child(1){animation-delay:.05s}.section:nth-child(2){animation-delay:.10s}.section:nth-child(3){animation-delay:.15s}.section:nth-child(4){animation-delay:.20s}.section:nth-child(5){animation-delay:.25s}.section:nth-child(6){animation-delay:.30s}.section:nth-child(7){animation-delay:.35s}.section:nth-child(8){animation-delay:.40s}.section:nth-child(9){animation-delay:.45s}.section:nth-child(10){animation-delay:.50s}
+.section:nth-child(1){animation-delay:.04s}.section:nth-child(2){animation-delay:.08s}
+.section:nth-child(3){animation-delay:.12s}.section:nth-child(4){animation-delay:.16s}
+.section:nth-child(5){animation-delay:.20s}.section:nth-child(6){animation-delay:.24s}
+.section:nth-child(7){animation-delay:.28s}.section:nth-child(8){animation-delay:.32s}
+.section:nth-child(9){animation-delay:.36s}.section:nth-child(10){animation-delay:.40s}
 .st{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;display:flex;align-items:center;gap:7px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.st svg{width:14px;height:14px;flex-shrink:0}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px}
 .csub{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.row{display:flex;gap:10px}
 .kv{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
 .kv:last-child{border-bottom:none}
 .kk{color:var(--text-2)}.kv-v{color:var(--text);font-weight:500}
@@ -70,291 +72,418 @@ nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1p
 .ev{font-size:10px;color:var(--text-3);width:32px;text-align:right;font-family:var(--mono)}
 .sc{display:inline-block;font-size:10px;padding:2px 8px;border-radius:3px;border:1px solid var(--border);color:var(--text-2);margin:2px 3px 2px 0;font-family:var(--mono)}
 .anat{background:var(--bg);border-radius:var(--r);width:80px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:8px 0}
-.row{display:flex;gap:10px}
+.loading-msg{text-align:center;padding:48px;color:var(--text-3);font-size:13px}
+.error-msg{text-align:center;padding:48px;color:var(--coral);font-size:13px}
+.qtl-loading{color:var(--text-3);font-size:11px;font-style:italic;margin-top:4px}
 </style>
 </head>
 <body>
 
 <nav>
-  <span class="nav-logo">TRpsyDB</span>
-  <a class="nav-link" href="#">Browse</a>
-  <a class="nav-link" href="#">Gene search</a>
-  <a class="nav-link" href="#">Analysis</a>
-  <a class="nav-link" href="#">Download</a>
+  <span class="nav-logo" onclick="location.href='/'">TRpsyDB</span>
+  <a class="nav-link" href="/">Browse</a>
   <span class="nav-back" onclick="history.back()">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M10 12L6 8l4-4"/></svg>
-    back to results
+    back
   </span>
 </nav>
 
-<div class="sh">
-  <div class="ring"><span class="ring-n">0.94</span><span class="ring-l">RExPRT</span></div>
+<!-- sticky header — populated after load -->
+<div class="sh" id="sticky-header" style="display:none">
+  <div class="ring"><span class="ring-n" id="sh-score">—</span><span class="ring-l">RExPRT</span></div>
   <div>
-    <div class="sh-title">HTT</div>
-    <div class="sh-coord">chr4:3074876–3074933 · CAG · Coding</div>
-    <div class="badges">
-      <span class="badge b-purple">Mendelian — HD</span>
-      <span class="badge b-teal">brain eQTL</span>
-      <span class="badge b-coral">promoter</span>
-      <span class="badge b-amber">brain SE</span>
-      <span class="badge b-blue">eVNTR</span>
-    </div>
+    <div class="sh-title" id="sh-title">Loading…</div>
+    <div class="sh-coord" id="sh-coord"></div>
+    <div class="badges" id="sh-badges"></div>
   </div>
   <div class="sh-stats">
-    <div class="sh-stat"><div class="sh-n">0.998</div><div class="sh-l">pLi</div></div>
-    <div class="sh-stat"><div class="sh-n">0.11</div><div class="sh-l">LOEUF</div></div>
-    <div class="sh-stat"><div class="sh-n">4</div><div class="sh-l">catalogs</div></div>
+    <div class="sh-stat"><div class="sh-n" id="sh-pli">—</div><div class="sh-l">pLi</div></div>
+    <div class="sh-stat"><div class="sh-n" id="sh-loeuf">—</div><div class="sh-l">LOEUF</div></div>
+    <div class="sh-stat"><div class="sh-n" id="sh-nsrc">—</div><div class="sh-l">catalogs</div></div>
+    <div class="sh-stat"><div class="sh-n" id="sh-nqtl">—</div><div class="sh-l">QTL hits</div></div>
   </div>
 </div>
 
-<div class="page">
-
-<!-- ① DISEASE -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v4M6 4h4M3 14s0-4 5-4 5 4 5 4"/></svg>
-    Disease / clinical
-  </div>
-  <div class="card">
-    <div class="csub">Huntington disease (HD) · OMIM 143100</div>
-    <div class="g4" style="margin-bottom:12px">
-      <div class="stat"><div class="sn">9–26</div><div class="sl">normal (repeats)</div></div>
-      <div class="stat"><div class="sn">27–35</div><div class="sl">intermediate</div></div>
-      <div class="stat"><div class="sn danger">≥ 36</div><div class="sl">pathogenic</div></div>
-      <div class="stat"><div class="sn">AD</div><div class="sl">inheritance</div></div>
-    </div>
-    <div class="kv"><span class="kk">Evidence tier</span><span class="kv-v">1 — established Mendelian disease locus</span></div>
-    <div class="kv"><span class="kk">Source</span><span class="kv-v">STRipy · OMIM · TRExplorer V1+V2</span></div>
-  </div>
+<div class="page" id="page-content">
+  <div class="loading-msg" id="loading-msg">Loading locus…</div>
 </div>
 
-<!-- ② PSYCHIATRIC -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v4M8 11v.5"/></svg>
-    Psychiatric evidence
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="csub">This TR — literature mining</div>
-      <div class="kv"><span class="kk">Schizophrenia</span><span><span class="tier t2">tier 2 · replicated</span><span class="kv-v" style="margin-left:6px">p = 0.002</span></span></div>
-      <div class="kv"><span class="kk">Bipolar disorder</span><span><span class="tier t3">tier 3 · single study</span><span class="kv-v" style="margin-left:6px">p = 0.041</span></span></div>
-      <div class="kv"><span class="kk">Study type</span><span class="kv-v">Case-control GWAS</span></div>
-      <div class="kv"><span class="kk">GWAS colocalisation</span><span class="yes">✓</span></div>
-      <div class="kv"><span class="kk">PMID</span><span class="kv-v mono" style="color:var(--purple)">32461655 · 29892012</span></div>
-      <div class="note">established Mendelian loci are tier 1 by definition — see disease section above</div>
-    </div>
-    <div class="card">
-      <div class="csub">Gene HTT — exome &amp; GWAS evidence</div>
-      <div class="kv"><span class="kk">SCHEMA (SCZ)</span><span class="kv-v" style="color:var(--purple)">OR 1.8 · p = 3.2e-09</span></div>
-      <div class="kv"><span class="kk">BipEx (BIP)</span><span class="kv-v" style="color:var(--purple)">p = 0.003</span></div>
-      <div class="kv"><span class="kk">PGC GWAS nearest gene</span><span class="yes">✓ SCZ locus</span></div>
-      <div class="kv"><span class="kk">OMIM</span><span class="kv-v">Huntington disease #143100</span></div>
-      <div class="kv"><span class="kk">Association type</span><span class="kv-v">Exome + GWAS</span></div>
-      <div class="note">evidence for the gene, not this specific TR</div>
-    </div>
-  </div>
-</div>
+<script>
+const API = '';
 
-<!-- ③ GENOMIC CONTEXT -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M8 2v12"/><circle cx="8" cy="8" r="2"/></svg>
-    Genomic context
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="csub">Locus identity</div>
-      <div class="kv"><span class="kk">Gene</span><span class="kv-v">HTT</span></div>
-      <div class="kv"><span class="kk">Gene region</span><span class="kv-v">Coding / Exon 1</span></div>
-      <div class="kv"><span class="kk">Gene type</span><span class="kv-v">Protein coding</span></div>
-      <div class="kv"><span class="kk">Motif</span><span class="kv-v mono">CAG</span></div>
-      <div class="kv"><span class="kk">Motif size</span><span class="kv-v">3 bp</span></div>
-      <div class="kv"><span class="kk">Repeats in reference</span><span class="kv-v">19</span></div>
-      <div class="kv"><span class="kk">Purity</span><span class="kv-v">0.98</span></div>
-      <div class="kv"><span class="kk">Mappability</span><span class="kv-v">0.94</span></div>
-    </div>
-    <div class="card">
-      <div class="csub">Position</div>
-      <div class="kv"><span class="kk">hg38</span><span class="kv-v mono">chr4:3074876–3074933</span></div>
-      <div class="kv"><span class="kk">hg19</span><span class="kv-v mono">chr4:3076603–3076660</span></div>
-      <div class="kv"><span class="kk">Region size</span><span class="kv-v">57 bp</span></div>
-      <div class="kv"><span class="kk">TSS distance</span><span class="kv-v">182 bp</span></div>
-      <div class="kv"><span class="kk">Splice junction distance</span><span class="kv-v">1,204 bp</span></div>
-    </div>
-  </div>
-</div>
+// ── helpers ───────────────────────────────────────────────────────────────────
+const fmt = v => v != null ? v : '—';
+const fmtF = (v, d=2) => v != null ? (+v).toFixed(d) : '—';
+const fmtE = v => v != null ? (+v).toExponential(2) : '—';
+const yn = v => v ? '<span class="yes">✓</span>' : '<span class="no">—</span>';
 
-<!-- ④ FUNCTIONAL SCORES -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l4-4 3 3 5-7"/></svg>
-    Functional scores
-  </div>
-  <div class="card">
-    <div class="g4" style="margin-bottom:12px">
-      <div class="stat"><div class="sn accent">0.94</div><div class="sl">RExPRT ensemble</div></div>
-      <div class="stat"><div class="sn">0.998</div><div class="sl">pLi</div></div>
-      <div class="stat"><div class="sn">0.11</div><div class="sl">LOEUF</div></div>
-      <div class="stat"><div class="sn">0.91 / 0.96</div><div class="sl">SVM / XGB</div></div>
-    </div>
-    <div class="sep"></div>
-    <div style="font-size:10px;color:var(--text-3);margin-bottom:6px;font-weight:500">Feature flags</div>
-    <span class="flag fon">eSTR</span>
-    <span class="flag fon">opReg</span>
-    <span class="flag foff">promoter</span>
-    <div class="note">RExPRT scores computed on hg19 · pLi and LOEUF from gnomAD via RExPRT output</div>
-  </div>
-</div>
+function kv(k, v){ return `<div class="kv"><span class="kk">${k}</span><span class="kv-v">${v}</span></div>`; }
+function kvMono(k, v){ return `<div class="kv"><span class="kk">${k}</span><span class="kv-v mono">${v}</span></div>`; }
+function bar(label, val, p, color){
+  return `<div class="bw"><div class="bl"><span><span class="dot" style="background:${color}"></span>${label}</span><span>β=${fmtF(val)} · p=${fmtE(p)}</span></div><div class="bt"><div class="bf" style="width:${Math.min((-Math.log10((p||1)+1e-300))/15*100,100)}%;background:${color}"></div></div></div>`;
+}
 
-<!-- ⑤ REGULATORY CONTEXT -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="12" height="8" rx="1"/><path d="M5 6V4a3 3 0 016 0v2"/></svg>
-    Regulatory context
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="csub">Promoter &amp; open chromatin</div>
-      <div class="kv"><span class="kk">Promoter (EPD)</span><span class="yes">✓ HTT_1</span></div>
-      <div class="kv"><span class="kk">ENCODE cCRE class</span><span class="kv-v">PLS — promoter-like</span></div>
-      <div class="kv"><span class="kk">cCRE accession</span><span class="kv-v mono">EH38E2145832</span></div>
-    </div>
-    <div class="card">
-      <div class="csub">Enhancers</div>
-      <div class="kv"><span class="kk">Brain super enhancer</span><span class="yes">✓ 12 brain samples</span></div>
-      <div class="kv"><span class="kk">SE linked gene (ABC)</span><span class="kv-v">HTT</span></div>
-      <div class="kv"><span class="kk">Brain typical enhancer</span><span class="no">— not found</span></div>
-    </div>
-  </div>
-</div>
+// ── badges ────────────────────────────────────────────────────────────────────
+function buildBadges(locus, established, regulatory, n_qtl){
+  const out = [];
+  if(established?.length) out.push(`<span class="badge b-purple">Mendelian — ${established[0].disease_name||'established'}</span>`);
+  if(n_qtl > 0)           out.push(`<span class="badge b-teal">brain QTL</span>`);
+  if(regulatory?.in_promoter)             out.push(`<span class="badge b-coral">promoter</span>`);
+  if(regulatory?.in_brain_super_enhancer) out.push(`<span class="badge b-amber">brain SE</span>`);
+  if(locus.has_eVNTR)     out.push(`<span class="badge b-blue">eVNTR</span>`);
+  return out.join('');
+}
 
-<!-- ⑥ BRAIN QTLs -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14l3-5 3 2 3-4 3 3"/></svg>
-    Brain QTLs <span style="font-weight:400;font-size:9px;margin-left:6px;color:var(--text-3)">78 hits total</span>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="csub">ROSMAP · DLPFC</div>
-      <div class="bw"><div class="bl"><span><span class="dot" style="background:var(--purple)"></span>eQTL</span><span>β=0.38 · p=4.1e-11</span></div><div class="bt"><div class="bf" style="width:90%;background:var(--purple)"></div></div></div>
-      <div class="bw"><div class="bl"><span><span class="dot" style="background:var(--purple)"></span>sQTL</span><span>β=0.21 · p=2.3e-08</span></div><div class="bt"><div class="bf" style="width:72%;background:var(--purple)"></div></div></div>
-      <div class="bw"><div class="bl"><span><span class="dot" style="background:var(--purple)"></span>hQTL (H3K27ac)</span><span>β=0.29 · p=8.2e-07</span></div><div class="bt"><div class="bf" style="width:58%;background:var(--purple)"></div></div></div>
-      <div class="bw"><div class="bl"><span><span class="dot" style="background:var(--purple)"></span>mQTL (methylation)</span><span>β=−0.44 · p=1.1e-06</span></div><div class="bt"><div class="bf" style="width:52%;background:var(--purple)"></div></div></div>
-    </div>
-    <div class="card">
-      <div class="csub">GTEx v8 · top brain regions</div>
-      <div class="bw"><div class="bl"><span><span class="dot" style="background:var(--blue)"></span>Brain Cortex</span><span>p=2.7e-09</span></div><div class="bt"><div class="bf" style="width:88%;background:var(--blue)"></div></div></div>
-      <div class="bw"><div class="bl"><span><span class="dot" style="background:var(--blue)"></span>Frontal Cortex BA9</span><span>p=4.1e-08</span></div><div class="bt"><div class="bf" style="width:76%;background:var(--blue)"></div></div></div>
-      <div class="bw"><div class="bl"><span><span class="dot" style="background:var(--blue)"></span>Hippocampus</span><span>p=9.3e-07</span></div><div class="bt"><div class="bf" style="width:62%;background:var(--blue)"></div></div></div>
-      <div class="bw"><div class="bl"><span><span class="dot" style="background:var(--blue)"></span>Caudate basal ganglia</span><span>p=1.2e-06</span></div><div class="bt"><div class="bf" style="width:55%;background:var(--blue)"></div></div></div>
-      <div class="note">+ 9 more brain regions · 31 non-brain GTEx tissues</div>
-    </div>
-  </div>
-</div>
+// ── render full page ──────────────────────────────────────────────────────────
+function renderPage(data){
+  const { locus: l, established, clinvar, rexprt: rx, regulatory: reg,
+          psychiatric, gene_evidence, phewas, sc_etr, qtls, n_qtl } = data;
 
-<!-- ⑦ GENE EXPRESSION -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2c0 0-4 2-4 6s4 6 4 6 4-2 4-6-4-6-4-6z"/><path d="M2 8h12"/></svg>
-    Gene expression — HTT · GTEx v8
-  </div>
-  <div class="row">
-    <div class="anat">
-      <svg width="58" height="155" viewBox="0 0 58 155">
-        <ellipse cx="29" cy="12" rx="11" ry="12" fill="#EEEDFE" stroke="#5340C8" stroke-width="1.5"/>
-        <rect x="24" y="23" width="10" height="7" rx="2" fill="#EEEDFE" stroke="#5340C8" stroke-width="1"/>
-        <rect x="13" y="30" width="32" height="44" rx="5" fill="#EEEDFE" stroke="#5340C8" stroke-width="1.5"/>
-        <rect x="2"  y="30" width="10" height="36" rx="4" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
-        <rect x="46" y="30" width="10" height="36" rx="4" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
-        <rect x="13" y="76" width="14" height="48" rx="4" fill="#EEEDFE" stroke="#5340C8" stroke-width="1.5"/>
-        <rect x="31" y="76" width="14" height="48" rx="4" fill="#EEEDFE" stroke="#5340C8" stroke-width="1.5"/>
-        <circle cx="29" cy="10" r="5" fill="#5340C8" opacity="0.8"/>
-      </svg>
-    </div>
-    <div style="flex:1">
+  // sticky header
+  document.getElementById('sh-score').textContent  = rx?.ensembleScore != null ? (+rx.ensembleScore).toFixed(2) : '—';
+  document.getElementById('sh-title').textContent  = l.gene_name || l.tr_id;
+  document.getElementById('sh-coord').textContent  = `${l.chr}:${(l.start||0).toLocaleString()}–${(l.end||0).toLocaleString()} · ${l.canonical_motif||'?'} · ${l.gene_region||'?'}`;
+  document.getElementById('sh-badges').innerHTML   = buildBadges(l, established, reg, n_qtl);
+  document.getElementById('sh-pli').textContent    = rx?.pLi != null ? (+rx.pLi).toFixed(3) : '—';
+  document.getElementById('sh-loeuf').textContent  = rx?.loeuf != null ? (+rx.loeuf).toFixed(2) : '—';
+  document.getElementById('sh-nsrc').textContent   = l.n_sources || '—';
+  document.getElementById('sh-nqtl').textContent   = n_qtl || 0;
+  document.getElementById('sticky-header').style.display = 'flex';
+
+  const sections = [];
+
+  // ① DISEASE (only if established)
+  if(established?.length){
+    const e = established[0];
+    sections.push(`
+      <div class="section">
+        <div class="st">Disease / clinical</div>
+        <div class="card">
+          <div class="csub">${e.disease_name||'Established disease locus'} · ${e.gene_name||l.gene_name||''}</div>
+          <div class="g4" style="margin-bottom:12px">
+            <div class="stat"><div class="sn">${e.normal_min != null ? `${e.normal_min}–${e.normal_max}` : '—'}</div><div class="sl">normal (repeats)</div></div>
+            <div class="stat"><div class="sn">${e.premut_min != null ? `${e.premut_min}–${e.premut_max}` : '—'}</div><div class="sl">intermediate</div></div>
+            <div class="stat"><div class="sn danger">${e.pathogenic_min != null ? `≥ ${e.pathogenic_min}` : '—'}</div><div class="sl">pathogenic</div></div>
+            <div class="stat"><div class="sn">${e.inheritance||'—'}</div><div class="sl">inheritance</div></div>
+          </div>
+          ${kv('Evidence tier','1 — established Mendelian disease locus')}
+          ${kv('Repeat unit', e.repeat_unit || l.canonical_motif || '—')}
+          ${e.pmid ? kv('PMID', `<span class="mono" style="color:var(--purple)">${e.pmid}</span>`) : ''}
+        </div>
+      </div>`);
+  }
+
+  // ② PSYCHIATRIC EVIDENCE
+  const hasPsych = psychiatric?.length || gene_evidence?.length;
+  if(hasPsych){
+    sections.push(`
+      <div class="section">
+        <div class="st">Psychiatric evidence</div>
+        <div class="g2">
+          <div class="card">
+            <div class="csub">This TR — literature mining</div>
+            ${psychiatric?.length ? psychiatric.map(p => `
+              <div class="kv">
+                <span class="kk">${p.phenotype}</span>
+                <span>
+                  ${p.evidence_tier >= 2 ? `<span class="tier t${p.evidence_tier}">tier ${p.evidence_tier}</span>` : ''}
+                  ${p.study_type ? `<span class="kv-v" style="margin-left:5px">${p.study_type}</span>` : ''}
+                </span>
+              </div>
+              ${p.pmid ? `<div style="font-size:10px;color:var(--text-3);margin-bottom:4px">PMID: <span class="mono" style="color:var(--purple)">${p.pmid}</span></div>` : ''}
+            `).join('') : '<div style="font-size:11px;color:var(--text-3)">No TR-level literature associations curated</div>'}
+            ${established?.length ? '<div class="note">established Mendelian loci are tier 1 — see disease section above</div>' : ''}
+          </div>
+          <div class="card">
+            <div class="csub">Gene ${l.gene_name||'—'} — exome &amp; GWAS evidence</div>
+            ${gene_evidence?.length ? gene_evidence.map(g => `
+              <div class="kv">
+                <span class="kk">${g.source} (${g.phenotype})</span>
+                <span class="kv-v" style="color:var(--purple)">
+                  ${g.odds_ratio != null ? `OR ${(+g.odds_ratio).toFixed(2)} · ` : ''}${g.p_value != null ? `p = ${fmtE(g.p_value)}` : ''}
+                </span>
+              </div>`).join('') : '<div style="font-size:11px;color:var(--text-3)">No gene-level psychiatric evidence</div>'}
+            <div class="note">evidence for the gene, not this specific TR</div>
+          </div>
+        </div>
+      </div>`);
+  }
+
+  // ③ GENOMIC CONTEXT
+  sections.push(`
+    <div class="section">
+      <div class="st">Genomic context</div>
+      <div class="g2">
+        <div class="card">
+          <div class="csub">Locus identity</div>
+          ${kv('Gene', l.gene_name || '—')}
+          ${kv('Gene region', l.gene_region || '—')}
+          ${kv('Gene ID', `<span class="mono">${l.gene_id || '—'}</span>`)}
+          ${kvMono('Motif', l.canonical_motif || '—')}
+          ${kv('Motif size', l.motif_size_bp != null ? `${l.motif_size_bp} bp` : '—')}
+          ${kv('Repeats in reference', fmt(l.num_repeats_ref))}
+          ${kv('Purity', fmtF(l.purity, 3))}
+          ${kv('Mappability', fmtF(l.mappability, 3))}
+        </div>
+        <div class="card">
+          <div class="csub">Position</div>
+          ${kvMono('hg38', `${l.chr}:${(l.start||0).toLocaleString()}–${(l.end||0).toLocaleString()}`)}
+          ${l.hg19_chr ? kvMono('hg19', `${l.hg19_chr}:${(l.hg19_start||0).toLocaleString()}–${(l.hg19_end||0).toLocaleString()}`) : ''}
+          ${kv('Region size', l.start != null && l.end != null ? `${(l.end - l.start).toLocaleString()} bp` : '—')}
+          ${kv('TSS distance', l.dist_tss_bp != null ? `${l.dist_tss_bp.toLocaleString()} bp → ${l.nearest_tss_gene||''}` : '—')}
+          ${kv('Splice junction distance', l.dist_splice_bp != null ? `${l.dist_splice_bp.toLocaleString()} bp` : '—')}
+        </div>
+      </div>
+    </div>`);
+
+  // ④ FUNCTIONAL SCORES
+  if(rx){
+    sections.push(`
+      <div class="section">
+        <div class="st">Functional scores</div>
+        <div class="card">
+          <div class="g4" style="margin-bottom:12px">
+            <div class="stat"><div class="sn accent">${fmtF(rx.ensembleScore)}</div><div class="sl">RExPRT ensemble</div></div>
+            <div class="stat"><div class="sn">${fmtF(rx.pLi, 3)}</div><div class="sl">pLi</div></div>
+            <div class="stat"><div class="sn">${fmtF(rx.loeuf, 2)}</div><div class="sl">LOEUF</div></div>
+            <div class="stat"><div class="sn">${rx.SVM != null ? fmtF(rx.SVM) : '—'} / ${rx.XGB != null ? fmtF(rx.XGB) : '—'}</div><div class="sl">SVM / XGB</div></div>
+          </div>
+          <div class="sep"></div>
+          <div style="font-size:10px;color:var(--text-3);margin-bottom:6px;font-weight:500">Feature flags</div>
+          <span class="flag ${rx.eSTR ? 'fon' : 'foff'}">eSTR</span>
+          <span class="flag ${rx.opReg ? 'fon' : 'foff'}">opReg</span>
+          <span class="flag ${rx.promoter ? 'fon' : 'foff'}">promoter</span>
+          <div class="note">RExPRT scores computed on hg19 · pLi and LOEUF from gnomAD via RExPRT</div>
+        </div>
+      </div>`);
+  }
+
+  // ⑤ REGULATORY CONTEXT
+  if(reg){
+    sections.push(`
+      <div class="section">
+        <div class="st">Regulatory context</div>
+        <div class="g2">
+          <div class="card">
+            <div class="csub">Promoter &amp; open chromatin</div>
+            ${kv('Promoter (EPD)', reg.in_promoter ? `<span class="yes">✓ ${reg.promoter_id||''}</span>` : '<span class="no">—</span>')}
+            ${kv('ENCODE cCRE class', reg.ccre_class || '<span class="no">—</span>')}
+            ${reg.ccre_id ? kvMono('cCRE accession', reg.ccre_id) : ''}
+          </div>
+          <div class="card">
+            <div class="csub">Enhancers</div>
+            ${kv('Brain super enhancer', reg.in_brain_super_enhancer ? `<span class="yes">✓ ${reg.n_super_enhancer_tissues||''} brain samples</span>` : '<span class="no">—</span>')}
+            ${reg.SE_gene_ABC ? kv('SE linked gene (ABC)', reg.SE_gene_ABC) : ''}
+            ${kv('Brain typical enhancer', reg.in_brain_enhancer ? `<span class="yes">✓</span>` : '<span class="no">—</span>')}
+          </div>
+        </div>
+      </div>`);
+  }
+
+  // ⑥ BRAIN QTLs — FIX 4: show first 20, lazy load rest
+  sections.push(`
+    <div class="section">
+      <div class="st">Brain QTLs <span style="font-weight:400;font-size:9px;margin-left:6px;color:var(--text-3)">${n_qtl} hits total</span></div>
+      ${n_qtl === 0 ? '<div class="card" style="color:var(--text-3);font-size:12px">No brain QTL associations found for this locus</div>' : `
+      <div class="g2" id="qtl-panel">
+        <div class="card">
+          <div class="csub" id="qtl-left-title">Loading QTLs…</div>
+          <div id="qtl-left-content"><div class="qtl-loading">Fetching QTL data…</div></div>
+        </div>
+        <div class="card">
+          <div class="csub" id="qtl-right-title">GTEx v8 · brain regions</div>
+          <div id="qtl-right-content"><div class="qtl-loading">Fetching QTL data…</div></div>
+        </div>
+      </div>`}
+    </div>`);
+
+  // ⑦ GENE EXPRESSION
+  sections.push(`
+    <div class="section">
+      <div class="st">Gene expression — ${l.gene_name||'?'} · GTEx v8</div>
+      <div class="row" id="expr-panel">
+        <div class="anat">
+          <svg width="58" height="155" viewBox="0 0 58 155">
+            <ellipse cx="29" cy="12" rx="11" ry="12" fill="#EEEDFE" stroke="#5340C8" stroke-width="1.5"/>
+            <rect x="24" y="23" width="10" height="7" rx="2" fill="#EEEDFE" stroke="#5340C8" stroke-width="1"/>
+            <rect x="13" y="30" width="32" height="44" rx="5" fill="#EEEDFE" stroke="#5340C8" stroke-width="1.5"/>
+            <rect x="2" y="30" width="10" height="36" rx="4" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+            <rect x="46" y="30" width="10" height="36" rx="4" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+            <rect x="13" y="76" width="14" height="48" rx="4" fill="#EEEDFE" stroke="#5340C8" stroke-width="1.5"/>
+            <rect x="31" y="76" width="14" height="48" rx="4" fill="#EEEDFE" stroke="#5340C8" stroke-width="1.5"/>
+            <circle cx="29" cy="10" r="5" fill="#5340C8" opacity="0.8"/>
+          </svg>
+        </div>
+        <div style="flex:1" id="expr-bars">
+          <div class="qtl-loading">Loading expression data…</div>
+        </div>
+      </div>
+    </div>`);
+
+  // ⑧ PHEWAS
+  if(phewas?.length){
+    sections.push(`
+      <div class="section">
+        <div class="st">Phenotype associations (PheWAS)</div>
+        <div class="card">
+          ${phewas.map(p => `
+            <div class="kv">
+              <span class="kk">${p.trait||p.phenotype_code||'—'} <span style="font-size:10px;color:var(--text-3)">${p.source||''}</span></span>
+              <span style="display:flex;align-items:center;gap:6px">
+                <span class="kv-v" style="color:var(--purple)">${p.beta!=null?`β=${fmtF(p.beta)} · `:''}p=${fmtE(p.p_value)}</span>
+                ${p.replicated_AoU ? '<span class="badge b-teal" style="font-size:9px">✓ AoU</span>' : ''}
+              </span>
+            </div>`).join('')}
+        </div>
+      </div>`);
+  }
+
+  // ⑨ SC-ETR
+  if(sc_etr?.length){
+    sections.push(`
+      <div class="section">
+        <div class="st">Single-cell expression QTL (Tanudisastro 2025)</div>
+        <div class="card">
+          <div class="g3" style="margin-bottom:12px">
+            <div class="stat"><div class="sn accent">${sc_etr[0].cell_type||'—'}</div><div class="sl">cell type</div></div>
+            <div class="stat"><div class="sn">${fmtF(sc_etr[0].PIP)}</div><div class="sl">PIP (causal prob.)</div></div>
+            <div class="stat"><div class="sn ${sc_etr[0].coloc_mQTL?'good':''}" style="font-size:13px">${sc_etr[0].coloc_mQTL?'mQTL coloc':'No coloc'}</div><div class="sl">${sc_etr[0].coloc_mQTL?'colocalized':''}</div></div>
+          </div>
+          ${kv('β', fmtF(sc_etr[0].beta))}
+          ${kv('p nominal', fmtE(sc_etr[0].p_value))}
+          ${kv('FDR', fmtE(sc_etr[0].p_fdr))}
+          ${kv('Gene affected', sc_etr[0].gene_affected||'—')}
+          ${kv('Candidate causal (PIP ≥ 0.7)', sc_etr[0].candidate_causal ? '<span class="yes">✓</span>' : '<span class="no">—</span>')}
+        </div>
+      </div>`);
+  }
+
+  // ⑩ SOURCES
+  const srcs = (l.source_catalogs||'').split(',').filter(Boolean);
+  sections.push(`
+    <div class="section">
+      <div class="st">Sources</div>
+      <div class="card">
+        <div style="margin-bottom:10px">${srcs.map(s=>`<span class="sc">${s.trim()}</span>`).join('')||'—'}</div>
+        <div class="g4">
+          <div class="stat"><div class="sn">${l.n_sources||'—'}</div><div class="sl">catalogs</div></div>
+          <div class="stat"><div class="sn">${fmtF(l.aou_median,1)}</div><div class="sl">AoU median</div></div>
+          <div class="stat"><div class="sn">${fmtF(l.aou_stdev,1)}</div><div class="sl">AoU stdev</div></div>
+          <div class="stat"><div class="sn">${fmtF(l.aou_max,0)}</div><div class="sl">AoU max allele</div></div>
+        </div>
+      </div>
+    </div>`);
+
+  // render
+  document.getElementById('loading-msg').remove();
+  document.getElementById('page-content').innerHTML = sections.join('');
+
+  // FIX 4: lazy load QTLs and expression AFTER page renders
+  if(n_qtl > 0) loadQTLsLazy(l.tr_id);
+  if(l.gene_name)   loadExpressionLazy(l.gene_name);
+}
+
+// ── FIX 4: lazy QTL loading ───────────────────────────────────────────────────
+async function loadQTLsLazy(tr_id){
+  try {
+    const r = await fetch(`${API}/api/loci/${tr_id}/qtls?limit=100`);
+    const d = await r.json();
+    const qtls = d.qtls || [];
+
+    // group by cohort
+    const rosmap = qtls.filter(q => q.cohort === 'ROSMAP');
+    const gtex   = qtls.filter(q => q.cohort === 'GTEx_v8' && q.tissue.includes('Brain'));
+    const nygcals= qtls.filter(q => q.cohort === 'NYGCALS');
+    const others = qtls.filter(q => !['ROSMAP','GTEx_v8'].includes(q.cohort) && q.cohort !== 'NYGCALS');
+
+    const colors = {eQTL:'var(--purple)',sQTL:'var(--purple)',hQTL:'var(--purple)',mQTL:'var(--purple)',caQTL:'var(--purple)','3aQTL':'var(--purple)'};
+    const gtexColors = {'Brain_Cortex':'var(--blue)','Brain_Frontal_Cortex_Ba9':'var(--blue)','Brain_Hippocampus':'var(--blue)'};
+
+    const leftTitle = document.getElementById('qtl-left-title');
+    const leftContent = document.getElementById('qtl-left-content');
+    if(leftTitle && leftContent){
+      leftTitle.textContent = `ROSMAP · DLPFC${nygcals.length ? ' + NYGCALS' : ''}`;
+      leftContent.innerHTML = [
+        ...rosmap.slice(0,6).map(q => bar(`${q.tissue} · ${q.qtl_type}`, q.beta, q.p_value, 'var(--purple)')),
+        ...nygcals.slice(0,4).map(q => bar(`${q.tissue} · ${q.qtl_type}`, q.beta, q.p_value, 'var(--teal)')),
+        ...others.slice(0,2).map(q => bar(`${q.cohort} · ${q.qtl_type}`, q.beta, q.p_value, 'var(--coral)')),
+      ].join('') || '<div class="no" style="font-size:11px">No ROSMAP/NYGCALS hits</div>';
+    }
+
+    const rightContent = document.getElementById('qtl-right-content');
+    if(rightContent){
+      rightContent.innerHTML = gtex.slice(0,6).map(q =>
+        bar(q.tissue.replace('Brain_','').replace(/_/g,' '), q.beta, q.p_value, 'var(--blue)')
+      ).join('') + (gtex.length > 6 ? `<div class="note">+ ${gtex.length-6} more brain regions</div>` : '') ||
+      '<div class="no" style="font-size:11px">No GTEx brain hits</div>';
+    }
+  } catch(e) {
+    const el = document.getElementById('qtl-left-content');
+    if(el) el.innerHTML = `<div style="color:var(--text-3);font-size:11px">Could not load QTL data</div>`;
+  }
+}
+
+// ── FIX 4: lazy expression loading ───────────────────────────────────────────
+async function loadExpressionLazy(gene){
+  try {
+    const r = await fetch(`${API}/api/expression/${gene}`);
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    const brain = d.brain || [];
+    const body  = (d.top_body || []).slice(0, 6);
+    const maxTpm = Math.max(...brain.map(t=>t.median_tpm), ...body.map(t=>t.median_tpm), 1);
+
+    const exprBars = document.getElementById('expr-bars');
+    if(!exprBars) return;
+
+    const barsHtml = [
+      ...brain.slice(0,6).map(t => `
+        <div class="er">
+          <span class="el">${t.tissue_name}</span>
+          <div class="et"><div class="ef" style="width:${Math.round(t.median_tpm/maxTpm*100)}%;background:var(--purple)"></div></div>
+          <span class="ev">${t.median_tpm.toFixed(1)}</span>
+        </div>`),
+      brain.length > 0 && body.length > 0 ? '<div class="sep"></div>' : '',
+      ...body.map(t => `
+        <div class="er">
+          <span class="el">${t.tissue_name}</span>
+          <div class="et"><div class="ef" style="width:${Math.round(t.median_tpm/maxTpm*100)}%;background:var(--teal)"></div></div>
+          <span class="ev">${t.median_tpm.toFixed(1)}</span>
+        </div>`),
+    ].join('');
+
+    exprBars.innerHTML = `
       <div style="font-size:10px;font-weight:500;color:var(--text-3);margin-bottom:7px">median TPM · purple = brain · green = other tissues · source: GTEx v8</div>
-      <div class="er"><span class="el">Brain Cortex</span><div class="et"><div class="ef" style="width:96%;background:var(--purple)"></div></div><span class="ev">42.1</span></div>
-      <div class="er"><span class="el">Frontal Cortex BA9</span><div class="et"><div class="ef" style="width:92%;background:var(--purple)"></div></div><span class="ev">40.8</span></div>
-      <div class="er"><span class="el">Hippocampus</span><div class="et"><div class="ef" style="width:87%;background:var(--purple)"></div></div><span class="ev">38.2</span></div>
-      <div class="er"><span class="el">Caudate basal ganglia</span><div class="et"><div class="ef" style="width:82%;background:var(--purple)"></div></div><span class="ev">35.7</span></div>
-      <div class="er"><span class="el">Cerebellum</span><div class="et"><div class="ef" style="width:77%;background:var(--purple)"></div></div><span class="ev">33.1</span></div>
-      <div class="er"><span class="el">Amygdala</span><div class="et"><div class="ef" style="width:73%;background:var(--purple)"></div></div><span class="ev">30.8</span></div>
-      <div class="sep"></div>
-      <div class="er"><span class="el">Liver</span><div class="et"><div class="ef" style="width:52%;background:var(--teal)"></div></div><span class="ev">21.4</span></div>
-      <div class="er"><span class="el">Whole Blood</span><div class="et"><div class="ef" style="width:45%;background:var(--teal)"></div></div><span class="ev">18.9</span></div>
-      <div class="er"><span class="el">Heart</span><div class="et"><div class="ef" style="width:37%;background:#888780"></div></div><span class="ev">15.2</span></div>
-      <div class="er"><span class="el">Muscle Skeletal</span><div class="et"><div class="ef" style="width:29%;background:#888780"></div></div><span class="ev">11.8</span></div>
-    </div>
-  </div>
-</div>
+      ${barsHtml}`;
+  } catch(e) {
+    const el = document.getElementById('expr-bars');
+    if(el) el.innerHTML = `<div style="color:var(--text-3);font-size:11px">Expression data unavailable for this gene</div>`;
+  }
+}
 
-<!-- ⑧ PHENOTYPE ASSOCIATIONS -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 14V8M8 14V4M12 14v-6"/></svg>
-    Phenotype associations (PheWAS)
-  </div>
-  <div class="card">
-    <div class="csub">Manigbas 2024 · 168,554 UK Biobank individuals</div>
-    <div class="kv">
-      <span class="kk">Cerebellar ataxia</span>
-      <span style="display:flex;align-items:center;gap:6px">
-        <span class="kv-v" style="color:var(--purple)">β = 1.82 · p = 3.1e-14</span>
-        <span class="badge b-teal" style="font-size:9px">✓ AoU replicated</span>
-      </span>
-    </div>
-    <div class="kv"><span class="kk">Cognitive function</span><span class="kv-v" style="color:var(--purple)">β = −0.44 · p = 6.7e-09</span></div>
-    <div class="kv"><span class="kk">BMI</span><span class="kv-v">β = 0.12 · p = 0.032</span></div>
-    <div class="sep"></div>
-    <div class="csub">Mukamel 2021 · 415,280 UK Biobank</div>
-    <div class="kv"><span class="kk">Height</span><span class="kv-v">β = 0.09 · p = 0.041</span></div>
-  </div>
-</div>
+// ── Main: get tr_id from URL and load ─────────────────────────────────────────
+async function init(){
+  const params = new URLSearchParams(window.location.search);
+  const trId   = params.get('id');
 
-<!-- ⑨ SINGLE-CELL EXPRESSION -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 2v2M8 12v2M2 8h2M12 8h2"/></svg>
-    Single-cell expression QTL (Tanudisastro 2025)
-  </div>
-  <div class="card">
-    <div class="g3" style="margin-bottom:12px">
-      <div class="stat"><div class="sn accent">ExN</div><div class="sl">excitatory neuron</div></div>
-      <div class="stat"><div class="sn">0.83</div><div class="sl">PIP (causal prob.)</div></div>
-      <div class="stat"><div class="sn good" style="font-size:13px">mQTL coloc</div><div class="sl">PP H4 = 0.87</div></div>
-    </div>
-    <div class="kv"><span class="kk">β</span><span class="kv-v">0.41</span></div>
-    <div class="kv"><span class="kk">p nominal</span><span class="kv-v">1.2e-08</span></div>
-    <div class="kv"><span class="kk">FDR</span><span class="kv-v">0.003</span></div>
-    <div class="kv"><span class="kk">Gene affected</span><span class="kv-v">HTT</span></div>
-    <div class="kv"><span class="kk">Candidate causal (PIP ≥ 0.7)</span><span class="yes">✓</span></div>
-  </div>
-</div>
+  if(!trId){
+    document.getElementById('page-content').innerHTML =
+      '<div class="error-msg">No locus ID specified. <a href="/" style="color:var(--purple)">Go to browse</a></div>';
+    return;
+  }
 
-<!-- ⑩ SOURCES -->
-<div class="section">
-  <div class="st">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="8" cy="5" rx="6" ry="2"/><path d="M2 5v6c0 1.1 2.7 2 6 2s6-.9 6-2V5"/><path d="M2 8c0 1.1 2.7 2 6 2s6-.9 6-2"/></svg>
-    Sources
-  </div>
-  <div class="card">
-    <div style="margin-bottom:10px">
-      <span class="sc">KnownDiseaseAssociatedLoci V1</span>
-      <span class="sc">KnownDiseaseAssociatedLociV2</span>
-      <span class="sc">Illumina174kPolymorphicTRs</span>
-      <span class="sc">Garg2021</span>
-    </div>
-    <div class="g4">
-      <div class="stat"><div class="sn">4</div><div class="sl">catalogs</div></div>
-      <div class="stat"><div class="sn">18.2</div><div class="sl">AoU median</div></div>
-      <div class="stat"><div class="sn">2.1</div><div class="sl">AoU stdev</div></div>
-      <div class="stat"><div class="sn">35</div><div class="sl">AoU max allele</div></div>
-    </div>
-  </div>
-</div>
+  try {
+    const r = await fetch(`${API}/api/loci/${trId}`);
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    renderPage(data);
+  } catch(e) {
+    document.getElementById('page-content').innerHTML =
+      `<div class="error-msg">Error loading locus: ${e.message}</div>`;
+  }
+}
 
-</div>
+init();
+</script>
 </body>
 </html>
