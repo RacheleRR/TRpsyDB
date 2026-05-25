@@ -40,14 +40,14 @@ def _serve(filename: str):
     return JSONResponse({"error": f"{filename} not found"}, status_code=404)
 
 # ── Routes ────────────────────────────────────────────────────
-@app.get("/",       include_in_schema=False)
-async def serve_browse():   return _serve("browse.html")
+@app.get("/",        include_in_schema=False)
+async def serve_home():    return _serve("index.html")   # original search homepage
 
-@app.get("/browse", include_in_schema=False)
-async def serve_browse2():  return _serve("browse.html")
+@app.get("/browse",  include_in_schema=False)
+async def serve_browse():  return _serve("browse.html")  # new table-first browse
 
-@app.get("/locus",  include_in_schema=False)
-async def serve_locus():    return _serve("locus.html")
+@app.get("/locus",   include_in_schema=False)
+async def serve_locus():   return _serve("locus.html")   # locus detail page
 
 # serve any other frontend file
 @app.get("/{filename}.html", include_in_schema=False)
