@@ -5,96 +5,143 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TRpsyDB — Locus Detail</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F7F6F2;--surface:#FFFFFF;--border:#E2E0D8;--text:#1A1917;--text-2:#6B6860;--text-3:#9E9B94;--purple:#5340C8;--purple-l:#EAE7FC;--purple-t:#3C3489;--teal:#0F6E56;--teal-l:#E1F5EE;--coral:#C04020;--coral-l:#FAECE7;--amber:#A05010;--amber-l:#FEF0DA;--blue:#1860A8;--blue-l:#E6F1FB;--gray-l:#F1EFE8;--mono:'IBM Plex Mono',monospace;--sans:'Syne',sans-serif;--body:'Inter',sans-serif;--r:6px;--rl:10px}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
-nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;height:48px;gap:24px}
-.nav-logo{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--purple);cursor:pointer}
-.nav-link{font-size:13px;color:var(--text-2);text-decoration:none}
-.nav-back{margin-left:auto;font-size:12px;color:var(--purple);cursor:pointer;display:flex;align-items:center;gap:4px}
-.sh{position:sticky;top:48px;z-index:90;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:14px}
-.ring{width:48px;height:48px;border-radius:50%;border:2.5px solid var(--purple);background:var(--purple-l);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
-.ring-n{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--purple-t);line-height:1}
-.ring-l{font-size:8px;color:var(--purple);line-height:1;margin-top:1px}
-.sh-title{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text)}
-.sh-coord{font-family:var(--mono);font-size:11px;color:var(--text-2);margin-top:2px}
-.badges{margin-top:4px;display:flex;flex-wrap:wrap;gap:3px}
-.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:3px;font-weight:500}
-.b-purple{background:var(--purple-l);color:var(--purple-t)}.b-teal{background:var(--teal-l);color:var(--teal)}
-.b-coral{background:var(--coral-l);color:var(--coral)}.b-amber{background:var(--amber-l);color:var(--amber)}
-.b-blue{background:var(--blue-l);color:var(--blue)}.b-gray{background:var(--gray-l);color:#444}
+body{font-family:'DM Sans',system-ui,sans-serif;font-size:14px;background:#f5f3ef;color:#0e2340;min-height:100vh}
+
+/* ── NAV ── */
+.hdr{position:sticky;top:0;z-index:100;background:#0e2340;border-bottom:2px solid #2563a8;height:50px;display:flex;align-items:center;padding:0 24px;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px;cursor:pointer}
+.logo-mark{width:26px;height:26px;background:#2563a8;border-radius:5px;display:flex;align-items:center;justify-content:center}
+.logo-text{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:#f5f3ef;letter-spacing:0.02em}
+.logo-text em{color:#7ab8f5;font-style:normal}
+.nav{display:flex;gap:2px}
+.nav-btn{background:transparent;border:none;color:rgba(245,243,239,0.5);font-size:12px;padding:6px 12px;border-radius:4px;cursor:pointer;font-family:'DM Sans',system-ui;transition:all 0.15s;text-decoration:none}
+.nav-btn:hover{background:rgba(255,255,255,0.08);color:#f5f3ef}
+.nav-back{color:rgba(245,243,239,0.6);font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:4px;background:none;border:none}
+.nav-back:hover{color:#7ab8f5}
+
+/* ── STATS STRIP ── */
+.strip{background:#0b1d33;padding:3px 24px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,243,239,0.3);letter-spacing:0.04em;border-bottom:1px solid rgba(255,255,255,0.05)}
+
+/* ── STICKY SUBHEADER ── */
+.sh{position:sticky;top:52px;z-index:90;background:#fff;border-bottom:1px solid #ddd9d2;padding:10px 24px;display:flex;align-items:center;gap:14px}
+.score-ring{width:46px;height:46px;border-radius:50%;border:2.5px solid #2563a8;background:#edf2fb;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.ring-n{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:#1a4a8a;line-height:1}
+.ring-l{font-size:8px;color:#2563a8;line-height:1;margin-top:1px}
+.sh-gene{font-size:18px;font-weight:500;color:#0e2340;letter-spacing:-0.01em}
+.sh-coord{font-family:'DM Mono',monospace;font-size:10px;color:#7a7468;margin-top:2px}
+.sh-badges{margin-top:3px;display:flex;flex-wrap:wrap;gap:3px}
+.badge{display:inline-block;font-size:9px;padding:2px 7px;border-radius:100px;font-weight:500;white-space:nowrap}
+.b-mendelian{background:#edf2fb;color:#1a4a8a;border:0.5px solid #bdd3f5}
+.b-qtl{background:#e8f5ee;color:#1a6b3c;border:0.5px solid #a8d5bc}
+.b-promoter{background:#fdf2f0;color:#993c1d;border:0.5px solid #f5c4b3}
+.b-se{background:#fef5e7;color:#7a4f1a;border:0.5px solid #f5d5a0}
+.b-evntr{background:#edf2fb;color:#1a4a8a;border:0.5px solid #bdd3f5}
 .sh-stats{margin-left:auto;display:flex;gap:20px}
 .sh-stat{text-align:center}
-.sh-n{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);line-height:1}
-.sh-l{font-size:9px;color:var(--text-3);margin-top:2px}
+.sh-n{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:#0e2340;line-height:1}
+.sh-l{font-size:9px;color:#7a7468;margin-top:2px;letter-spacing:0.04em;text-transform:uppercase}
+
+/* ── PAGE ── */
 .page{max-width:900px;margin:0 auto;padding:24px}
-.section{margin-bottom:20px;opacity:0;transform:translateY(10px);animation:fu .4s ease forwards}
+.section{margin-bottom:18px;opacity:0;transform:translateY(8px);animation:fu .35s ease forwards}
 @keyframes fu{to{opacity:1;transform:translateY(0)}}
 .section:nth-child(1){animation-delay:.04s}.section:nth-child(2){animation-delay:.08s}
 .section:nth-child(3){animation-delay:.12s}.section:nth-child(4){animation-delay:.16s}
 .section:nth-child(5){animation-delay:.20s}.section:nth-child(6){animation-delay:.24s}
 .section:nth-child(7){animation-delay:.28s}.section:nth-child(8){animation-delay:.32s}
 .section:nth-child(9){animation-delay:.36s}.section:nth-child(10){animation-delay:.40s}
-.st{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;display:flex;align-items:center;gap:7px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px}
-.csub{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+.sec-title{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#7a7468;margin-bottom:10px;padding-bottom:6px;border-bottom:0.5px solid #ddd9d2}
+.card{background:#fff;border:0.5px solid #ddd9d2;padding:14px}
+.csub{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#b0a99e;margin-bottom:10px;padding-bottom:7px;border-bottom:0.5px solid #f0ede8;font-weight:500;font-family:'DM Mono',monospace}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.row{display:flex;gap:10px}
-.kv{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
+.kv{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f5f3ef;font-size:12px}
 .kv:last-child{border-bottom:none}
-.kk{color:var(--text-2)}.kv-v{color:var(--text);font-weight:500}
-.mono{font-family:var(--mono);font-size:10px}
-.stat{background:var(--bg);border-radius:var(--r);padding:10px 12px;text-align:center}
-.sn{font-family:var(--sans);font-size:18px;font-weight:600;color:var(--text);line-height:1}
-.sn.accent{color:var(--purple)}.sn.danger{color:var(--coral)}.sn.good{color:var(--teal)}
-.sl{font-size:10px;color:var(--text-3);margin-top:3px}
-.sep{border-top:1px solid var(--border);margin:10px 0}
+.kk{color:#7a7468}.kval{font-family:'DM Mono',monospace;font-weight:500;color:#0e2340;font-size:11px}
+.stat-box{background:#f5f3ef;border:0.5px solid #ddd9d2;padding:10px 12px;text-align:center}
+.stat-n{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:#0e2340;line-height:1}
+.stat-n.accent{color:#2563a8}.stat-n.danger{color:#993c1d}.stat-n.good{color:#1a6b3c}
+.stat-l{font-size:9px;color:#7a7468;margin-top:3px;letter-spacing:0.06em;text-transform:uppercase}
+.sep{border-top:0.5px solid #ddd9d2;margin:10px 0}
 .bw{margin-bottom:6px}
-.bl{display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);margin-bottom:3px;align-items:center}
-.bt{height:4px;background:var(--bg);border-radius:2px;overflow:hidden}
+.bl{display:flex;justify-content:space-between;font-size:10px;color:#7a7468;margin-bottom:3px;align-items:center}
+.bt{height:3px;background:#f0ede8;border-radius:2px;overflow:hidden}
 .bf{height:100%;border-radius:2px}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
-.flag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:3px;margin-right:4px;font-weight:500}
-.fon{background:var(--teal-l);color:var(--teal);border:1px solid rgba(15,110,86,.2)}
-.foff{background:var(--gray-l);color:var(--text-3);border:1px solid var(--border)}
-.tier{display:inline-block;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:5px;font-weight:500}
-.t2{background:var(--purple-l);color:var(--purple-t)}.t3{background:var(--amber-l);color:var(--amber)}
-.yes{color:var(--teal);font-weight:500}.no{color:var(--text-3)}
-.note{font-size:10px;color:var(--text-3);margin-top:8px;font-style:italic}
-.er{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.el{font-size:10px;color:var(--text-2);width:150px;flex-shrink:0;text-align:right}
-.et{flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden}
-.ef{height:100%;border-radius:3px}
-.ev{font-size:10px;color:var(--text-3);width:32px;text-align:right;font-family:var(--mono)}
-.sc{display:inline-block;font-size:10px;padding:2px 8px;border-radius:3px;border:1px solid var(--border);color:var(--text-2);margin:2px 3px 2px 0;font-family:var(--mono)}
-.anat{background:var(--bg);border-radius:var(--r);width:80px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:8px 0}
-.loading-msg{text-align:center;padding:48px;color:var(--text-3);font-size:13px}
-.error-msg{text-align:center;padding:48px;color:var(--coral);font-size:13px}
-.qtl-loading{color:var(--text-3);font-size:11px;font-style:italic;margin-top:4px}
+.flag-pill{display:inline-block;font-size:9px;padding:2px 8px;border-radius:100px;margin:2px 3px 2px 0;font-weight:500}
+.fp-on{background:#e8f5ee;color:#1a6b3c;border:0.5px solid #a8d5bc}
+.fp-off{background:#f1eeea;color:#7a7468;border:0.5px solid #ddd9d2}
+.yes{color:#1a6b3c;font-weight:500}.no{color:#b0a99e}
+.note{font-size:10px;color:#b0a99e;margin-top:8px;font-style:italic}
+.er{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.el{font-size:10px;color:#7a7468;width:160px;flex-shrink:0;text-align:right}
+.et{flex:1;height:4px;background:#f0ede8;border-radius:2px;overflow:hidden}
+.ef{height:100%;border-radius:2px}
+.ev{font-size:10px;color:#7a7468;width:36px;text-align:right;font-family:'DM Mono',monospace}
+.sc{display:inline-block;font-size:9px;padding:2px 8px;border-radius:3px;border:0.5px solid #ddd9d2;color:#7a7468;margin:2px 3px 2px 0;font-family:'DM Mono',monospace;background:#f5f3ef}
+.tier-pill{display:inline-block;font-size:9px;padding:1px 7px;border-radius:100px;margin-left:5px;font-weight:500}
+.t1{background:#e8f5ee;color:#1a6b3c;border:0.5px solid #a8d5bc}
+.t2{background:#edf2fb;color:#1a4a8a;border:0.5px solid #bdd3f5}
+.t3{background:#fef5e7;color:#7a4f1a;border:0.5px solid #f5d5a0}
+.loading-msg{text-align:center;padding:48px;color:#b0a99e;font-size:12px;font-family:'DM Mono',monospace}
+.error-msg{text-align:center;padding:48px;color:#993c1d;font-size:13px}
+.lazy-loading{color:#b0a99e;font-size:10px;font-style:italic;font-family:'DM Mono',monospace;margin-top:4px}
+
+/* ── EXPRESSION ATLAS ── */
+.atlas-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.atlas-panel{background:#fff;border:0.5px solid #ddd9d2;padding:12px}
+.atlas-ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.atlas-pt{font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#7a7468;font-family:'DM Mono',monospace}
+.atlas-ps{font-size:9px;color:#b0a99e;font-family:'DM Mono',monospace}
+.svg-wrap{display:flex;justify-content:center;min-height:180px;align-items:center}
+.svg-wrap svg{max-width:100%;height:auto}
+.leg-bar{height:6px;background:linear-gradient(to right,#f5f0eb,#dce8f8,#9fc8ee,#2563a8,#0e2340);border-radius:1px;margin:6px 0 3px}
+.leg-lbl{display:flex;justify-content:space-between;font-size:8px;color:#b0a99e;font-family:'DM Mono',monospace}
+.tlist{margin-top:8px;padding-top:6px;border-top:0.5px solid #f0ede8;display:grid;gap:3px}
+.trow{display:flex;align-items:center;gap:5px;font-size:10px}
+.tdot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.tname{color:#0e2340;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px}
+.tbw{flex:0 0 44px;height:3px;background:#f0ede8}
+.tbf{height:100%}
+.tval{font-family:'DM Mono',monospace;color:#7a7468;font-size:9px;min-width:36px;text-align:right}
+.anat-tooltip{position:fixed;background:#0e2340;color:#f5f3ef;padding:4px 8px;border-radius:3px;font-size:10px;font-family:'DM Mono',monospace;pointer-events:none;z-index:9999;display:none;white-space:nowrap}
 </style>
 </head>
 <body>
 
-<nav>
-  <span class="nav-logo" onclick="location.href='/'">TRpsyDB</span>
-  <a class="nav-link" href="/">Browse</a>
-  <span class="nav-back" onclick="history.back()">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M10 12L6 8l4-4"/></svg>
-    back
-  </span>
-</nav>
+<div class="anat-tooltip" id="anat-tt"></div>
 
-<!-- sticky header — populated after load -->
+<header class="hdr">
+  <div class="logo" onclick="location.href='/'">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" fill="none" width="14" height="14">
+        <rect x="2" y="4" width="3" height="10" rx="1" fill="#7ab8f5"/>
+        <rect x="7" y="2" width="3" height="14" rx="1" fill="#f5f3ef"/>
+        <rect x="12" y="6" width="3" height="6" rx="1" fill="#7ab8f5"/>
+      </svg>
+    </div>
+    <div class="logo-text">TR<em>psy</em>DB</div>
+  </div>
+  <nav class="nav">
+    <a href="/" class="nav-btn">Search</a>
+    <a href="/browse" class="nav-btn">Browse</a>
+  </nav>
+  <button class="nav-back" onclick="history.back()">← back to results</button>
+</header>
+
+<div class="strip" id="stats-strip">TRpsyDB · Neuropsychiatric Tandem Repeat Database</div>
+
 <div class="sh" id="sticky-header" style="display:none">
-  <div class="ring"><span class="ring-n" id="sh-score">—</span><span class="ring-l">RExPRT</span></div>
+  <div class="score-ring"><span class="ring-n" id="sh-score">—</span><span class="ring-l">RExPRT</span></div>
   <div>
-    <div class="sh-title" id="sh-title">Loading…</div>
+    <div class="sh-gene" id="sh-title">Loading…</div>
     <div class="sh-coord" id="sh-coord"></div>
-    <div class="badges" id="sh-badges"></div>
+    <div class="sh-badges" id="sh-badges"></div>
   </div>
   <div class="sh-stats">
     <div class="sh-stat"><div class="sh-n" id="sh-pli">—</div><div class="sh-l">pLi</div></div>
@@ -110,359 +157,466 @@ nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1p
 
 <script>
 const API = '';
+const EBI = 'https://unpkg.com/@ebi-gene-expression-group/organ-anatomogram@1.2.0/lib/svg/';
+const ttEl = document.getElementById('anat-tt');
 
 // ── helpers ───────────────────────────────────────────────────────────────────
-const fmt = v => v != null ? v : '—';
-const fmtF = (v, d=2) => v != null ? (+v).toFixed(d) : '—';
+const fmt  = v => v != null ? v : '—';
+const fmtF = (v,d=2) => v != null ? (+v).toFixed(d) : '—';
 const fmtE = v => v != null ? (+v).toExponential(2) : '—';
-const yn = v => v ? '<span class="yes">✓</span>' : '<span class="no">—</span>';
+function kv(k,v){ return `<div class="kv"><span class="kk">${k}</span><span class="kval">${v??'—'}</span></div>`; }
+function kvMono(k,v){ return `<div class="kv"><span class="kk">${k}</span><span class="kval" style="font-family:'DM Mono',monospace">${v??'—'}</span></div>`; }
 
-function kv(k, v){ return `<div class="kv"><span class="kk">${k}</span><span class="kv-v">${v}</span></div>`; }
-function kvMono(k, v){ return `<div class="kv"><span class="kk">${k}</span><span class="kv-v mono">${v}</span></div>`; }
 function bar(label, val, p, color){
-  return `<div class="bw"><div class="bl"><span><span class="dot" style="background:${color}"></span>${label}</span><span>β=${fmtF(val)} · p=${fmtE(p)}</span></div><div class="bt"><div class="bf" style="width:${Math.min((-Math.log10((p||1)+1e-300))/15*100,100)}%;background:${color}"></div></div></div>`;
+  const pct = p!=null ? Math.min((-Math.log10(p+1e-300))/15*100, 100) : 0;
+  return `<div class="bw"><div class="bl"><span><span class="dot" style="background:${color}"></span>${label}</span><span>β=${fmtF(val)} · p=${fmtE(p)}</span></div><div class="bt"><div class="bf" style="width:${pct}%;background:${color}"></div></div></div>`;
 }
 
-// ── badges ────────────────────────────────────────────────────────────────────
-function buildBadges(locus, established, regulatory, n_qtl){
-  const out = [];
-  if(established?.length) out.push(`<span class="badge b-purple">Mendelian — ${established[0].disease_name||'established'}</span>`);
-  if(n_qtl > 0)           out.push(`<span class="badge b-teal">brain QTL</span>`);
-  if(regulatory?.in_promoter)             out.push(`<span class="badge b-coral">promoter</span>`);
-  if(regulatory?.in_brain_super_enhancer) out.push(`<span class="badge b-amber">brain SE</span>`);
-  if(locus.has_eVNTR)     out.push(`<span class="badge b-blue">eVNTR</span>`);
-  return out.join('');
+// ── EBI anatomogram ───────────────────────────────────────────────────────────
+const UBERON_BODY = {
+  'UBERON_0000955':'Brain_Cortex','UBERON_0002048':'Lung',
+  'UBERON_0002084':'Heart_Left_Ventricle','UBERON_0002107':'Liver',
+  'UBERON_0001134':'Muscle_Skeletal','UBERON_0002046':'Thyroid',
+  'UBERON_0000178':'Whole_Blood','UBERON_0001264':'Pancreas',
+  'UBERON_0002369':'Adrenal_Gland','UBERON_0000007':'Pituitary',
+  'UBERON_0001321':'Nerve_Tibial','UBERON_0000310':'Breast_Mammary_Tissue',
+  'UBERON_0002367':'Prostate','UBERON_0001043':'Esophagus_Mucosa',
+  'UBERON_0002190':'Adipose_Subcutaneous','UBERON_0000473':'Testis',
+  'UBERON_0001159':'Colon_Sigmoid','UBERON_0002113':'Kidney_Cortex',
+  'UBERON_0002106':'Spleen','UBERON_0000945':'Stomach',
+};
+const UBERON_BRAIN = {
+  'UBERON_0000956':'Brain_Cortex','UBERON_0001870':'Brain_Frontal_Cortex_Ba9',
+  'UBERON_0001954':'Brain_Hippocampus','UBERON_0001876':'Brain_Amygdala',
+  'UBERON_0001873':'Brain_Caudate_basal_ganglia','UBERON_0001874':'Brain_Putamen_basal_ganglia',
+  'UBERON_0001882':'Brain_Nucleus_accumbens_basal_ganglia','UBERON_0001898':'Brain_Hypothalamus',
+  'UBERON_0002037':'Brain_Cerebellum','UBERON_0002245':'Brain_Cerebellar_Hemisphere',
+  'UBERON_0001871':'Brain_Anterior_cingulate_cortex_Ba24',
+  'UBERON_0002240':'Brain_Spinal_cord_cervical_c_1','UBERON_0002038':'Brain_Substantia_nigra',
+  'UBERON_0001875':'Brain_Caudate_basal_ganglia','UBERON_0001897':'Brain_Substantia_nigra',
+};
+
+function tpmColor(v,mx){
+  const t=Math.min(v/mx,1);
+  if(t<0.05)return'#f5f0eb';if(t<0.15)return'#dce8f8';
+  if(t<0.3)return'#9fc8ee'; if(t<0.5)return'#5ba0d4';
+  if(t<0.7)return'#2563a8'; if(t<0.85)return'#1a4a8a';
+  return'#0e2340';
 }
 
-// ── render full page ──────────────────────────────────────────────────────────
+async function loadEBISvg(filename, wrapperId){
+  try {
+    const r = await fetch(EBI + filename);
+    if(!r.ok) throw new Error(`SVG fetch failed: ${r.status}`);
+    const txt = await r.text();
+    const doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+    const svg = doc.querySelector('svg');
+    if(!svg) throw new Error('No SVG element found');
+    svg.style.width='100%'; svg.style.height='auto'; svg.style.maxHeight='220px';
+    const wrap = document.getElementById(wrapperId);
+    if(!wrap) throw new Error(`Wrapper #${wrapperId} not found`);
+    wrap.innerHTML=''; wrap.appendChild(svg);
+    return svg;
+  } catch(e) {
+    console.warn('EBI SVG load failed:', e.message);
+    const wrap = document.getElementById(wrapperId);
+    if(wrap) wrap.innerHTML = `<div style="color:#b0a99e;font-size:10px;font-family:'DM Mono',monospace;text-align:center">Anatomogram unavailable</div>`;
+    return null;
+  }
+}
+
+function resetSvg(svg){
+  if(!svg) return;
+  svg.querySelectorAll('path,ellipse,circle,polygon,rect').forEach(s=>{
+    s.style.fill='#e8e4de'; s.style.stroke='#d0ccc6'; s.style.strokeWidth='0.3';
+  });
+}
+
+function colourOrgan(svg, uberonId, color, label, tpm){
+  const el = svg.getElementById(uberonId);
+  if(!el) return;
+  const shapes = el.tagName==='g' ? el.querySelectorAll('path,ellipse,circle,polygon,rect') : [el];
+  shapes.forEach(s=>{
+    s.style.fill=color;
+    s.style.stroke=color==='#f5f0eb'?'#d8d4ce':'rgba(255,255,255,0.2)';
+    s.style.strokeWidth='0.3'; s.style.cursor='pointer'; s.style.transition='fill 0.3s';
+  });
+  el.addEventListener('mouseenter', e=>{
+    ttEl.style.display='block';
+    ttEl.textContent=`${label}: ${tpm.toFixed(1)} TPM`;
+    ttEl.style.left=(e.clientX+12)+'px'; ttEl.style.top=(e.clientY-28)+'px';
+  });
+  el.addEventListener('mousemove', e=>{
+    ttEl.style.left=(e.clientX+12)+'px'; ttEl.style.top=(e.clientY-28)+'px';
+  });
+  el.addEventListener('mouseleave', ()=>{ ttEl.style.display='none'; });
+}
+
+// ── Render page ───────────────────────────────────────────────────────────────
 function renderPage(data){
-  const { locus: l, established, clinvar, rexprt: rx, regulatory: reg,
-          psychiatric, gene_evidence, phewas, sc_etr, qtls, n_qtl } = data;
+  const {locus:l, established, clinvar, rexprt:rx, regulatory:reg,
+         psychiatric, gene_evidence, phewas, sc_etr, qtls, n_qtl} = data;
 
   // sticky header
-  document.getElementById('sh-score').textContent  = rx?.ensembleScore != null ? (+rx.ensembleScore).toFixed(2) : '—';
+  document.getElementById('sh-score').textContent  = rx?.ensembleScore!=null ? (+rx.ensembleScore).toFixed(2) : '—';
   document.getElementById('sh-title').textContent  = l.gene_name || l.tr_id;
   document.getElementById('sh-coord').textContent  = `${l.chr}:${(l.start||0).toLocaleString()}–${(l.end||0).toLocaleString()} · ${l.canonical_motif||'?'} · ${l.gene_region||'?'}`;
-  document.getElementById('sh-badges').innerHTML   = buildBadges(l, established, reg, n_qtl);
-  document.getElementById('sh-pli').textContent    = rx?.pLi != null ? (+rx.pLi).toFixed(3) : '—';
-  document.getElementById('sh-loeuf').textContent  = rx?.loeuf != null ? (+rx.loeuf).toFixed(2) : '—';
-  document.getElementById('sh-nsrc').textContent   = l.n_sources || '—';
-  document.getElementById('sh-nqtl').textContent   = n_qtl || 0;
+  const badges = [
+    established?.length ? `<span class="badge b-mendelian">Mendelian — ${established[0].disease_name||'established'}</span>` : '',
+    n_qtl > 0           ? `<span class="badge b-qtl">brain QTL</span>`      : '',
+    reg?.in_promoter    ? `<span class="badge b-promoter">promoter</span>`  : '',
+    reg?.in_brain_super_enhancer ? `<span class="badge b-se">brain SE</span>` : '',
+    l.has_eVNTR         ? `<span class="badge b-evntr">eVNTR</span>`        : '',
+  ].join('');
+  document.getElementById('sh-badges').innerHTML  = badges;
+  document.getElementById('sh-pli').textContent   = rx?.pLi!=null ? (+rx.pLi).toFixed(3) : '—';
+  document.getElementById('sh-loeuf').textContent = rx?.loeuf!=null ? (+rx.loeuf).toFixed(2) : '—';
+  document.getElementById('sh-nsrc').textContent  = l.n_sources || '—';
+  document.getElementById('sh-nqtl').textContent  = n_qtl || 0;
   document.getElementById('sticky-header').style.display = 'flex';
 
-  const sections = [];
+  const S = [];
 
-  // ① DISEASE (only if established)
+  // ① DISEASE
   if(established?.length){
     const e = established[0];
-    sections.push(`
-      <div class="section">
-        <div class="st">Disease / clinical</div>
-        <div class="card">
-          <div class="csub">${e.disease_name||'Established disease locus'} · ${e.gene_name||l.gene_name||''}</div>
-          <div class="g4" style="margin-bottom:12px">
-            <div class="stat"><div class="sn">${e.normal_min != null ? `${e.normal_min}–${e.normal_max}` : '—'}</div><div class="sl">normal (repeats)</div></div>
-            <div class="stat"><div class="sn">${e.premut_min != null ? `${e.premut_min}–${e.premut_max}` : '—'}</div><div class="sl">intermediate</div></div>
-            <div class="stat"><div class="sn danger">${e.pathogenic_min != null ? `≥ ${e.pathogenic_min}` : '—'}</div><div class="sl">pathogenic</div></div>
-            <div class="stat"><div class="sn">${e.inheritance||'—'}</div><div class="sl">inheritance</div></div>
-          </div>
-          ${kv('Evidence tier','1 — established Mendelian disease locus')}
-          ${kv('Repeat unit', e.repeat_unit || l.canonical_motif || '—')}
-          ${e.pmid ? kv('PMID', `<span class="mono" style="color:var(--purple)">${e.pmid}</span>`) : ''}
+    S.push(`<div class="section">
+      <div class="sec-title">Disease / clinical</div>
+      <div class="card">
+        <div class="csub">${e.disease_name||'Established disease locus'} · ${e.gene_name||l.gene_name||''}</div>
+        <div class="g4" style="margin-bottom:12px">
+          <div class="stat-box"><div class="stat-n">${e.normal_min!=null?`${e.normal_min}–${e.normal_max}`:'—'}</div><div class="stat-l">normal</div></div>
+          <div class="stat-box"><div class="stat-n">${e.premut_min!=null?`${e.premut_min}–${e.premut_max}`:'—'}</div><div class="stat-l">intermediate</div></div>
+          <div class="stat-box"><div class="stat-n danger">${e.pathogenic_min!=null?`≥ ${e.pathogenic_min}`:'—'}</div><div class="stat-l">pathogenic</div></div>
+          <div class="stat-box"><div class="stat-n">${e.inheritance||'—'}</div><div class="stat-l">inheritance</div></div>
         </div>
-      </div>`);
+        ${kv('Evidence tier','1 — established Mendelian disease locus')}
+        ${kv('Repeat unit', e.repeat_unit||l.canonical_motif||'—')}
+        ${e.pmid?kv('PMID',`<span style="color:#2563a8;font-family:'DM Mono',monospace">${e.pmid}</span>`):''}
+      </div>
+    </div>`);
   }
 
   // ② PSYCHIATRIC EVIDENCE
-  const hasPsych = psychiatric?.length || gene_evidence?.length;
-  if(hasPsych){
-    sections.push(`
-      <div class="section">
-        <div class="st">Psychiatric evidence</div>
-        <div class="g2">
-          <div class="card">
-            <div class="csub">This TR — literature mining</div>
-            ${psychiatric?.length ? psychiatric.map(p => `
-              <div class="kv">
-                <span class="kk">${p.phenotype}</span>
-                <span>
-                  ${p.evidence_tier >= 2 ? `<span class="tier t${p.evidence_tier}">tier ${p.evidence_tier}</span>` : ''}
-                  ${p.study_type ? `<span class="kv-v" style="margin-left:5px">${p.study_type}</span>` : ''}
-                </span>
-              </div>
-              ${p.pmid ? `<div style="font-size:10px;color:var(--text-3);margin-bottom:4px">PMID: <span class="mono" style="color:var(--purple)">${p.pmid}</span></div>` : ''}
-            `).join('') : '<div style="font-size:11px;color:var(--text-3)">No TR-level literature associations curated</div>'}
-            ${established?.length ? '<div class="note">established Mendelian loci are tier 1 — see disease section above</div>' : ''}
-          </div>
-          <div class="card">
-            <div class="csub">Gene ${l.gene_name||'—'} — exome &amp; GWAS evidence</div>
-            ${gene_evidence?.length ? gene_evidence.map(g => `
-              <div class="kv">
-                <span class="kk">${g.source} (${g.phenotype})</span>
-                <span class="kv-v" style="color:var(--purple)">
-                  ${g.odds_ratio != null ? `OR ${(+g.odds_ratio).toFixed(2)} · ` : ''}${g.p_value != null ? `p = ${fmtE(g.p_value)}` : ''}
-                </span>
-              </div>`).join('') : '<div style="font-size:11px;color:var(--text-3)">No gene-level psychiatric evidence</div>'}
-            <div class="note">evidence for the gene, not this specific TR</div>
-          </div>
-        </div>
-      </div>`);
-  }
-
-  // ③ GENOMIC CONTEXT
-  sections.push(`
-    <div class="section">
-      <div class="st">Genomic context</div>
+  if(psychiatric?.length || gene_evidence?.length){
+    S.push(`<div class="section">
+      <div class="sec-title">Psychiatric evidence</div>
       <div class="g2">
         <div class="card">
-          <div class="csub">Locus identity</div>
-          ${kv('Gene', l.gene_name || '—')}
-          ${kv('Gene region', l.gene_region || '—')}
-          ${kv('Gene ID', `<span class="mono">${l.gene_id || '—'}</span>`)}
-          ${kvMono('Motif', l.canonical_motif || '—')}
-          ${kv('Motif size', l.motif_size_bp != null ? `${l.motif_size_bp} bp` : '—')}
-          ${kv('Repeats in reference', fmt(l.num_repeats_ref))}
-          ${kv('Purity', fmtF(l.purity, 3))}
-          ${kv('Mappability', fmtF(l.mappability, 3))}
+          <div class="csub">This TR — literature mining</div>
+          ${psychiatric?.length ? psychiatric.map(p=>`
+            <div class="kv">
+              <span class="kk">${p.phenotype}</span>
+              <span>${p.evidence_tier>=2?`<span class="tier-pill t${p.evidence_tier}">tier ${p.evidence_tier}</span>`:''} <span class="kval">${p.study_type||''}</span></span>
+            </div>
+            ${p.pmid?`<div style="font-size:9px;color:#b0a99e;margin-bottom:4px">PMID <span style="color:#2563a8;font-family:'DM Mono',monospace">${p.pmid}</span></div>`:''}
+          `).join('') : '<div style="font-size:11px;color:#b0a99e">No TR-level associations curated</div>'}
+          ${established?.length?'<div class="note">established Mendelian loci are tier 1 — see disease section above</div>':''}
         </div>
         <div class="card">
-          <div class="csub">Position</div>
-          ${kvMono('hg38', `${l.chr}:${(l.start||0).toLocaleString()}–${(l.end||0).toLocaleString()}`)}
-          ${l.hg19_chr ? kvMono('hg19', `${l.hg19_chr}:${(l.hg19_start||0).toLocaleString()}–${(l.hg19_end||0).toLocaleString()}`) : ''}
-          ${kv('Region size', l.start != null && l.end != null ? `${(l.end - l.start).toLocaleString()} bp` : '—')}
-          ${kv('TSS distance', l.dist_tss_bp != null ? `${l.dist_tss_bp.toLocaleString()} bp → ${l.nearest_tss_gene||''}` : '—')}
-          ${kv('Splice junction distance', l.dist_splice_bp != null ? `${l.dist_splice_bp.toLocaleString()} bp` : '—')}
+          <div class="csub">Gene ${l.gene_name||'—'} — exome &amp; GWAS</div>
+          ${gene_evidence?.length ? gene_evidence.map(g=>`
+            <div class="kv">
+              <span class="kk">${g.source} (${g.phenotype})</span>
+              <span class="kval" style="color:#2563a8">${g.odds_ratio!=null?`OR ${(+g.odds_ratio).toFixed(2)} · `:''}${g.p_value!=null?`p=${fmtE(g.p_value)}`:''}</span>
+            </div>`).join('')
+          : '<div style="font-size:11px;color:#b0a99e">No gene-level psychiatric evidence</div>'}
+          <div class="note">evidence for the gene, not this specific TR</div>
         </div>
       </div>
     </div>`);
+  }
+
+  // ③ GENOMIC CONTEXT
+  S.push(`<div class="section">
+    <div class="sec-title">Genomic context</div>
+    <div class="g2">
+      <div class="card">
+        <div class="csub">Locus identity</div>
+        ${kv('Gene', l.gene_name||'—')}
+        ${kv('Gene region', l.gene_region||'—')}
+        ${kvMono('Motif', l.canonical_motif||'—')}
+        ${kv('Motif size', l.motif_size_bp!=null?`${l.motif_size_bp} bp`:'—')}
+        ${kv('Repeats in reference', fmt(l.num_repeats_ref))}
+        ${kv('Purity', fmtF(l.purity,3))}
+        ${kv('Mappability', fmtF(l.mappability,3))}
+      </div>
+      <div class="card">
+        <div class="csub">Position</div>
+        ${kvMono('hg38', `${l.chr}:${(l.start||0).toLocaleString()}–${(l.end||0).toLocaleString()}`)}
+        ${l.hg19_chr ? kvMono('hg19',`${l.hg19_chr}:${(l.hg19_start||0).toLocaleString()}–${(l.hg19_end||0).toLocaleString()}`) : ''}
+        ${kv('Region size', l.start!=null&&l.end!=null?`${(l.end-l.start).toLocaleString()} bp`:'—')}
+        ${kv('TSS distance', l.dist_tss_bp!=null?`${l.dist_tss_bp.toLocaleString()} bp → ${l.nearest_tss_gene||''}`:'—')}
+        ${kv('Splice junction distance', l.dist_splice_bp!=null?`${l.dist_splice_bp.toLocaleString()} bp`:'—')}
+      </div>
+    </div>
+  </div>`);
 
   // ④ FUNCTIONAL SCORES
   if(rx){
-    sections.push(`
-      <div class="section">
-        <div class="st">Functional scores</div>
-        <div class="card">
-          <div class="g4" style="margin-bottom:12px">
-            <div class="stat"><div class="sn accent">${fmtF(rx.ensembleScore)}</div><div class="sl">RExPRT ensemble</div></div>
-            <div class="stat"><div class="sn">${fmtF(rx.pLi, 3)}</div><div class="sl">pLi</div></div>
-            <div class="stat"><div class="sn">${fmtF(rx.loeuf, 2)}</div><div class="sl">LOEUF</div></div>
-            <div class="stat"><div class="sn">${rx.SVM != null ? fmtF(rx.SVM) : '—'} / ${rx.XGB != null ? fmtF(rx.XGB) : '—'}</div><div class="sl">SVM / XGB</div></div>
-          </div>
-          <div class="sep"></div>
-          <div style="font-size:10px;color:var(--text-3);margin-bottom:6px;font-weight:500">Feature flags</div>
-          <span class="flag ${rx.eSTR ? 'fon' : 'foff'}">eSTR</span>
-          <span class="flag ${rx.opReg ? 'fon' : 'foff'}">opReg</span>
-          <span class="flag ${rx.promoter ? 'fon' : 'foff'}">promoter</span>
-          <div class="note">RExPRT scores computed on hg19 · pLi and LOEUF from gnomAD via RExPRT</div>
+    S.push(`<div class="section">
+      <div class="sec-title">Functional scores</div>
+      <div class="card">
+        <div class="g4" style="margin-bottom:12px">
+          <div class="stat-box"><div class="stat-n accent">${fmtF(rx.ensembleScore)}</div><div class="stat-l">RExPRT</div></div>
+          <div class="stat-box"><div class="stat-n">${fmtF(rx.pLi,3)}</div><div class="stat-l">pLi</div></div>
+          <div class="stat-box"><div class="stat-n">${fmtF(rx.loeuf,2)}</div><div class="stat-l">LOEUF</div></div>
+          <div class="stat-box"><div class="stat-n" style="font-size:12px">${rx.SVM!=null?fmtF(rx.SVM):'—'} / ${rx.XGB!=null?fmtF(rx.XGB):'—'}</div><div class="stat-l">SVM / XGB</div></div>
         </div>
-      </div>`);
+        <div class="sep"></div>
+        <span class="flag-pill ${rx.eSTR?'fp-on':'fp-off'}">eSTR</span>
+        <span class="flag-pill ${rx.opReg?'fp-on':'fp-off'}">opReg</span>
+        <span class="flag-pill ${rx.promoter?'fp-on':'fp-off'}">promoter</span>
+        <div class="note">RExPRT scores computed on hg19 · pLi and LOEUF from gnomAD via RExPRT</div>
+      </div>
+    </div>`);
   }
 
   // ⑤ REGULATORY CONTEXT
   if(reg){
-    sections.push(`
-      <div class="section">
-        <div class="st">Regulatory context</div>
-        <div class="g2">
-          <div class="card">
-            <div class="csub">Promoter &amp; open chromatin</div>
-            ${kv('Promoter (EPD)', reg.in_promoter ? `<span class="yes">✓ ${reg.promoter_id||''}</span>` : '<span class="no">—</span>')}
-            ${kv('ENCODE cCRE class', reg.ccre_class || '<span class="no">—</span>')}
-            ${reg.ccre_id ? kvMono('cCRE accession', reg.ccre_id) : ''}
-          </div>
-          <div class="card">
-            <div class="csub">Enhancers</div>
-            ${kv('Brain super enhancer', reg.in_brain_super_enhancer ? `<span class="yes">✓ ${reg.n_super_enhancer_tissues||''} brain samples</span>` : '<span class="no">—</span>')}
-            ${reg.SE_gene_ABC ? kv('SE linked gene (ABC)', reg.SE_gene_ABC) : ''}
-            ${kv('Brain typical enhancer', reg.in_brain_enhancer ? `<span class="yes">✓</span>` : '<span class="no">—</span>')}
-          </div>
-        </div>
-      </div>`);
-  }
-
-  // ⑥ BRAIN QTLs — FIX 4: show first 20, lazy load rest
-  sections.push(`
-    <div class="section">
-      <div class="st">Brain QTLs <span style="font-weight:400;font-size:9px;margin-left:6px;color:var(--text-3)">${n_qtl} hits total</span></div>
-      ${n_qtl === 0 ? '<div class="card" style="color:var(--text-3);font-size:12px">No brain QTL associations found for this locus</div>' : `
-      <div class="g2" id="qtl-panel">
+    S.push(`<div class="section">
+      <div class="sec-title">Regulatory context</div>
+      <div class="g2">
         <div class="card">
-          <div class="csub" id="qtl-left-title">Loading QTLs…</div>
-          <div id="qtl-left-content"><div class="qtl-loading">Fetching QTL data…</div></div>
+          <div class="csub">Promoter &amp; open chromatin</div>
+          ${kv('Promoter (EPD)', reg.in_promoter?`<span class="yes">✓ ${reg.promoter_id||''}</span>`:'<span class="no">—</span>')}
+          ${kv('ENCODE cCRE class', reg.ccre_class||'<span class="no">—</span>')}
+          ${reg.ccre_id ? kvMono('cCRE accession', reg.ccre_id) : ''}
         </div>
         <div class="card">
-          <div class="csub" id="qtl-right-title">GTEx v8 · brain regions</div>
-          <div id="qtl-right-content"><div class="qtl-loading">Fetching QTL data…</div></div>
+          <div class="csub">Enhancers</div>
+          ${kv('Brain super enhancer', reg.in_brain_super_enhancer?`<span class="yes">✓ ${reg.n_super_enhancer_tissues||''} samples</span>`:'<span class="no">—</span>')}
+          ${reg.SE_gene_ABC ? kv('SE linked gene (ABC)', reg.SE_gene_ABC) : ''}
+          ${kv('Brain typical enhancer', reg.in_brain_enhancer?'<span class="yes">✓</span>':'<span class="no">—</span>')}
         </div>
-      </div>`}
-    </div>`);
-
-  // ⑦ GENE EXPRESSION
-  sections.push(`
-    <div class="section">
-      <div class="st">Gene expression — ${l.gene_name||'?'} · GTEx v8</div>
-      <div class="row" id="expr-panel" style="align-items:flex-start;gap:16px">
-        <div style="color:var(--text-3);font-size:11px;margin-top:8px">Loading anatomogram…</div>
       </div>
     </div>`);
+  }
+
+  // ⑥ BRAIN QTLs
+  S.push(`<div class="section">
+    <div class="sec-title">Brain QTLs <span style="font-weight:400;font-size:8px;margin-left:6px;color:#b0a99e">${n_qtl} hits total</span></div>
+    ${n_qtl===0
+      ? '<div class="card" style="color:#b0a99e;font-size:12px">No brain QTL associations found for this locus</div>'
+      : `<div class="g2">
+          <div class="card">
+            <div class="csub" id="qtl-left-title">Loading QTLs…</div>
+            <div id="qtl-left"><div class="lazy-loading">Fetching…</div></div>
+          </div>
+          <div class="card">
+            <div class="csub">GTEx v8 · brain regions</div>
+            <div id="qtl-right"><div class="lazy-loading">Fetching…</div></div>
+          </div>
+        </div>`}
+  </div>`);
+
+  // ⑦ GENE EXPRESSION — EBI anatomogram
+  S.push(`<div class="section">
+    <div class="sec-title">Gene expression — ${l.gene_name||'?'} · GTEx v8</div>
+    <div class="atlas-grid" id="expr-atlas">
+      <div class="atlas-panel">
+        <div class="atlas-ph"><div class="atlas-pt">Body tissues</div><div class="atlas-ps" id="body-max-lbl">loading…</div></div>
+        <div class="svg-wrap" id="body-svg-wrap"><div style="color:#b0a99e;font-size:10px;font-family:'DM Mono',monospace">Loading anatomogram…</div></div>
+        <div class="leg-bar"></div><div class="leg-lbl"><span>0 TPM</span><span>Low</span><span>Med</span><span>High</span></div>
+        <div class="tlist" id="body-tlist"></div>
+      </div>
+      <div class="atlas-panel">
+        <div class="atlas-ph"><div class="atlas-pt">Brain regions</div><div class="atlas-ps">GTEx v8 · 13 regions</div></div>
+        <div class="svg-wrap" id="brain-svg-wrap"><div style="color:#b0a99e;font-size:10px;font-family:'DM Mono',monospace">Loading brain atlas…</div></div>
+        <div class="leg-bar"></div><div class="leg-lbl"><span>0 TPM</span><span>Low</span><span>Med</span><span>High</span></div>
+        <div class="tlist" id="brain-tlist"></div>
+      </div>
+    </div>
+  </div>`);
 
   // ⑧ PHEWAS
   if(phewas?.length){
-    sections.push(`
-      <div class="section">
-        <div class="st">Phenotype associations (PheWAS)</div>
-        <div class="card">
-          ${phewas.map(p => `
-            <div class="kv">
-              <span class="kk">${p.trait||p.phenotype_code||'—'} <span style="font-size:10px;color:var(--text-3)">${p.source||''}</span></span>
-              <span style="display:flex;align-items:center;gap:6px">
-                <span class="kv-v" style="color:var(--purple)">${p.beta!=null?`β=${fmtF(p.beta)} · `:''}p=${fmtE(p.p_value)}</span>
-                ${p.replicated_AoU ? '<span class="badge b-teal" style="font-size:9px">✓ AoU</span>' : ''}
-              </span>
-            </div>`).join('')}
-        </div>
-      </div>`);
+    S.push(`<div class="section">
+      <div class="sec-title">Phenotype associations (PheWAS)</div>
+      <div class="card">
+        ${phewas.map(p=>`<div class="kv">
+          <span class="kk">${p.trait||p.phenotype_code||'—'} <span style="font-size:9px;color:#b0a99e">${p.source||''}</span></span>
+          <span style="display:flex;align-items:center;gap:6px">
+            <span class="kval" style="color:#2563a8">${p.beta!=null?`β=${fmtF(p.beta)} · `:''}p=${fmtE(p.p_value)}</span>
+            ${p.replicated_AoU?'<span class="badge b-qtl" style="font-size:8px">✓ AoU</span>':''}
+          </span>
+        </div>`).join('')}
+      </div>
+    </div>`);
   }
 
-  // ⑨ SC-ETR
+  // ⑨ SC-eTR
   if(sc_etr?.length){
-    sections.push(`
-      <div class="section">
-        <div class="st">Single-cell expression QTL (Tanudisastro 2025)</div>
-        <div class="card">
-          <div class="g3" style="margin-bottom:12px">
-            <div class="stat"><div class="sn accent">${sc_etr[0].cell_type||'—'}</div><div class="sl">cell type</div></div>
-            <div class="stat"><div class="sn">${fmtF(sc_etr[0].PIP)}</div><div class="sl">PIP (causal prob.)</div></div>
-            <div class="stat"><div class="sn ${sc_etr[0].coloc_mQTL?'good':''}" style="font-size:13px">${sc_etr[0].coloc_mQTL?'mQTL coloc':'No coloc'}</div><div class="sl">${sc_etr[0].coloc_mQTL?'colocalized':''}</div></div>
-          </div>
-          ${kv('β', fmtF(sc_etr[0].beta))}
-          ${kv('p nominal', fmtE(sc_etr[0].p_value))}
-          ${kv('FDR', fmtE(sc_etr[0].p_fdr))}
-          ${kv('Gene affected', sc_etr[0].gene_affected||'—')}
-          ${kv('Candidate causal (PIP ≥ 0.7)', sc_etr[0].candidate_causal ? '<span class="yes">✓</span>' : '<span class="no">—</span>')}
+    S.push(`<div class="section">
+      <div class="sec-title">Single-cell expression QTL · Tanudisastro 2025</div>
+      <div class="card">
+        <div class="g3" style="margin-bottom:12px">
+          <div class="stat-box"><div class="stat-n accent" style="font-size:14px">${sc_etr[0].cell_type||'—'}</div><div class="stat-l">cell type</div></div>
+          <div class="stat-box"><div class="stat-n">${fmtF(sc_etr[0].PIP)}</div><div class="stat-l">PIP</div></div>
+          <div class="stat-box"><div class="stat-n ${sc_etr[0].coloc_mQTL?'good':''}" style="font-size:12px">${sc_etr[0].coloc_mQTL?'mQTL coloc':'no coloc'}</div><div class="stat-l">colocalization</div></div>
         </div>
-      </div>`);
+        ${kv('β', fmtF(sc_etr[0].beta))}
+        ${kv('p nominal', fmtE(sc_etr[0].p_value))}
+        ${kv('FDR', fmtE(sc_etr[0].p_fdr))}
+        ${kv('Candidate causal (PIP ≥ 0.7)', sc_etr[0].candidate_causal?'<span class="yes">✓</span>':'<span class="no">—</span>')}
+      </div>
+    </div>`);
   }
 
   // ⑩ SOURCES
   const srcs = (l.source_catalogs||'').split(',').filter(Boolean);
-  sections.push(`
-    <div class="section">
-      <div class="st">Sources</div>
-      <div class="card">
-        <div style="margin-bottom:10px">${srcs.map(s=>`<span class="sc">${s.trim()}</span>`).join('')||'—'}</div>
-        <div class="g4">
-          <div class="stat"><div class="sn">${l.n_sources||'—'}</div><div class="sl">catalogs</div></div>
-          <div class="stat"><div class="sn">${fmtF(l.aou_median,1)}</div><div class="sl">AoU median</div></div>
-          <div class="stat"><div class="sn">${fmtF(l.aou_stdev,1)}</div><div class="sl">AoU stdev</div></div>
-          <div class="stat"><div class="sn">${fmtF(l.aou_max,0)}</div><div class="sl">AoU max allele</div></div>
-        </div>
+  S.push(`<div class="section">
+    <div class="sec-title">Sources</div>
+    <div class="card">
+      <div style="margin-bottom:10px">${srcs.map(s=>`<span class="sc">${s.trim()}</span>`).join('')||'—'}</div>
+      <div class="g4">
+        <div class="stat-box"><div class="stat-n">${l.n_sources||'—'}</div><div class="stat-l">catalogs</div></div>
+        <div class="stat-box"><div class="stat-n">${fmtF(l.aou_median,1)}</div><div class="stat-l">AoU median</div></div>
+        <div class="stat-box"><div class="stat-n">${fmtF(l.aou_stdev,1)}</div><div class="stat-l">AoU stdev</div></div>
+        <div class="stat-box"><div class="stat-n">${fmtF(l.aou_max,0)}</div><div class="stat-l">AoU max</div></div>
       </div>
-    </div>`);
+    </div>
+  </div>`);
 
-  // render
+  // inject
   document.getElementById('loading-msg').remove();
-  document.getElementById('page-content').innerHTML = sections.join('');
+  document.getElementById('page-content').innerHTML = S.join('');
 
-  // FIX 4: lazy load QTLs and expression AFTER page renders
-  if(n_qtl > 0) loadQTLsLazy(l.tr_id);
-  if(l.gene_name)   loadExpressionLazy(l.gene_name);
+  // lazy load — wait one tick for DOM to settle
+  setTimeout(() => {
+    if(n_qtl > 0) loadQTLsLazy(l.tr_id);
+    if(l.gene_name) loadExpressionLazy(l.gene_name);
+  }, 50);
 }
 
-// ── FIX 4: lazy QTL loading ───────────────────────────────────────────────────
+// ── Lazy QTL loading ──────────────────────────────────────────────────────────
 async function loadQTLsLazy(tr_id){
   try {
     const r = await fetch(`${API}/api/loci/${tr_id}/qtls?limit=100`);
     const d = await r.json();
     const qtls = d.qtls || [];
 
-    // group by cohort
-    const rosmap = qtls.filter(q => q.cohort === 'ROSMAP');
-    const gtex   = qtls.filter(q => q.cohort === 'GTEx_v8' && q.tissue.includes('Brain'));
-    const nygcals= qtls.filter(q => q.cohort === 'NYGCALS');
-    const others = qtls.filter(q => !['ROSMAP','GTEx_v8'].includes(q.cohort) && q.cohort !== 'NYGCALS');
-
-    const colors = {eQTL:'var(--purple)',sQTL:'var(--purple)',hQTL:'var(--purple)',mQTL:'var(--purple)',caQTL:'var(--purple)','3aQTL':'var(--purple)'};
-    const gtexColors = {'Brain_Cortex':'var(--blue)','Brain_Frontal_Cortex_Ba9':'var(--blue)','Brain_Hippocampus':'var(--blue)'};
+    const rosmap = qtls.filter(q=>q.cohort==='ROSMAP');
+    const nygcals= qtls.filter(q=>q.cohort==='NYGCALS');
+    const answerals=qtls.filter(q=>q.cohort==='AnswerALS');
+    const gtex  = qtls.filter(q=>q.cohort==='GTEx_v8' && (q.tissue||'').includes('Brain'));
 
     const leftTitle = document.getElementById('qtl-left-title');
-    const leftContent = document.getElementById('qtl-left-content');
-    if(leftTitle && leftContent){
-      leftTitle.textContent = `ROSMAP · DLPFC${nygcals.length ? ' + NYGCALS' : ''}`;
-      leftContent.innerHTML = [
-        ...rosmap.slice(0,6).map(q => bar(`${q.tissue} · ${q.qtl_type}`, q.beta, q.p_value, 'var(--purple)')),
-        ...nygcals.slice(0,4).map(q => bar(`${q.tissue} · ${q.qtl_type}`, q.beta, q.p_value, 'var(--teal)')),
-        ...others.slice(0,2).map(q => bar(`${q.cohort} · ${q.qtl_type}`, q.beta, q.p_value, 'var(--coral)')),
-      ].join('') || '<div class="no" style="font-size:11px">No ROSMAP/NYGCALS hits</div>';
+    const leftEl    = document.getElementById('qtl-left');
+    if(leftTitle) leftTitle.textContent = `ROSMAP${nygcals.length?' + NYGCALS':''}${answerals.length?' + AnswerALS':''}`;
+    if(leftEl){
+      leftEl.innerHTML = [
+        ...rosmap.slice(0,5).map(q=>bar(`${q.tissue||''} · ${q.qtl_type}`, q.beta, q.p_value, '#2563a8')),
+        ...nygcals.slice(0,3).map(q=>bar(`${q.tissue||''} · ${q.qtl_type}`, q.beta, q.p_value, '#1a6b3c')),
+        ...answerals.slice(0,2).map(q=>bar(`${q.tissue||''} · ${q.qtl_type}`, q.beta, q.p_value, '#993c1d')),
+      ].join('') || '<div class="no" style="font-size:11px;color:#b0a99e">No ROSMAP/NYGCALS hits</div>';
     }
 
-    const rightContent = document.getElementById('qtl-right-content');
-    if(rightContent){
-      rightContent.innerHTML = gtex.slice(0,6).map(q =>
-        bar(q.tissue.replace('Brain_','').replace(/_/g,' '), q.beta, q.p_value, 'var(--blue)')
-      ).join('') + (gtex.length > 6 ? `<div class="note">+ ${gtex.length-6} more brain regions</div>` : '') ||
-      '<div class="no" style="font-size:11px">No GTEx brain hits</div>';
+    const rightEl = document.getElementById('qtl-right');
+    if(rightEl){
+      rightEl.innerHTML = gtex.slice(0,6).map(q=>
+        bar((q.tissue||'').replace('Brain_','').replace(/_/g,' '), q.beta, q.p_value, '#0e2340')
+      ).join('') + (gtex.length>6?`<div class="note">+ ${gtex.length-6} more brain regions</div>`:'')
+      || '<div style="color:#b0a99e;font-size:11px">No GTEx brain hits</div>';
     }
   } catch(e) {
-    const el = document.getElementById('qtl-left-content');
-    if(el) el.innerHTML = `<div style="color:var(--text-3);font-size:11px">Could not load QTL data</div>`;
+    const el = document.getElementById('qtl-left');
+    if(el) el.innerHTML = `<div style="color:#b0a99e;font-size:10px">Could not load QTL data</div>`;
   }
 }
 
-// ── FIX 4: lazy expression loading ───────────────────────────────────────────
+// ── Lazy expression loading with EBI anatomogram ──────────────────────────────
 async function loadExpressionLazy(gene){
-  try {
-    const r = await fetch(`${API}/api/expression/${gene}`);
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
-    const brain = d.brain || [];
-    const body  = (d.top_body || []).slice(0, 6);
-    const maxTpm = Math.max(...brain.map(t=>t.median_tpm), ...body.map(t=>t.median_tpm), 1);
-
-    const exprBars = document.getElementById('expr-bars');
-    if(!exprBars) return;
-
-    const barsHtml = [
-      ...brain.slice(0,6).map(t => `
-        <div class="er">
-          <span class="el">${t.tissue_name}</span>
-          <div class="et"><div class="ef" style="width:${Math.round(t.median_tpm/maxTpm*100)}%;background:var(--purple)"></div></div>
-          <span class="ev">${t.median_tpm.toFixed(1)}</span>
-        </div>`),
-      brain.length > 0 && body.length > 0 ? '<div class="sep"></div>' : '',
-      ...body.map(t => `
-        <div class="er">
-          <span class="el">${t.tissue_name}</span>
-          <div class="et"><div class="ef" style="width:${Math.round(t.median_tpm/maxTpm*100)}%;background:var(--teal)"></div></div>
-          <span class="ev">${t.median_tpm.toFixed(1)}</span>
-        </div>`),
-    ].join('');
-
-    exprBars.innerHTML = `
-      <div style="font-size:10px;font-weight:500;color:var(--text-3);margin-bottom:7px">median TPM · purple = brain · green = other tissues · source: GTEx v8</div>
-      ${barsHtml}`;
-  } catch(e) {
-    const el = document.getElementById('expr-bars');
-    if(el) el.innerHTML = `<div style="color:var(--text-3);font-size:11px">Expression data unavailable for this gene</div>`;
-  }
-}
-
-// ── Main: get tr_id from URL and load ─────────────────────────────────────────
-async function init(){
-  const params = new URLSearchParams(window.location.search);
-  const trId   = params.get('id');
-
-  if(!trId){
-    document.getElementById('page-content').innerHTML =
-      '<div class="error-msg">No locus ID specified. <a href="/" style="color:var(--purple)">Go to browse</a></div>';
+  // gene must be a symbol like HTT, FMR1 — not an Ensembl ID
+  const cleanGene = gene.replace(/\.[0-9]+$/, '').trim();
+  if(!cleanGene || cleanGene.startsWith('ENSG')) {
+    const bw = document.getElementById('body-svg-wrap');
+    if(bw) bw.innerHTML = '<div style="color:#b0a99e;font-size:10px;font-family:\'DM Mono\',monospace;text-align:center">Gene symbol required for expression lookup</div>';
     return;
   }
 
   try {
+    const r = await fetch(`${API}/api/expression/${cleanGene}`);
+    if(!r.ok) throw new Error(`Expression API: HTTP ${r.status}`);
+    const d = await r.json();
+    const bodyData  = d.body  || [];
+    const brainData = d.brain || [];
+    const maxB  = Math.max(...bodyData.map(x=>x.median_tpm),  1);
+    const maxBr = Math.max(...brainData.map(x=>x.median_tpm), 1);
+
+    // update label
+    const bml = document.getElementById('body-max-lbl');
+    if(bml) bml.textContent = `max: ${maxB.toFixed(1)} TPM`;
+
+    // load SVGs
+    const bodySVG  = await loadEBISvg('homo_sapiens.male.svg',  'body-svg-wrap');
+    const brainSVG = await loadEBISvg('homo_sapiens.brain.svg', 'brain-svg-wrap');
+
+    // colour body organs
+    if(bodySVG){
+      resetSvg(bodySVG);
+      const tpmMap = {};
+      bodyData.forEach(t=>{ tpmMap[t.tissue_gtex]=t.median_tpm; });
+      Object.entries(UBERON_BODY).forEach(([u,gtex])=>{
+        const tpm = tpmMap[gtex]||0;
+        const name = bodyData.find(t=>t.tissue_gtex===gtex)?.tissue_name || gtex.replace(/_/g,' ');
+        colourOrgan(bodySVG, u, tpmColor(tpm,maxB), name, tpm);
+      });
+    }
+
+    // colour brain organs
+    if(brainSVG){
+      resetSvg(brainSVG);
+      const tpmMap = {};
+      brainData.forEach(t=>{ tpmMap[t.tissue_gtex]=t.median_tpm; });
+      Object.entries(UBERON_BRAIN).forEach(([u,gtex])=>{
+        const tpm = tpmMap[gtex]||0;
+        const name = brainData.find(t=>t.tissue_gtex===gtex)?.tissue_name || gtex.replace('Brain_','').replace(/_/g,' ');
+        colourOrgan(brainSVG, u, tpmColor(tpm,maxBr), name, tpm);
+      });
+    }
+
+    // top tissue bars
+    const top5Body  = [...bodyData].sort((a,b)=>b.median_tpm-a.median_tpm).slice(0,5);
+    const top5Brain = [...brainData].sort((a,b)=>b.median_tpm-a.median_tpm).slice(0,5);
+
+    const bodyTlist = document.getElementById('body-tlist');
+    if(bodyTlist) bodyTlist.innerHTML = top5Body.map(t=>`
+      <div class="trow">
+        <div class="tdot" style="background:${tpmColor(t.median_tpm,maxB)}"></div>
+        <div class="tname">${t.tissue_name}</div>
+        <div class="tbw"><div class="tbf" style="width:${Math.round(t.median_tpm/maxB*100)}%;background:${tpmColor(t.median_tpm,maxB)}"></div></div>
+        <div class="tval">${t.median_tpm.toFixed(1)}</div>
+      </div>`).join('');
+
+    const brainTlist = document.getElementById('brain-tlist');
+    if(brainTlist) brainTlist.innerHTML = top5Brain.map(t=>`
+      <div class="trow">
+        <div class="tdot" style="background:${tpmColor(t.median_tpm,maxBr)}"></div>
+        <div class="tname">${t.tissue_name}</div>
+        <div class="tbw"><div class="tbf" style="width:${Math.round(t.median_tpm/maxBr*100)}%;background:${tpmColor(t.median_tpm,maxBr)}"></div></div>
+        <div class="tval">${t.median_tpm.toFixed(1)}</div>
+      </div>`).join('');
+
+  } catch(e) {
+    console.warn('Expression load failed:', e.message);
+    const bw = document.getElementById('body-svg-wrap');
+    if(bw) bw.innerHTML = `<div style="color:#b0a99e;font-size:10px;font-family:'DM Mono',monospace;text-align:center">Expression data unavailable<br>${e.message}</div>`;
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init(){
+  const trId = new URLSearchParams(window.location.search).get('id');
+  if(!trId){
+    document.getElementById('page-content').innerHTML =
+      '<div class="error-msg">No locus ID specified. <a href="/" style="color:#2563a8">Go to search</a></div>';
+    return;
+  }
+  try {
     const r = await fetch(`${API}/api/loci/${trId}`);
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-    renderPage(data);
+    renderPage(await r.json());
   } catch(e) {
     document.getElementById('page-content').innerHTML =
       `<div class="error-msg">Error loading locus: ${e.message}</div>`;

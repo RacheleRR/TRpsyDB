@@ -5,98 +5,136 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TRpsyDB — Browse</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F7F6F2;--surface:#FFFFFF;--border:#E2E0D8;--border-s:#C8C5BC;--text:#1A1917;--text-2:#6B6860;--text-3:#9E9B94;--purple:#5340C8;--purple-l:#EAE7FC;--purple-t:#3C3489;--teal:#0F6E56;--teal-l:#E1F5EE;--coral:#C04020;--coral-l:#FAECE7;--amber:#A05010;--amber-l:#FEF0DA;--blue:#1860A8;--blue-l:#E6F1FB;--gray-l:#F1EFE8;--mono:'IBM Plex Mono',monospace;--sans:'Syne',sans-serif;--body:'Inter',sans-serif;--r:6px;--rl:10px}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column}
-nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;height:48px;gap:20px;flex-shrink:0}
-.nav-logo{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--purple);letter-spacing:-.01em;cursor:pointer}
-.nav-link{font-size:12px;color:var(--text-2);text-decoration:none;padding:4px 0;border-bottom:1.5px solid transparent;transition:all .15s}
-.nav-link:hover,.nav-link.active{color:var(--purple);border-bottom-color:var(--purple)}
-.nav-search{margin-left:auto;display:flex;align-items:center;gap:8px}
-.nav-search input{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:5px 10px;font-size:12px;font-family:var(--body);color:var(--text);width:220px;outline:none;transition:border .15s}
-.nav-search input:focus{border-color:var(--purple)}
-.nav-search input::placeholder{color:var(--text-3)}
-.toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-.tb-count{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text)}
-.tb-count span{font-size:10px;font-weight:400;color:var(--text-3);margin-left:3px}
-.tb-sep{width:1px;height:18px;background:var(--border)}
-.tb-label{font-size:11px;color:var(--text-3);font-weight:500}
-.sort-select{font-size:11px;color:var(--text-2);background:transparent;border:none;outline:none;cursor:pointer;font-family:var(--body)}
+body{font-family:'DM Sans',system-ui,sans-serif;font-size:13px;background:#f5f3ef;color:#0e2340;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── NAV ── */
+.hdr{position:sticky;top:0;z-index:100;background:#0e2340;border-bottom:2px solid #2563a8;height:50px;display:flex;align-items:center;padding:0 24px;justify-content:space-between;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none}
+.logo-mark{width:26px;height:26px;background:#2563a8;border-radius:5px;display:flex;align-items:center;justify-content:center}
+.logo-text{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:#f5f3ef;letter-spacing:0.02em}
+.logo-text em{color:#7ab8f5;font-style:normal}
+.nav{display:flex;gap:2px}
+.nav-btn{background:transparent;border:none;color:rgba(245,243,239,0.5);font-size:12px;padding:6px 12px;border-radius:4px;cursor:pointer;font-family:'DM Sans',system-ui;transition:all 0.15s;text-decoration:none;display:inline-block}
+.nav-btn:hover,.nav-btn.on{background:rgba(255,255,255,0.08);color:#f5f3ef}
+.nav-search input{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:5px 10px;font-size:12px;font-family:'DM Mono',monospace;color:#f5f3ef;width:200px;outline:none}
+.nav-search input::placeholder{color:rgba(245,243,239,0.35)}
+.nav-search input:focus{border-color:rgba(255,255,255,0.3)}
+
+/* ── STATS STRIP ── */
+.strip{background:#0b1d33;padding:3px 24px;display:flex;gap:20px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,243,239,0.3);letter-spacing:0.04em;border-bottom:1px solid rgba(255,255,255,0.05);flex-shrink:0}
+.strip em{color:#7ab8f5;font-style:normal}
+
+/* ── TOOLBAR ── */
+.toolbar{background:#f0ede8;border-bottom:1px solid #ddd9d2;padding:7px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-count{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:#0e2340}
+.tb-count span{font-size:10px;font-weight:400;color:#7a7468;margin-left:3px}
+.tb-sep{width:1px;height:16px;background:#ddd9d2}
+.tb-label{font-size:10px;color:#7a7468}
+.sort-select{font-size:11px;color:#0e2340;background:transparent;border:none;outline:none;cursor:pointer;font-family:'DM Mono',monospace}
+
+/* ── ACTIVE FILTERS ── */
+.active-filters{background:#edf2fb;border-bottom:1px solid #bdd3f5;padding:5px 20px;display:none;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.active-filters.visible{display:flex}
+.af-chip{display:flex;align-items:center;gap:4px;font-size:10px;padding:2px 8px;border-radius:100px;background:#fff;border:0.5px solid #bdd3f5;color:#1a4a8a}
+.af-chip button{border:none;background:none;color:#2563a8;cursor:pointer;font-size:12px;line-height:1;padding:0 0 0 2px}
+.af-clear-all{font-size:10px;color:#2563a8;cursor:pointer;margin-left:auto;font-weight:500}
+
+/* ── LAYOUT ── */
 .layout{display:flex;flex:1;min-height:0}
-.sidebar{width:210px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:14px}
-.filter-section{margin-bottom:16px}
-.fs-title{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
-.fs-clear{font-size:10px;color:var(--purple);cursor:pointer;font-weight:400;text-transform:none;letter-spacing:0}
-.check-row{display:flex;align-items:center;gap:7px;padding:3px 0;cursor:pointer}
-.check-row:hover .cb-label{color:var(--text)}
-.cb{width:13px;height:13px;border:1.5px solid var(--border-s);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s}
-.cb.checked{background:var(--purple);border-color:var(--purple)}
-.cb.checked::after{content:'';width:7px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block}
-.cb-label{font-size:12px;color:var(--text-2);flex:1;transition:color .12s}
-.cb-count{font-size:10px;color:var(--text-3);font-family:var(--mono)}
-input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer;margin:4px 0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--purple);cursor:pointer}
-.range-row{display:flex;align-items:center;gap:6px;margin-top:4px}
-.range-label{font-size:10px;color:var(--text-2);width:28px}
-.range-val{font-size:10px;color:var(--purple);font-family:var(--mono);font-weight:500;text-align:right}
-.range-input{width:48px;font-size:11px;border:1px solid var(--border);border-radius:3px;padding:2px 5px;font-family:var(--mono)}
-.sidebar-sep{border-top:1px solid var(--border);margin:12px 0}
+
+/* ── SIDEBAR ── */
+.sidebar{width:190px;flex-shrink:0;background:#f0ede8;border-right:1px solid #ddd9d2;overflow-y:auto;padding:14px}
+.filter-section{margin-bottom:14px}
+.fs-title{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#7a7468;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
+.fs-clear{font-size:9px;color:#2563a8;cursor:pointer;font-weight:400;text-transform:none;letter-spacing:0;font-family:'DM Sans',system-ui}
+.check-row{display:flex;align-items:center;gap:6px;padding:3px 0;cursor:pointer}
+.check-row:hover .cb-label{color:#0e2340}
+.cb{width:12px;height:12px;border:1.5px solid #b0a99e;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s}
+.cb.checked{background:#0e2340;border-color:#0e2340}
+.cb.checked::after{content:'';width:6px;height:4px;border-left:1.5px solid #f5f3ef;border-bottom:1.5px solid #f5f3ef;transform:rotate(-45deg) translateY(-1px);display:block}
+.cb-label{font-size:11px;color:#7a7468;flex:1;transition:color .12s}
+.cb-count{font-size:9px;color:#b0a99e;font-family:'DM Mono',monospace}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:#ddd9d2;border-radius:2px;outline:none;cursor:pointer;margin:4px 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#0e2340;cursor:pointer}
+.range-row{display:flex;align-items:center;gap:6px;margin-top:3px}
+.range-label{font-size:9px;color:#7a7468;width:24px}
+.range-num{width:44px;font-size:10px;border:1px solid #ddd9d2;border-radius:3px;padding:2px 4px;font-family:'DM Mono',monospace;background:#fff;color:#0e2340}
+.range-val{font-size:10px;color:#2563a8;font-family:'DM Mono',monospace;font-weight:500;text-align:right;margin-left:auto}
+.sidebar-sep{border-top:1px solid #ddd9d2;margin:10px 0}
+
+/* ── MAIN ── */
 .main{flex:1;overflow:hidden;display:flex;flex-direction:column}
 .table-wrap{flex:1;overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
-thead{position:sticky;top:0;z-index:10;background:var(--surface)}
-th{padding:8px 12px;text-align:left;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
-th:hover{color:var(--text-2)}
-th .sort-icon{margin-left:3px;opacity:.4;font-size:9px}
-th.sorted{color:var(--purple)}
-th.sorted .sort-icon{opacity:1}
-td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+thead{position:sticky;top:0;z-index:10;background:#f0ede8}
+th{padding:7px 12px;text-align:left;font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:#7a7468;border-bottom:1px solid #ddd9d2;white-space:nowrap;cursor:pointer;user-select:none;transition:color .12s}
+th:hover{color:#0e2340}
+th.sorted{color:#2563a8}
+td{padding:7px 12px;border-bottom:0.5px solid #ddd9d2;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr{transition:background .1s;cursor:pointer}
-tr:hover td{background:#FAFAF7}
-.locus-coord{font-family:var(--mono);font-size:10px;color:var(--text-2);white-space:nowrap}
-.gene-name{font-weight:500;color:var(--text);margin-bottom:1px}
-.gene-region{font-size:10px;color:var(--text-3)}
-.badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:3px;font-weight:500;white-space:nowrap}
-.b-purple{background:var(--purple-l);color:var(--purple-t)}
-.b-teal{background:var(--teal-l);color:var(--teal)}
-.b-coral{background:var(--coral-l);color:var(--coral)}
-.b-amber{background:var(--amber-l);color:var(--amber)}
-.b-gray{background:var(--gray-l);color:#555}
-.b-blue{background:var(--blue-l);color:var(--blue)}
-.score-bar-wrap{display:flex;align-items:center;gap:6px}
-.score-n{font-family:var(--sans);font-size:14px;font-weight:600}
-.score-high{color:var(--purple)}.score-mid{color:var(--amber)}.score-low{color:var(--text-3)}
-.score-bar{height:3px;border-radius:2px;background:var(--purple);min-width:2px}
-.qtl-cell{text-align:right;font-size:11px;color:var(--text-2)}
-.qtl-n{font-family:var(--sans);font-weight:500;color:var(--text)}
-.motif-cell{font-family:var(--mono);font-size:11px;color:var(--text-2)}
-.pagination{background:var(--surface);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0}
-.pg-info{font-size:11px;color:var(--text-3);margin-right:auto}
-.pg-btn{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text-2);cursor:pointer;transition:all .12s}
-.pg-btn:hover:not(:disabled){border-color:var(--purple);color:var(--purple)}
+tr:hover td{background:#f0ede8}
+tr:nth-child(even) td{background:#faf9f6}
+tr:nth-child(even):hover td{background:#f0ede8}
+
+/* ── TABLE CONTENT ── */
+.locus-coord{font-family:'DM Mono',monospace;font-size:9px;color:#7a7468;white-space:nowrap}
+.gene-name{font-weight:500;color:#0e2340;font-size:12px}
+.gene-region{font-size:9px;color:#b0a99e;margin-top:1px}
+.badge{display:inline-block;font-size:8px;padding:1px 6px;border-radius:100px;font-weight:500;white-space:nowrap}
+.b-mendelian{background:#edf2fb;color:#1a4a8a;border:0.5px solid #bdd3f5}
+.b-functional{background:#e8f5ee;color:#1a6b3c;border:0.5px solid #a8d5bc}
+.b-clinvar{background:#edf2fb;color:#1a4a8a;border:0.5px solid #bdd3f5}
+.b-polymorphic{background:#f1eeea;color:#7a7468;border:0.5px solid #ddd9d2}
+.flag-pill{display:inline-block;font-size:7px;padding:1px 5px;border-radius:100px;font-weight:500;margin-top:2px;margin-right:2px}
+.fp-promoter{background:#fdf2f0;color:#993c1d;border:0.5px solid #f5c4b3}
+.fp-brainse{background:#fef5e7;color:#7a4f1a;border:0.5px solid #f5d5a0}
+.fp-evntr{background:#edf2fb;color:#1a4a8a;border:0.5px solid #bdd3f5}
+.score-wrap{display:flex;align-items:center;gap:6px}
+.score-n{font-family:'DM Mono',monospace;font-size:13px;font-weight:500}
+.score-high{color:#2563a8}.score-mid{color:#7a4f1a}.score-low{color:#b0a99e}
+.score-bar{height:2px;border-radius:1px;background:#0e2340;opacity:0.7;min-width:2px}
+.qtl-cell{text-align:right;font-size:11px;color:#7a7468}
+.motif-cell{font-family:'DM Mono',monospace;font-size:10px;color:#7a7468}
+
+/* ── PAGINATION ── */
+.pagination{background:#f0ede8;border-top:1px solid #ddd9d2;padding:7px 16px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.pg-info{font-size:10px;color:#7a7468;margin-right:auto;font-family:'DM Mono',monospace}
+.pg-btn{font-size:10px;padding:4px 10px;border:0.5px solid #ddd9d2;border-radius:3px;background:#fff;color:#7a7468;cursor:pointer;transition:all .12s;font-family:'DM Sans',system-ui}
+.pg-btn:hover:not(:disabled){border-color:#0e2340;color:#0e2340;background:#f5f3ef}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed}
-.active-filters{background:var(--purple-l);border-bottom:1px solid rgba(83,64,200,.15);padding:6px 20px;display:none;align-items:center;gap:8px;flex-wrap:wrap}
-.active-filters.visible{display:flex}
-.af-chip{display:flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:3px;background:#fff;border:1px solid rgba(83,64,200,.2);color:var(--purple-t)}
-.af-chip button{border:none;background:none;color:var(--purple);cursor:pointer;font-size:12px;line-height:1;padding:0 0 0 2px}
-.af-clear-all{font-size:11px;color:var(--purple);cursor:pointer;margin-left:auto;font-weight:500}
-.loading-row td{text-align:center;padding:48px;color:var(--text-3)}
-.no-data td{text-align:center;padding:48px;color:var(--text-3)}
+
+.loading-row td,.no-data td{text-align:center;padding:48px;color:#b0a99e;font-family:'DM Mono',monospace;font-size:11px}
 </style>
 </head>
 <body>
-<nav>
-  <span class="nav-logo" onclick="location.href='/'">TRpsyDB</span>
-  <a href="/" class="nav-link">Search</a>
-  <a href="/browse" class="nav-link active">Browse</a>
-  <a href="/locus" class="nav-link">Locus detail</a>
+
+<header class="hdr">
+  <div class="logo" onclick="location.href='/'">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" fill="none" width="14" height="14">
+        <rect x="2" y="4" width="3" height="10" rx="1" fill="#7ab8f5"/>
+        <rect x="7" y="2" width="3" height="14" rx="1" fill="#f5f3ef"/>
+        <rect x="12" y="6" width="3" height="6" rx="1" fill="#7ab8f5"/>
+      </svg>
+    </div>
+    <div class="logo-text">TR<em>psy</em>DB</div>
+  </div>
+  <nav class="nav">
+    <a href="/" class="nav-btn">Search</a>
+    <a href="/browse" class="nav-btn on">Browse</a>
+    <a href="/" class="nav-btn" onclick="event.preventDefault();location.href='/#analyse'">Analyse</a>
+    <a href="/" class="nav-btn" onclick="event.preventDefault();location.href='/#about'">About</a>
+  </nav>
   <div class="nav-search">
     <input type="text" id="search-input" placeholder="Search gene, motif, disease…" oninput="debounceSearch()">
   </div>
-</nav>
+</header>
+
+<div class="strip" id="stats-strip">Loading…</div>
 
 <div class="active-filters" id="active-filters-bar"></div>
 
@@ -126,12 +164,10 @@ tr:hover td{background:#FAFAF7}
       <div class="check-row" onclick="toggleFilter('type','functional')">
         <div class="cb" id="cb-functional"></div>
         <span class="cb-label">Functional VNTR</span>
-        <span class="cb-count">531</span>
       </div>
       <div class="check-row" onclick="toggleFilter('type','clinvar')">
         <div class="cb" id="cb-clinvar"></div>
         <span class="cb-label">ClinVar</span>
-        <span class="cb-count">297</span>
       </div>
       <div class="check-row" onclick="toggleFilter('type','polymorphic')">
         <div class="cb" id="cb-polymorphic"></div>
@@ -143,8 +179,8 @@ tr:hover td{background:#FAFAF7}
 
     <div class="filter-section">
       <div class="fs-title">Gene region <span class="fs-clear" onclick="clearFilter('region')">clear</span></div>
-      <div class="check-row" onclick="toggleSingleRegion('CodingExon')">
-        <div class="cb" id="cb-CodingExon"></div>
+      <div class="check-row" onclick="toggleSingleRegion('Coding')">
+        <div class="cb" id="cb-Coding"></div>
         <span class="cb-label">Coding / Exon</span>
       </div>
       <div class="check-row" onclick="toggleSingleRegion('5UTR')">
@@ -177,17 +213,14 @@ tr:hover td{background:#FAFAF7}
       <div class="check-row" onclick="toggleFlag('in_brain_se')">
         <div class="cb" id="cb-in_brain_se"></div>
         <span class="cb-label">Brain super enhancer</span>
-        <span class="cb-count">367,076</span>
       </div>
       <div class="check-row" onclick="toggleFlag('in_ccre')">
         <div class="cb" id="cb-in_ccre"></div>
         <span class="cb-label">In cCRE</span>
-        <span class="cb-count">109,616</span>
       </div>
       <div class="check-row" onclick="toggleFlag('has_qtl')">
         <div class="cb" id="cb-has_qtl"></div>
         <span class="cb-label">Has brain QTL</span>
-        <span class="cb-count">19,630</span>
       </div>
       <div class="check-row" onclick="toggleFlag('has_evntr')">
         <div class="cb" id="cb-has_evntr"></div>
@@ -202,7 +235,7 @@ tr:hover td{background:#FAFAF7}
       <input type="range" min="0" max="1" step="0.05" value="0" id="rexprt-slider" oninput="updateRange()">
       <div class="range-row">
         <span class="range-label">min</span>
-        <input type="number" class="range-input" min="0" max="1" step="0.05" value="0" id="rexprt-num" oninput="syncRange()">
+        <input type="number" class="range-num" min="0" max="1" step="0.05" value="0" id="rexprt-num" oninput="syncRange()">
         <span class="range-val" id="rexprt-display">≥ 0.00</span>
       </div>
     </div>
@@ -228,12 +261,12 @@ tr:hover td{background:#FAFAF7}
       <table>
         <thead>
           <tr>
-            <th onclick="sortBy('locus')" id="th-locus">Locus <span class="sort-icon">↕</span></th>
-            <th onclick="sortBy('gene')"  id="th-gene">Gene <span class="sort-icon">↕</span></th>
-            <th id="th-motif">Motif</th>
-            <th id="th-type">Type</th>
-            <th onclick="sortBy('rexprt_desc')" id="th-score" class="sorted">RExPRT <span class="sort-icon">↓</span></th>
-            <th onclick="sortBy('qtl_desc')" id="th-qtl">QTL hits <span class="sort-icon">↕</span></th>
+            <th onclick="sortBy('locus')">Locus</th>
+            <th onclick="sortBy('gene_asc')">Gene</th>
+            <th>Motif</th>
+            <th>Type</th>
+            <th onclick="sortBy('rexprt_desc')" class="sorted">RExPRT ↓</th>
+            <th onclick="sortBy('qtl_desc')" style="text-align:right">QTL hits</th>
           </tr>
         </thead>
         <tbody id="table-body">
@@ -254,21 +287,28 @@ const API = '';
 const PER_PAGE = 50;
 
 let state = {
-  page: 1,
-  sort: 'rexprt_desc',
-  search: '',
+  page: 1, sort: 'rexprt_desc', search: '',
   filters: { type: null, region: null, motif: null },
   flags: { in_promoter:0, in_brain_se:0, in_ccre:0, has_qtl:0, has_evntr:0 },
   rexprtMin: 0,
 };
 
+// ── Stats strip ───────────────────────────────────────────────────────────────
+async function loadStats(){
+  try {
+    const d = await fetch('/api/meta/').then(r=>r.json());
+    document.getElementById('stats-strip').innerHTML =
+      `DB v${d.schema_version} &nbsp;·&nbsp; <em>${(d.n_loci||0).toLocaleString()}</em> loci &nbsp;·&nbsp; <em>${d.n_established||0}</em> established &nbsp;·&nbsp; <em>${d.n_with_qtl||0}</em> with brain QTL &nbsp;·&nbsp; <em>${d.n_in_promoter||0}</em> in promoter`;
+  } catch { document.getElementById('stats-strip').textContent = 'TRpsyDB'; }
+}
+
+// ── Search ────────────────────────────────────────────────────────────────────
 let searchTimer = null;
 function debounceSearch(){
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => {
     state.search = document.getElementById('search-input').value.trim();
-    state.page = 1;
-    loadData();
+    state.page = 1; loadData();
   }, 400);
 }
 
@@ -278,16 +318,16 @@ function buildUrl(){
   p.set('limit', PER_PAGE);
   p.set('offset', (state.page - 1) * PER_PAGE);
   p.set('sort', state.sort);
-  if(state.search)          p.set('q', state.search);
-  if(state.filters.type)    p.set('locus_type', state.filters.type);
-  if(state.filters.region)  p.set('gene_region', state.filters.region);
-  if(state.filters.motif)   p.set('motif_size', state.filters.motif);
-  if(state.flags.in_promoter) p.set('in_promoter', 1);
-  if(state.flags.in_brain_se) p.set('in_brain_se', 1);
-  if(state.flags.in_ccre)     p.set('in_ccre', 1);
-  if(state.flags.has_qtl)     p.set('has_qtl', 1);
-  if(state.flags.has_evntr)   p.set('has_evntr', 1);
-  if(state.rexprtMin > 0)   p.set('rexprt_min', state.rexprtMin);
+  if(state.search)             p.set('q', state.search);
+  if(state.filters.type)       p.set('locus_type', state.filters.type);
+  if(state.filters.region)     p.set('gene_region', state.filters.region);
+  if(state.filters.motif)      p.set('motif_size', state.filters.motif);
+  if(state.flags.in_promoter)  p.set('in_promoter', 1);
+  if(state.flags.in_brain_se)  p.set('in_brain_se', 1);
+  if(state.flags.in_ccre)      p.set('in_ccre', 1);
+  if(state.flags.has_qtl)      p.set('has_qtl', 1);
+  if(state.flags.has_evntr)    p.set('has_evntr', 1);
+  if(state.rexprtMin > 0)      p.set('rexprt_min', state.rexprtMin);
   return `${API}/api/loci/?${p}`;
 }
 
@@ -308,65 +348,50 @@ async function loadData(){
   }
 }
 
-// ── Render table ──────────────────────────────────────────────────────────────
+// ── Render ────────────────────────────────────────────────────────────────────
 function scoreClass(s){ return s==null?'score-low':s>=0.7?'score-high':s>=0.4?'score-mid':'score-low'; }
 
 function typeBadge(t, disease){
-  const map = {
-    mendelian: ['b-purple', disease ? `Mendelian — ${disease.split(',')[0]}` : 'Mendelian'],
-    functional:['b-teal',   'Functional VNTR'],
-    clinvar:   ['b-blue',   'ClinVar'],
-    polymorphic:['b-gray',  'Polymorphic'],
-  };
-  const [cls, label] = map[t] || ['b-gray', t || 'Unknown'];
+  const cls = {mendelian:'b-mendelian',functional:'b-functional',clinvar:'b-clinvar',polymorphic:'b-polymorphic'}[t] || 'b-polymorphic';
+  const label = t === 'mendelian' && disease ? `Mendelian — ${disease.split(',')[0]}` :
+                t === 'mendelian' ? 'Mendelian' :
+                t === 'functional' ? 'Functional VNTR' :
+                t === 'clinvar'    ? 'ClinVar' : 'Polymorphic';
   return `<span class="badge ${cls}">${label}</span>`;
-}
-
-function flagBadges(row){
-  const out = [];
-  if(row.in_promoter)            out.push(`<span class="badge b-coral" style="margin-top:2px">promoter</span>`);
-  if(row.in_brain_super_enhancer)out.push(`<span class="badge b-amber" style="margin-top:2px">brain SE</span>`);
-  if(row.has_eVNTR)              out.push(`<span class="badge b-blue"  style="margin-top:2px">eVNTR</span>`);
-  return out.join(' ');
 }
 
 function renderTable(d){
   document.getElementById('result-count').innerHTML =
     `${(d.total||0).toLocaleString()} <span>loci</span>`;
-
   if(!d.results || !d.results.length){
     document.getElementById('table-body').innerHTML =
       '<tr class="no-data"><td colspan="6">No loci match current filters</td></tr>';
     return;
   }
-
   document.getElementById('table-body').innerHTML = d.results.map(row => {
-    const coord = `${row.chr}:${(row.start||0).toLocaleString()}–${(row.end||0).toLocaleString()}`;
     const score = row.rexprt_score;
-    const scoreVal = score != null ? (+score).toFixed(2) : '—';
-    const barW = score != null ? Math.round(score * 60) : 0;
-    return `<tr onclick="goToLocus('${row.tr_id}')">
-      <td><div class="locus-coord">${coord}</div></td>
+    const barW  = score != null ? Math.round(score * 50) : 0;
+    const scoreStr = score != null ? (+score).toFixed(2) : '—';
+    const flags = [
+      row.in_promoter             ? '<span class="flag-pill fp-promoter">promoter</span>' : '',
+      row.in_brain_super_enhancer ? '<span class="flag-pill fp-brainse">brain SE</span>'  : '',
+      row.has_eVNTR               ? '<span class="flag-pill fp-evntr">eVNTR</span>'       : '',
+    ].join('');
+    return `<tr onclick="location.href='/locus?id=${row.tr_id}'">
+      <td class="locus-coord">${row.chr||''}:${(row.start||0).toLocaleString()}</td>
+      <td><div class="gene-name">${row.gene_name||'—'}</div><div class="gene-region">${row.gene_region||''}</div></td>
+      <td class="motif-cell">${row.canonical_motif||'—'}</td>
       <td>
-        <div class="gene-name">${row.gene_name || '—'}</div>
-        <div class="gene-region">${row.gene_region || ''}</div>
+        ${typeBadge(row.locus_type, row.disease_name)}
+        <div>${flags}</div>
       </td>
-      <td class="motif-cell">${row.canonical_motif || '—'}</td>
       <td>
-        <div style="display:flex;flex-direction:column;gap:2px">
-          ${typeBadge(row.locus_type, row.disease_name)}
-          <div>${flagBadges(row)}</div>
-        </div>
-      </td>
-      <td>
-        <div class="score-bar-wrap">
-          <span class="score-n ${scoreClass(score)}">${scoreVal}</span>
+        <div class="score-wrap">
+          <span class="score-n ${scoreClass(score)}">${scoreStr}</span>
           <div class="score-bar" style="width:${barW}px"></div>
         </div>
       </td>
-      <td class="qtl-cell">
-        ${row.n_qtl > 0 ? `<span class="qtl-n">${row.n_qtl}</span> hits` : '<span style="color:var(--text-3)">—</span>'}
-      </td>
+      <td class="qtl-cell">${row.n_qtl > 0 ? `<b style="color:#0e2340">${row.n_qtl}</b> hits` : '<span style="color:#b0a99e">—</span>'}</td>
     </tr>`;
   }).join('');
 }
@@ -375,64 +400,45 @@ function renderTable(d){
 function renderPagination(total){
   const totalPages = Math.ceil(total / PER_PAGE);
   const start = (state.page - 1) * PER_PAGE + 1;
-  const end = Math.min(state.page * PER_PAGE, total);
+  const end   = Math.min(state.page * PER_PAGE, total);
   document.getElementById('pg-info').textContent =
     `Showing ${start.toLocaleString()}–${end.toLocaleString()} of ${(total||0).toLocaleString()}`;
   document.getElementById('pg-prev').disabled = state.page <= 1;
   document.getElementById('pg-next').disabled = state.page >= totalPages;
 }
-
 function changePage(delta){ state.page += delta; loadData(); window.scrollTo(0,0); }
 
 // ── Filters ───────────────────────────────────────────────────────────────────
 function toggleFilter(group, val){
   state.filters[group] = state.filters[group] === val ? null : val;
-  const cb = document.getElementById(`cb-${val}`);
-  if(cb) cb.classList.toggle('checked', state.filters[group] === val);
+  document.getElementById(`cb-${val}`)?.classList.toggle('checked', state.filters[group] === val);
   state.page = 1; loadData();
 }
-
 function toggleSingleRegion(val){
   state.filters.region = state.filters.region === val ? null : val;
-  ['CodingExon','5UTR','Intronic','Promoter','Intergenic'].forEach(v => {
-    const cb = document.getElementById(`cb-${v}`);
-    if(cb) cb.classList.toggle('checked', state.filters.region === v);
+  ['Coding','5UTR','Intronic','Promoter','Intergenic'].forEach(v => {
+    document.getElementById(`cb-${v}`)?.classList.toggle('checked', state.filters.region === v);
   });
   state.page = 1; loadData();
 }
-
 function toggleFlag(key){
   state.flags[key] = state.flags[key] ? 0 : 1;
-  const cb = document.getElementById(`cb-${key}`);
-  if(cb) cb.classList.toggle('checked', !!state.flags[key]);
+  document.getElementById(`cb-${key}`)?.classList.toggle('checked', !!state.flags[key]);
   state.page = 1; loadData();
 }
-
 function clearFilter(group){
-  if(group === 'type'){
-    state.filters.type = null;
-    ['mendelian','functional','clinvar','polymorphic'].forEach(v => {
-      document.getElementById(`cb-${v}`)?.classList.remove('checked');
-    });
-  } else if(group === 'region'){
-    state.filters.region = null;
-    ['CodingExon','5UTR','Intronic','Promoter','Intergenic'].forEach(v => {
-      document.getElementById(`cb-${v}`)?.classList.remove('checked');
-    });
-  }
+  state.filters[group] = null;
+  const keys = { type:['mendelian','functional','clinvar','polymorphic'], region:['Coding','5UTR','Intronic','Promoter','Intergenic'] };
+  (keys[group]||[]).forEach(v => document.getElementById(`cb-${v}`)?.classList.remove('checked'));
   state.page = 1; loadData();
 }
-
-// ── Sort ──────────────────────────────────────────────────────────────────────
-function sortBy(key){
-  state.sort = key; state.page = 1; loadData();
-}
+function sortBy(key){ state.sort = key; state.page = 1; loadData(); }
 
 // ── Range ─────────────────────────────────────────────────────────────────────
 function updateRange(){
   const v = parseFloat(document.getElementById('rexprt-slider').value);
   state.rexprtMin = v;
-  document.getElementById('rexprt-num').value = v.toFixed(2);
+  document.getElementById('rexprt-num').value   = v.toFixed(2);
   document.getElementById('rexprt-display').textContent = `≥ ${v.toFixed(2)}`;
   state.page = 1; loadData();
 }
@@ -444,41 +450,45 @@ function syncRange(){
   state.page = 1; loadData();
 }
 
-// ── Active filters display ────────────────────────────────────────────────────
+// ── Active filters bar ────────────────────────────────────────────────────────
 function renderActiveFilters(){
   const bar = document.getElementById('active-filters-bar');
-  const chips = [];
   const labels = {
-    type:{mendelian:'Mendelian',functional:'Functional VNTR',clinvar:'ClinVar',polymorphic:'Polymorphic'},
-    region:{CodingExon:'Coding',['5UTR']:"5′ UTR",Intronic:'Intronic',Promoter:'Promoter',Intergenic:'Intergenic'},
-    motif:{str:'STR (1–6 bp)',vntr:'VNTR (≥7 bp)'},
-    flags:{in_promoter:'In promoter',in_brain_se:'Brain SE',in_ccre:'In cCRE',has_qtl:'Has QTL',has_evntr:'eVNTR'},
+    mendelian:'Mendelian', functional:'Functional VNTR', clinvar:'ClinVar', polymorphic:'Polymorphic',
+    Coding:'Coding', '5UTR':"5′ UTR", Intronic:'Intronic', Promoter:'Promoter', Intergenic:'Intergenic',
+    str:'STR', vntr:'VNTR',
+    in_promoter:'In promoter', in_brain_se:'Brain SE', in_ccre:'In cCRE', has_qtl:'Has QTL', has_evntr:'eVNTR',
   };
-  if(state.filters.type)   chips.push(`<div class="af-chip">${labels.type[state.filters.type]}<button onclick="clearFilter('type')">×</button></div>`);
-  if(state.filters.region) chips.push(`<div class="af-chip">${labels.region[state.filters.region]||state.filters.region}<button onclick="clearFilter('region')">×</button></div>`);
-  if(state.filters.motif)  chips.push(`<div class="af-chip">${labels.motif[state.filters.motif]||state.filters.motif}<button onclick="toggleFilter('motif','${state.filters.motif}')">×</button></div>`);
+  const chips = [];
+  if(state.filters.type)   chips.push(`<div class="af-chip">${labels[state.filters.type]}<button onclick="clearFilter('type')">×</button></div>`);
+  if(state.filters.region) chips.push(`<div class="af-chip">${labels[state.filters.region]||state.filters.region}<button onclick="clearFilter('region')">×</button></div>`);
+  if(state.filters.motif)  chips.push(`<div class="af-chip">${labels[state.filters.motif]||state.filters.motif}<button onclick="toggleFilter('motif','${state.filters.motif}')">×</button></div>`);
   Object.entries(state.flags).forEach(([k,v]) => {
-    if(v) chips.push(`<div class="af-chip">${labels.flags[k]||k}<button onclick="toggleFlag('${k}')">×</button></div>`);
+    if(v) chips.push(`<div class="af-chip">${labels[k]||k}<button onclick="toggleFlag('${k}')">×</button></div>`);
   });
-  if(state.rexprtMin > 0) chips.push(`<div class="af-chip">RExPRT ≥ ${state.rexprtMin.toFixed(2)}<button onclick="document.getElementById('rexprt-slider').value=0;document.getElementById('rexprt-num').value=0;state.rexprtMin=0;document.getElementById('rexprt-display').textContent='≥ 0.00';loadData()">×</button></div>`);
-  if(state.search) chips.push(`<div class="af-chip">Search: "${state.search}"<button onclick="document.getElementById('search-input').value='';state.search='';loadData()">×</button></div>`);
-  bar.innerHTML = chips.length ? chips.join('') + `<span class="af-clear-all" onclick="clearAll()">Clear all</span>` : '';
+  if(state.rexprtMin > 0)
+    chips.push(`<div class="af-chip">RExPRT ≥ ${state.rexprtMin.toFixed(2)}<button onclick="state.rexprtMin=0;document.getElementById('rexprt-slider').value=0;document.getElementById('rexprt-num').value=0;document.getElementById('rexprt-display').textContent='≥ 0.00';loadData()">×</button></div>`);
+  if(state.search)
+    chips.push(`<div class="af-chip">Search: "${state.search}"<button onclick="document.getElementById('search-input').value='';state.search='';loadData()">×</button></div>`);
+
+  bar.innerHTML = chips.length
+    ? chips.join('') + `<span class="af-clear-all" onclick="clearAll()">Clear all</span>`
+    : '';
   bar.classList.toggle('visible', chips.length > 0);
 }
 
 function clearAll(){
-  state = {...state, page:1, search:'', filters:{type:null,region:null,motif:null}, flags:{in_promoter:0,in_brain_se:0,in_ccre:0,has_qtl:0,has_evntr:0}, rexprtMin:0};
-  document.querySelectorAll('.cb').forEach(cb => cb.classList.remove('checked'));
+  state = {...state, page:1, search:'', filters:{type:null,region:null,motif:null},
+    flags:{in_promoter:0,in_brain_se:0,in_ccre:0,has_qtl:0,has_evntr:0}, rexprtMin:0};
+  document.querySelectorAll('.cb').forEach(cb=>cb.classList.remove('checked'));
   document.getElementById('rexprt-slider').value = 0;
-  document.getElementById('rexprt-num').value = 0;
+  document.getElementById('rexprt-num').value    = 0;
   document.getElementById('rexprt-display').textContent = '≥ 0.00';
-  document.getElementById('search-input').value = '';
+  document.getElementById('search-input').value  = '';
   loadData();
 }
 
-function goToLocus(id){ window.location.href = `/locus?id=${id}`; }
-
-// ── Init ──────────────────────────────────────────────────────────────────────
+loadStats();
 loadData();
 </script>
 </body>
