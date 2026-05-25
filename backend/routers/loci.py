@@ -1,135 +1,199 @@
 """
-Loci router — Mode 1 endpoints
-GET /api/loci/search?q=RFC1              → search by gene name or locus_id
-GET /api/loci/{locus_id}                 → full locus report card
-GET /api/loci/{locus_id}/evidence        → all studies that tested this locus
-GET /api/loci/gene/{gene_symbol}         → all TR loci within/near a gene
-GET /api/loci/                           → browse all loci (paginated, filterable by tier)
+Loci router — new schema (trs, tr_established, tr_regulatory, tr_brain_qtl)
+GET /api/loci/              → paginated browse, filter by type/region/regulatory
+GET /api/loci/search?q=HTT  → search by gene name or tr_id
+GET /api/loci/{tr_id}       → full locus detail card
 """
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
-from backend.db.database import get_connection
+from backend.db.database import query, query_one
 
 router = APIRouter()
 
-
-def row_to_dict(row) -> dict:
-    """Convert sqlite3.Row to plain dict."""
-    return dict(row) if row else None
-
-
-# ── Browse all loci ──────────────────────────────────────────
+# ── Browse ────────────────────────────────────────────────────────────────────
 @router.get("/")
 def list_loci(
-    tier: Optional[int]  = Query(None, description="Filter by evidence tier (1-5)"),
-    phenotype: Optional[str] = Query(None, description="Filter by phenotype e.g. SCZ"),
-    limit: int = Query(50, le=500),
-    offset: int = Query(0),
+    limit:       int            = Query(50, le=500),
+    offset:      int            = Query(0),
+    locus_type:  Optional[str]  = Query(None, description="mendelian|functional|clinvar|polymorphic"),
+    gene_region: Optional[str]  = Query(None),
+    in_promoter: Optional[int]  = Query(None, description="1 to filter"),
+    in_brain_se: Optional[int]  = Query(None),
+    in_ccre:     Optional[int]  = Query(None),
+    has_qtl:     Optional[int]  = Query(None),
+    rexprt_min:  Optional[float]= Query(None),
+    motif_size:  Optional[str]  = Query(None, description="str|vntr"),
+    sort:        Optional[str]  = Query("rexprt_desc"),
 ):
-    with get_connection() as conn:
-        clauses, params = [], []
+    clauses, params = [], []
 
-        if tier is not None:
-            clauses.append("evidence_tier = ?")
-            params.append(tier)
-        if phenotype:
-            clauses.append("phenotypes LIKE ?")
-            params.append(f"%{phenotype}%")
+    # locus type filter
+    if locus_type == "mendelian":
+        clauses.append("t.tr_id IN (SELECT DISTINCT tr_id FROM tr_established)")
+    elif locus_type == "functional":
+        clauses.append("t.tr_id IN (SELECT DISTINCT tr_id FROM tr_clinvar_functional WHERE locus_type='functional_VNTR')")
+    elif locus_type == "clinvar":
+        clauses.append("t.tr_id IN (SELECT DISTINCT tr_id FROM tr_clinvar_functional WHERE locus_type='ClinVar')")
+    elif locus_type == "polymorphic":
+        clauses.append("t.tr_id NOT IN (SELECT DISTINCT tr_id FROM tr_established)")
+        clauses.append("t.tr_id NOT IN (SELECT DISTINCT tr_id FROM tr_clinvar_functional)")
 
-        where = ("WHERE " + " AND ".join(clauses)) if clauses else ""
-        total = conn.execute(
-            f"SELECT COUNT(*) FROM loci {where}", params
-        ).fetchone()[0]
+    if gene_region:
+        clauses.append("t.gene_region LIKE ?"); params.append(f"%{gene_region}%")
+    if in_promoter == 1:
+        clauses.append("r.in_promoter = 1")
+    if in_brain_se == 1:
+        clauses.append("r.in_brain_super_enhancer = 1")
+    if in_ccre == 1:
+        clauses.append("r.in_any_ccre = 1")
+    if has_qtl == 1:
+        clauses.append("t.tr_id IN (SELECT DISTINCT tr_id FROM tr_brain_qtl)")
+    if rexprt_min is not None:
+        clauses.append("rx.ensembleScore >= ?"); params.append(rexprt_min)
+    if motif_size == "str":
+        clauses.append("t.motif_size_bp <= 6")
+    elif motif_size == "vntr":
+        clauses.append("t.motif_size_bp >= 7")
 
-        rows = conn.execute(
-            f"""SELECT locus_id, gene_symbol, chrom, start, end, motif,
-                       evidence_tier, phenotypes, rexprt_score, common_name
-                FROM loci {where}
-                ORDER BY evidence_tier, gene_symbol
-                LIMIT ? OFFSET ?""",
-            params + [limit, offset],
-        ).fetchall()
+    where = ("WHERE " + " AND ".join(clauses)) if clauses else ""
 
-    return {
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-        "results": [row_to_dict(r) for r in rows],
+    sort_map = {
+        "rexprt_desc": "rx.ensembleScore DESC NULLS LAST",
+        "rexprt_asc":  "rx.ensembleScore ASC NULLS LAST",
+        "gene_asc":    "t.gene_name ASC",
+        "qtl_desc":    "(SELECT COUNT(*) FROM tr_brain_qtl q WHERE q.tr_id=t.tr_id) DESC",
     }
+    order = sort_map.get(sort, "rx.ensembleScore DESC NULLS LAST")
 
+    count_sql = f"""
+        SELECT COUNT(*) as n FROM trs t
+        LEFT JOIN tr_regulatory r  ON t.tr_id = r.tr_id
+        LEFT JOIN tr_rexprt    rx  ON t.tr_id = rx.tr_id
+        {where}
+    """
+    total = (query_one(count_sql, tuple(params)) or {}).get("n", 0)
 
-# ── Search by gene name or locus_id ─────────────────────────
+    rows = query(f"""
+        SELECT
+            t.tr_id, t.chr, t.start, t.end,
+            t.gene_name, t.gene_region, t.canonical_motif, t.motif_size_bp,
+            t.n_sources, t.has_eVNTR,
+            rx.ensembleScore as rexprt_score, rx.pLi, rx.loeuf,
+            r.in_promoter, r.in_brain_super_enhancer, r.in_any_ccre,
+            (SELECT COUNT(*) FROM tr_brain_qtl q WHERE q.tr_id=t.tr_id) as n_qtl,
+            CASE WHEN e.tr_id IS NOT NULL THEN 'mendelian'
+                 WHEN c.tr_id IS NOT NULL THEN c.locus_type
+                 ELSE 'polymorphic' END as locus_type,
+            e.disease_name
+        FROM trs t
+        LEFT JOIN tr_regulatory       r  ON t.tr_id = r.tr_id
+        LEFT JOIN tr_rexprt           rx ON t.tr_id = rx.tr_id
+        LEFT JOIN tr_established      e  ON t.tr_id = e.tr_id
+        LEFT JOIN tr_clinvar_functional c ON t.tr_id = c.tr_id
+        {where}
+        GROUP BY t.tr_id
+        ORDER BY {order}
+        LIMIT ? OFFSET ?
+    """, tuple(params) + (limit, offset))
+
+    return {"total": total, "limit": limit, "offset": offset, "results": rows}
+
+# ── Search ────────────────────────────────────────────────────────────────────
 @router.get("/search")
 def search_loci(q: str = Query(..., min_length=2)):
-    """
-    Search by gene symbol (partial match) or exact locus_id.
-    """
-    with get_connection() as conn:
-        rows = conn.execute(
-            """SELECT locus_id, gene_symbol, chrom, start, end, motif,
-                      evidence_tier, phenotypes, rexprt_score, common_name
-               FROM loci
-               WHERE gene_symbol LIKE ?
-                  OR locus_id = ?
-                  OR common_name LIKE ?
-               ORDER BY evidence_tier, gene_symbol
-               LIMIT 50""",
-            (f"%{q}%", q, f"%{q}%"),
-        ).fetchall()
+    rows = query("""
+        SELECT
+            t.tr_id, t.chr, t.start, t.end,
+            t.gene_name, t.gene_region, t.canonical_motif,
+            rx.ensembleScore as rexprt_score,
+            CASE WHEN e.tr_id IS NOT NULL THEN 'mendelian'
+                 WHEN c.tr_id IS NOT NULL THEN c.locus_type
+                 ELSE 'polymorphic' END as locus_type,
+            e.disease_name
+        FROM trs t
+        LEFT JOIN tr_rexprt           rx ON t.tr_id = rx.tr_id
+        LEFT JOIN tr_established      e  ON t.tr_id = e.tr_id
+        LEFT JOIN tr_clinvar_functional c ON t.tr_id = c.tr_id
+        WHERE t.gene_name LIKE ?
+           OR t.tr_id = ?
+           OR e.disease_name LIKE ?
+        GROUP BY t.tr_id
+        ORDER BY rx.ensembleScore DESC NULLS LAST
+        LIMIT 50
+    """, (f"%{q}%", q, f"%{q}%"))
+    return {"query": q, "n": len(rows), "results": rows}
 
-    return {"query": q, "n": len(rows), "results": [row_to_dict(r) for r in rows]}
+# ── Full locus detail ─────────────────────────────────────────────────────────
+@router.get("/{tr_id}")
+def get_locus(tr_id: str):
+    # core TR
+    locus = query_one("SELECT * FROM trs WHERE tr_id = ?", (tr_id,))
+    if not locus:
+        raise HTTPException(status_code=404, detail=f"Locus '{tr_id}' not found")
 
+    gene = locus.get("gene_name")
 
-# ── All loci near a gene ─────────────────────────────────────
-@router.get("/gene/{gene_symbol}")
-def get_loci_by_gene(gene_symbol: str):
-    """All TR loci associated with a given gene symbol (case-insensitive)."""
-    with get_connection() as conn:
-        rows = conn.execute(
-            """SELECT * FROM loci
-               WHERE UPPER(gene_symbol) = UPPER(?)
-               ORDER BY evidence_tier, tss_distance""",
-            (gene_symbol,),
-        ).fetchall()
+    # disease info
+    established = query(
+        "SELECT * FROM tr_established WHERE tr_id = ? ORDER BY id", (tr_id,)
+    )
 
-    if not rows:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No TR loci found for gene '{gene_symbol}'. "
-                   "Check spelling or try a search.",
-        )
+    # functional/clinvar
+    clinvar = query(
+        "SELECT * FROM tr_clinvar_functional WHERE tr_id = ?", (tr_id,)
+    )
 
-    return {"gene": gene_symbol.upper(), "n": len(rows), "loci": [row_to_dict(r) for r in rows]}
+    # functional scores
+    rexprt = query_one("SELECT * FROM tr_rexprt WHERE tr_id = ?", (tr_id,))
 
+    # regulatory
+    regulatory = query_one("SELECT * FROM tr_regulatory WHERE tr_id = ?", (tr_id,))
 
-# ── Full locus report card ───────────────────────────────────
-@router.get("/{locus_id:path}")
-def get_locus(locus_id: str):
-    """
-    Full report card for a single locus.
-    locus_id format: chrN:start-end   e.g. chr3:63912684-63912714
-    """
-    with get_connection() as conn:
-        locus = conn.execute(
-            "SELECT * FROM loci WHERE locus_id = ?", (locus_id,)
-        ).fetchone()
+    # brain QTLs — top hits per cohort/qtl_type
+    qtls = query("""
+        SELECT cohort, tissue, qtl_type, gene_id, beta, p_value, q_value
+        FROM tr_brain_qtl
+        WHERE tr_id = ?
+        ORDER BY p_value ASC
+        LIMIT 50
+    """, (tr_id,))
 
-        if not locus:
-            raise HTTPException(status_code=404, detail=f"Locus '{locus_id}' not found")
+    # psychiatric literature
+    psychiatric = query(
+        "SELECT * FROM tr_psychiatric WHERE tr_id = ? ORDER BY evidence_tier", (tr_id,)
+    )
 
-        evidence = conn.execute(
-            """SELECT le.*, s.title, s.first_author, s.year, s.journal,
-                      s.pmid, s.cohort_size_cases, s.cohort_size_controls,
-                      s.phenotype, s.sequencing_type
-               FROM locus_evidence le
-               JOIN studies s ON le.study_id = s.id
-               WHERE le.locus_id = ?
-               ORDER BY s.year DESC""",
-            (locus_id,),
-        ).fetchall()
+    # gene-level psychiatric evidence
+    gene_evidence = query(
+        "SELECT * FROM gene_psychiatric_assoc WHERE gene_name = ? ORDER BY p_value",
+        (gene,)
+    ) if gene else []
+
+    # PheWAS
+    phewas = query(
+        "SELECT * FROM tr_phenotype_assoc WHERE tr_id = ? ORDER BY p_value", (tr_id,)
+    )
+
+    # sc-eTR expression
+    sc_etr = query(
+        "SELECT * FROM tr_expression WHERE tr_id = ? ORDER BY p_fdr", (tr_id,)
+    )
+
+    # source catalog count
+    n_qtl = (query_one(
+        "SELECT COUNT(*) as n FROM tr_brain_qtl WHERE tr_id = ?", (tr_id,)
+    ) or {}).get("n", 0)
 
     return {
-        "locus": row_to_dict(locus),
-        "evidence": [row_to_dict(e) for e in evidence],
+        "locus":        locus,
+        "established":  established,
+        "clinvar":      clinvar,
+        "rexprt":       rexprt,
+        "regulatory":   regulatory,
+        "qtls":         qtls,
+        "n_qtl":        n_qtl,
+        "psychiatric":  psychiatric,
+        "gene_evidence":gene_evidence,
+        "phewas":       phewas,
+        "sc_etr":       sc_etr,
     }
-
