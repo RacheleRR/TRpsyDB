@@ -7,45 +7,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#F7F6F2;--surface:#FFFFFF;--border:#E2E0D8;--border-s:#C8C5BC;
-  --text:#1A1917;--text-2:#6B6860;--text-3:#9E9B94;
-  --purple:#5340C8;--purple-l:#EAE7FC;--purple-t:#3C3489;
-  --teal:#0F6E56;--teal-l:#E1F5EE;
-  --coral:#C04020;--coral-l:#FAECE7;
-  --amber:#A05010;--amber-l:#FEF0DA;
-  --blue:#1860A8;--blue-l:#E6F1FB;
-  --gray-l:#F1EFE8;
-  --mono:'IBM Plex Mono',monospace;
-  --sans:'Syne',sans-serif;
-  --body:'Inter',sans-serif;
-  --r:6px;--rl:10px;
-}
+:root{--bg:#F7F6F2;--surface:#FFFFFF;--border:#E2E0D8;--border-s:#C8C5BC;--text:#1A1917;--text-2:#6B6860;--text-3:#9E9B94;--purple:#5340C8;--purple-l:#EAE7FC;--purple-t:#3C3489;--teal:#0F6E56;--teal-l:#E1F5EE;--coral:#C04020;--coral-l:#FAECE7;--amber:#A05010;--amber-l:#FEF0DA;--blue:#1860A8;--blue-l:#E6F1FB;--gray-l:#F1EFE8;--mono:'IBM Plex Mono',monospace;--sans:'Syne',sans-serif;--body:'Inter',sans-serif;--r:6px;--rl:10px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column}
-
-/* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;height:48px;gap:20px;flex-shrink:0}
-.nav-logo{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--purple);letter-spacing:-.01em}
+.nav-logo{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--purple);letter-spacing:-.01em;cursor:pointer}
 .nav-link{font-size:12px;color:var(--text-2);text-decoration:none;padding:4px 0;border-bottom:1.5px solid transparent;transition:all .15s}
 .nav-link:hover,.nav-link.active{color:var(--purple);border-bottom-color:var(--purple)}
 .nav-search{margin-left:auto;display:flex;align-items:center;gap:8px}
 .nav-search input{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:5px 10px;font-size:12px;font-family:var(--body);color:var(--text);width:220px;outline:none;transition:border .15s}
 .nav-search input:focus{border-color:var(--purple)}
 .nav-search input::placeholder{color:var(--text-3)}
-
-/* TOOLBAR */
 .toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-.tb-label{font-size:11px;color:var(--text-3);font-weight:500}
 .tb-count{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text)}
 .tb-count span{font-size:10px;font-weight:400;color:var(--text-3);margin-left:3px}
 .tb-sep{width:1px;height:18px;background:var(--border)}
+.tb-label{font-size:11px;color:var(--text-3);font-weight:500}
 .sort-select{font-size:11px;color:var(--text-2);background:transparent;border:none;outline:none;cursor:pointer;font-family:var(--body)}
-
-/* LAYOUT */
 .layout{display:flex;flex:1;min-height:0}
-
-/* SIDEBAR */
 .sidebar{width:210px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:14px}
 .filter-section{margin-bottom:16px}
 .fs-title{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
@@ -57,31 +36,26 @@ nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1p
 .cb.checked::after{content:'';width:7px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block}
 .cb-label{font-size:12px;color:var(--text-2);flex:1;transition:color .12s}
 .cb-count{font-size:10px;color:var(--text-3);font-family:var(--mono)}
-.range-wrap{padding:2px 0}
-.range-row{display:flex;align-items:center;gap:6px;margin-top:4px}
-.range-label{font-size:10px;color:var(--text-2);width:28px}
 input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer;margin:4px 0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--purple);cursor:pointer}
+.range-row{display:flex;align-items:center;gap:6px;margin-top:4px}
+.range-label{font-size:10px;color:var(--text-2);width:28px}
 .range-val{font-size:10px;color:var(--purple);font-family:var(--mono);font-weight:500;text-align:right}
+.range-input{width:48px;font-size:11px;border:1px solid var(--border);border-radius:3px;padding:2px 5px;font-family:var(--mono)}
 .sidebar-sep{border-top:1px solid var(--border);margin:12px 0}
-
-/* MAIN TABLE AREA */
 .main{flex:1;overflow:hidden;display:flex;flex-direction:column}
 .table-wrap{flex:1;overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead{position:sticky;top:0;z-index:10;background:var(--surface)}
-th{padding:8px 12px;text-align:left;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;transition:color .12s}
+th{padding:8px 12px;text-align:left;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
 th:hover{color:var(--text-2)}
 th .sort-icon{margin-left:3px;opacity:.4;font-size:9px}
 th.sorted{color:var(--purple)}
-th.sorted .sort-icon{opacity:1;color:var(--purple)}
+th.sorted .sort-icon{opacity:1}
 td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr{transition:background .1s;cursor:pointer}
 tr:hover td{background:#FAFAF7}
-tr.selected td{background:var(--purple-l)}
-
-/* TABLE CONTENT */
 .locus-coord{font-family:var(--mono);font-size:10px;color:var(--text-2);white-space:nowrap}
 .gene-name{font-weight:500;color:var(--text);margin-bottom:1px}
 .gene-region{font-size:10px;color:var(--text-3)}
@@ -92,63 +66,44 @@ tr.selected td{background:var(--purple-l)}
 .b-amber{background:var(--amber-l);color:var(--amber)}
 .b-gray{background:var(--gray-l);color:#555}
 .b-blue{background:var(--blue-l);color:var(--blue)}
-.score-cell{font-family:var(--sans);font-size:14px;font-weight:600;text-align:right}
-.score-high{color:var(--purple)}
-.score-mid{color:var(--amber)}
-.score-low{color:var(--text-3)}
-.qtl-cell{text-align:right;font-size:11px;color:var(--text-2)}
-.qtl-cell .qtl-n{font-family:var(--sans);font-weight:500;color:var(--text)}
-.motif-cell{font-family:var(--mono);font-size:11px;color:var(--text-2)}
-.flag-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:3px}
-
-/* MINI BARS in score column */
 .score-bar-wrap{display:flex;align-items:center;gap:6px}
+.score-n{font-family:var(--sans);font-size:14px;font-weight:600}
+.score-high{color:var(--purple)}.score-mid{color:var(--amber)}.score-low{color:var(--text-3)}
 .score-bar{height:3px;border-radius:2px;background:var(--purple);min-width:2px}
-
-/* PAGINATION */
+.qtl-cell{text-align:right;font-size:11px;color:var(--text-2)}
+.qtl-n{font-family:var(--sans);font-weight:500;color:var(--text)}
+.motif-cell{font-family:var(--mono);font-size:11px;color:var(--text-2)}
 .pagination{background:var(--surface);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0}
 .pg-info{font-size:11px;color:var(--text-3);margin-right:auto}
 .pg-btn{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text-2);cursor:pointer;transition:all .12s}
-.pg-btn:hover{border-color:var(--purple);color:var(--purple)}
-.pg-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.pg-btn:hover:not(:disabled){border-color:var(--purple);color:var(--purple)}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed}
-
-/* EMPTY STATE */
-.empty{text-align:center;padding:60px 20px;color:var(--text-3)}
-.empty-icon{font-size:32px;margin-bottom:12px}
-.empty-title{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text-2);margin-bottom:6px}
-
-/* ACTIVE FILTERS BAR */
-.active-filters{background:var(--purple-l);border-bottom:1px solid rgba(83,64,200,.15);padding:6px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;display:none}
+.active-filters{background:var(--purple-l);border-bottom:1px solid rgba(83,64,200,.15);padding:6px 20px;display:none;align-items:center;gap:8px;flex-wrap:wrap}
 .active-filters.visible{display:flex}
 .af-chip{display:flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:3px;background:#fff;border:1px solid rgba(83,64,200,.2);color:var(--purple-t)}
 .af-chip button{border:none;background:none;color:var(--purple);cursor:pointer;font-size:12px;line-height:1;padding:0 0 0 2px}
 .af-clear-all{font-size:11px;color:var(--purple);cursor:pointer;margin-left:auto;font-weight:500}
+.loading-row td{text-align:center;padding:48px;color:var(--text-3)}
+.no-data td{text-align:center;padding:48px;color:var(--text-3)}
 </style>
 </head>
 <body>
-
-<!-- NAV -->
 <nav>
-  <span class="nav-logo">TRpsyDB</span>
-  <a href="browse.html" class="nav-link active">Browse</a>
-  <a href="search.html" class="nav-link">Gene search</a>
-  <a href="analysis.html" class="nav-link">Analysis</a>
-  <a href="download.html" class="nav-link">Download</a>
+  <span class="nav-logo" onclick="location.href='/'">TRpsyDB</span>
+  <a href="/" class="nav-link active">Browse</a>
+  <a href="/locus" class="nav-link">Locus detail</a>
   <div class="nav-search">
-    <input type="text" id="search-input" placeholder="Search gene, motif, disease…" oninput="applyFilters()">
+    <input type="text" id="search-input" placeholder="Search gene, motif, disease…" oninput="debounceSearch()">
   </div>
 </nav>
 
-<!-- ACTIVE FILTERS BAR -->
 <div class="active-filters" id="active-filters-bar"></div>
 
-<!-- TOOLBAR -->
 <div class="toolbar">
-  <span class="tb-count" id="result-count">1,078,334 <span>loci</span></span>
+  <span class="tb-count" id="result-count">— <span>loci</span></span>
   <div class="tb-sep"></div>
   <span class="tb-label">Sort by</span>
-  <select class="sort-select" id="sort-select" onchange="applyFilters()">
+  <select class="sort-select" id="sort-select" onchange="loadData()">
     <option value="rexprt_desc">RExPRT score ↓</option>
     <option value="rexprt_asc">RExPRT score ↑</option>
     <option value="gene_asc">Gene name A→Z</option>
@@ -157,33 +112,29 @@ tr.selected td{background:var(--purple-l)}
   </select>
 </div>
 
-<!-- LAYOUT -->
 <div class="layout">
-
-  <!-- SIDEBAR -->
   <div class="sidebar">
 
     <div class="filter-section">
       <div class="fs-title">Locus type <span class="fs-clear" onclick="clearFilter('type')">clear</span></div>
       <div class="check-row" onclick="toggleFilter('type','mendelian')">
-        <div class="cb checked" id="cb-mendelian"></div>
+        <div class="cb" id="cb-mendelian"></div>
         <span class="cb-label">Mendelian</span>
         <span class="cb-count">90</span>
       </div>
       <div class="check-row" onclick="toggleFilter('type','functional')">
-        <div class="cb checked" id="cb-functional"></div>
+        <div class="cb" id="cb-functional"></div>
         <span class="cb-label">Functional VNTR</span>
         <span class="cb-count">531</span>
       </div>
       <div class="check-row" onclick="toggleFilter('type','clinvar')">
-        <div class="cb checked" id="cb-clinvar"></div>
+        <div class="cb" id="cb-clinvar"></div>
         <span class="cb-label">ClinVar</span>
         <span class="cb-count">297</span>
       </div>
       <div class="check-row" onclick="toggleFilter('type','polymorphic')">
-        <div class="cb checked" id="cb-polymorphic"></div>
+        <div class="cb" id="cb-polymorphic"></div>
         <span class="cb-label">Polymorphic</span>
-        <span class="cb-count">1,077,416</span>
       </div>
     </div>
 
@@ -191,30 +142,25 @@ tr.selected td{background:var(--purple-l)}
 
     <div class="filter-section">
       <div class="fs-title">Gene region <span class="fs-clear" onclick="clearFilter('region')">clear</span></div>
-      <div class="check-row" onclick="toggleFilter('region','coding')">
-        <div class="cb" id="cb-coding"></div>
-        <span class="cb-label">Coding</span>
-        <span class="cb-count">42,318</span>
+      <div class="check-row" onclick="toggleSingleRegion('CodingExon')">
+        <div class="cb" id="cb-CodingExon"></div>
+        <span class="cb-label">Coding / Exon</span>
       </div>
-      <div class="check-row" onclick="toggleFilter('region','utr5')">
-        <div class="cb" id="cb-utr5"></div>
+      <div class="check-row" onclick="toggleSingleRegion('5UTR')">
+        <div class="cb" id="cb-5UTR"></div>
         <span class="cb-label">5′ UTR</span>
-        <span class="cb-count">18,441</span>
       </div>
-      <div class="check-row" onclick="toggleFilter('region','intronic')">
-        <div class="cb" id="cb-intronic"></div>
+      <div class="check-row" onclick="toggleSingleRegion('Intronic')">
+        <div class="cb" id="cb-Intronic"></div>
         <span class="cb-label">Intronic</span>
-        <span class="cb-count">381,220</span>
       </div>
-      <div class="check-row" onclick="toggleFilter('region','promoter')">
-        <div class="cb" id="cb-promoter"></div>
+      <div class="check-row" onclick="toggleSingleRegion('Promoter')">
+        <div class="cb" id="cb-Promoter"></div>
         <span class="cb-label">Promoter</span>
-        <span class="cb-count">29,114</span>
       </div>
-      <div class="check-row" onclick="toggleFilter('region','intergenic')">
-        <div class="cb" id="cb-intergenic"></div>
+      <div class="check-row" onclick="toggleSingleRegion('Intergenic')">
+        <div class="cb" id="cb-Intergenic"></div>
         <span class="cb-label">Intergenic</span>
-        <span class="cb-count">607,241</span>
       </div>
     </div>
 
@@ -222,30 +168,29 @@ tr.selected td{background:var(--purple-l)}
 
     <div class="filter-section">
       <div class="fs-title">Regulatory</div>
-      <div class="check-row" onclick="toggleFilter('reg','in_promoter')">
+      <div class="check-row" onclick="toggleFlag('in_promoter')">
         <div class="cb" id="cb-in_promoter"></div>
         <span class="cb-label">In promoter (EPD)</span>
         <span class="cb-count">3,294</span>
       </div>
-      <div class="check-row" onclick="toggleFilter('reg','brain_se')">
-        <div class="cb" id="cb-brain_se"></div>
+      <div class="check-row" onclick="toggleFlag('in_brain_se')">
+        <div class="cb" id="cb-in_brain_se"></div>
         <span class="cb-label">Brain super enhancer</span>
         <span class="cb-count">367,076</span>
       </div>
-      <div class="check-row" onclick="toggleFilter('reg','ccre')">
-        <div class="cb" id="cb-ccre"></div>
+      <div class="check-row" onclick="toggleFlag('in_ccre')">
+        <div class="cb" id="cb-in_ccre"></div>
         <span class="cb-label">In cCRE</span>
         <span class="cb-count">109,616</span>
       </div>
-      <div class="check-row" onclick="toggleFilter('reg','has_qtl')">
+      <div class="check-row" onclick="toggleFlag('has_qtl')">
         <div class="cb" id="cb-has_qtl"></div>
         <span class="cb-label">Has brain QTL</span>
-        <span class="cb-count">8,421</span>
+        <span class="cb-count">19,630</span>
       </div>
-      <div class="check-row" onclick="toggleFilter('reg','evntr')">
-        <div class="cb" id="cb-evntr"></div>
+      <div class="check-row" onclick="toggleFlag('has_evntr')">
+        <div class="cb" id="cb-has_evntr"></div>
         <span class="cb-label">eVNTR (Garg 2021)</span>
-        <span class="cb-count">1,300</span>
       </div>
     </div>
 
@@ -253,250 +198,249 @@ tr.selected td{background:var(--purple-l)}
 
     <div class="filter-section">
       <div class="fs-title">RExPRT score</div>
-      <div class="range-wrap">
-        <input type="range" min="0" max="1" step="0.05" value="0"
-               id="rexprt-min" oninput="updateRange()">
-        <div class="range-row">
-          <span class="range-label">min</span>
-          <input type="number" min="0" max="1" step="0.05" value="0"
-                 id="rexprt-min-val" style="width:48px;font-size:11px;border:1px solid var(--border);border-radius:3px;padding:2px 5px;font-family:var(--mono)" oninput="syncRange()">
-          <span class="range-val" id="rexprt-display">≥ 0.00</span>
-        </div>
+      <input type="range" min="0" max="1" step="0.05" value="0" id="rexprt-slider" oninput="updateRange()">
+      <div class="range-row">
+        <span class="range-label">min</span>
+        <input type="number" class="range-input" min="0" max="1" step="0.05" value="0" id="rexprt-num" oninput="syncRange()">
+        <span class="range-val" id="rexprt-display">≥ 0.00</span>
       </div>
     </div>
 
     <div class="sidebar-sep"></div>
 
     <div class="filter-section">
-      <div class="fs-title">Motif size (bp)</div>
+      <div class="fs-title">Motif size</div>
       <div class="check-row" onclick="toggleFilter('motif','str')">
         <div class="cb" id="cb-str"></div>
         <span class="cb-label">STR (1–6 bp)</span>
-        <span class="cb-count">812,441</span>
       </div>
       <div class="check-row" onclick="toggleFilter('motif','vntr')">
         <div class="cb" id="cb-vntr"></div>
         <span class="cb-label">VNTR (≥ 7 bp)</span>
-        <span class="cb-count">265,893</span>
       </div>
     </div>
 
-  </div><!-- /sidebar -->
+  </div>
 
-  <!-- MAIN -->
   <div class="main">
     <div class="table-wrap">
-      <table id="loci-table">
+      <table>
         <thead>
           <tr>
             <th onclick="sortBy('locus')" id="th-locus">Locus <span class="sort-icon">↕</span></th>
             <th onclick="sortBy('gene')"  id="th-gene">Gene <span class="sort-icon">↕</span></th>
-            <th onclick="sortBy('motif')" id="th-motif">Motif <span class="sort-icon">↕</span></th>
-            <th onclick="sortBy('type')"  id="th-type">Type <span class="sort-icon">↕</span></th>
-            <th onclick="sortBy('score')" id="th-score" class="sorted">RExPRT <span class="sort-icon">↓</span></th>
-            <th onclick="sortBy('qtl')"   id="th-qtl">QTL hits <span class="sort-icon">↕</span></th>
+            <th id="th-motif">Motif</th>
+            <th id="th-type">Type</th>
+            <th onclick="sortBy('rexprt_desc')" id="th-score" class="sorted">RExPRT <span class="sort-icon">↓</span></th>
+            <th onclick="sortBy('qtl_desc')" id="th-qtl">QTL hits <span class="sort-icon">↕</span></th>
           </tr>
         </thead>
-        <tbody id="table-body"></tbody>
+        <tbody id="table-body">
+          <tr class="loading-row"><td colspan="6">Loading…</td></tr>
+        </tbody>
       </table>
     </div>
-
-    <div class="pagination" id="pagination">
-      <span class="pg-info" id="pg-info">Showing 1–25 of 1,078,334</span>
+    <div class="pagination">
+      <span class="pg-info" id="pg-info">–</span>
       <button class="pg-btn" id="pg-prev" onclick="changePage(-1)" disabled>← prev</button>
-      <button class="pg-btn active">1</button>
-      <button class="pg-btn" onclick="changePage(1)">2</button>
-      <button class="pg-btn" onclick="changePage(2)">3</button>
-      <span style="font-size:11px;color:var(--text-3)">…</span>
-      <button class="pg-btn" onclick="goToPage(43133)">43,133</button>
-      <button class="pg-btn" id="pg-next" onclick="changePage(1)">next →</button>
+      <button class="pg-btn" id="pg-next" onclick="changePage(1)"  disabled>next →</button>
     </div>
   </div>
-
 </div>
 
 <script>
-// ── Sample data (replace with API calls) ──────────────────────────────────────
-const SAMPLE_DATA = [
-  {id:'TR_0000042',chr:'chr4', start:3074876, end:3074933, gene:'HTT',   region:'Coding',    type:'mendelian',  motif:'CAG',    motif_size:3,  score:0.94, qtl:78,  badges:['b-purple','Mendelian — HD'],   flags:{promoter:true,  brain_se:true,  ccre:true,  evntr:false}},
-  {id:'TR_0000891',chr:'chrX', start:147912050,end:147912110,gene:'FMR1', region:'5′ UTR',   type:'mendelian',  motif:'CGG',    motif_size:3,  score:0.91, qtl:42,  badges:['b-purple','Mendelian — FRAXA'],flags:{promoter:true,  brain_se:false, ccre:true,  evntr:true}},
-  {id:'TR_0002341',chr:'chr9', start:27573528, end:27573544, gene:'C9ORF72',region:'Intronic',type:'mendelian',  motif:'GGGGCC', motif_size:6,  score:0.89, qtl:31,  badges:['b-purple','Mendelian — ALS'], flags:{promoter:false, brain_se:true,  ccre:true,  evntr:false}},
-  {id:'TR_0011204',chr:'chr3', start:63912685, end:63912946, gene:'ATXN7',region:'Coding',   type:'mendelian',  motif:'CAG',    motif_size:3,  score:0.87, qtl:19,  badges:['b-purple','Mendelian — SCA7'],flags:{promoter:false, brain_se:true,  ccre:false, evntr:true}},
-  {id:'TR_0034881',chr:'chr19',start:45770205, end:45770264, gene:'DMPK', region:'3′ UTR',   type:'mendelian',  motif:'CTG',    motif_size:3,  score:0.85, qtl:24,  badges:['b-purple','Mendelian — DM1'], flags:{promoter:false, brain_se:false, ccre:true,  evntr:false}},
-  {id:'TR_0112398',chr:'chr7', start:117548621,end:117549172,gene:'CFTR', region:'Intronic', type:'polymorphic', motif:'GATT',  motif_size:4,  score:0.72, qtl:12,  badges:['b-gray','Polymorphic'],       flags:{promoter:false, brain_se:true,  ccre:true,  evntr:true}},
-  {id:'TR_0219847',chr:'chr11',start:5246696,  end:5246750,  gene:'HBB',  region:'Promoter', type:'functional', motif:'ATAAA', motif_size:5,  score:0.68, qtl:8,   badges:['b-teal','Functional VNTR'],   flags:{promoter:true,  brain_se:false, ccre:true,  evntr:false}},
-  {id:'TR_0341209',chr:'chr2', start:196993561,end:196993610,gene:'SCN1A',region:'Intronic', type:'polymorphic', motif:'AT',   motif_size:2,  score:0.61, qtl:22,  badges:['b-gray','Polymorphic'],       flags:{promoter:false, brain_se:true,  ccre:false, evntr:true}},
-  {id:'TR_0498821',chr:'chr22',start:19766762, end:19766807, gene:'SHANK3',region:'Coding',  type:'polymorphic', motif:'GCN',  motif_size:3,  score:0.58, qtl:5,   badges:['b-gray','Polymorphic'],       flags:{promoter:false, brain_se:false, ccre:false, evntr:false}},
-  {id:'TR_0521034',chr:'chr16',start:87604287, end:87604329, gene:'JPH3', region:'3′ UTR',   type:'mendelian',  motif:'CTG',   motif_size:3,  score:0.83, qtl:17,  badges:['b-purple','Mendelian — HDL2'],flags:{promoter:false, brain_se:true,  ccre:true,  evntr:false}},
-  {id:'TR_0634512',chr:'chr6', start:170561906,end:170562017,gene:'TBP',  region:'Coding',   type:'mendelian',  motif:'GCA',   motif_size:3,  score:0.81, qtl:9,   badges:['b-purple','Mendelian — SCA17'],flags:{promoter:true, brain_se:true,  ccre:true,  evntr:true}},
-  {id:'TR_0712983',chr:'chr1', start:149390802,end:149390841,gene:'NOTCH2NLC',region:'5′ UTR',type:'mendelian', motif:'GGC',  motif_size:3,  score:0.79, qtl:6,   badges:['b-purple','Mendelian — NIID'], flags:{promoter:true,  brain_se:false, ccre:true,  evntr:false}},
-  {id:'TR_0834671',chr:'chr4', start:39348424, end:39348479, gene:'RFC1', region:'Intronic', type:'mendelian',  motif:'AAGGG', motif_size:5,  score:0.76, qtl:11,  badges:['b-purple','Mendelian — CANVAS'],flags:{promoter:false,brain_se:false, ccre:false, evntr:false}},
-  {id:'TR_0921045',chr:'chr5', start:10356346, end:10356411, gene:'MARCHF6',region:'Intronic',type:'mendelian', motif:'TTTCA',motif_size:5,  score:0.74, qtl:3,   badges:['b-purple','Mendelian — FAME3'],flags:{promoter:false,brain_se:true,  ccre:false, evntr:false}},
-  {id:'TR_1034892',chr:'chr8', start:118366812,end:118366918,gene:'SAMD12',region:'Intronic',type:'mendelian',  motif:'TTTCA',motif_size:5,  score:0.72, qtl:4,   badges:['b-purple','Mendelian — FAME1'],flags:{promoter:false,brain_se:false, ccre:false, evntr:false}},
-  {id:'TR_1198234',chr:'chr12',start:111598949,end:111599018,gene:'ATXN2',region:'Coding',   type:'mendelian',  motif:'CAG',   motif_size:3,  score:0.88, qtl:28,  badges:['b-purple','Mendelian — SCA2'], flags:{promoter:false,brain_se:true,  ccre:true,  evntr:true}},
-  {id:'TR_1302841',chr:'chr3', start:128891420,end:128891461,gene:'CNBP', region:'Intronic', type:'mendelian',  motif:'CCTG',  motif_size:4,  score:0.82, qtl:14,  badges:['b-purple','Mendelian — DM2'],  flags:{promoter:false,brain_se:false, ccre:true,  evntr:false}},
-  {id:'TR_1489012',chr:'chr14',start:92071010, end:92071040, gene:'ATXN3',region:'Coding',   type:'mendelian',  motif:'CAG',   motif_size:3,  score:0.86, qtl:21,  badges:['b-purple','Mendelian — SCA3'], flags:{promoter:false,brain_se:true,  ccre:false, evntr:true}},
-  {id:'TR_1592341',chr:'chr9', start:71652202, end:71652241, gene:'FXN',  region:'Intronic', type:'mendelian',  motif:'GAA',   motif_size:3,  score:0.77, qtl:7,   badges:['b-purple','Mendelian — FRDA'], flags:{promoter:false,brain_se:false, ccre:false, evntr:false}},
-  {id:'TR_1698234',chr:'chr21',start:43776443, end:43776479, gene:'CSTB', region:'Promoter', type:'mendelian',  motif:'CGCGGGGCGGGG',motif_size:12,score:0.71,qtl:2, badges:['b-purple','Mendelian — EPM1'], flags:{promoter:true, brain_se:false, ccre:true,  evntr:false}},
-  {id:'TR_1801234',chr:'chr17',start:79052946, end:79052980, gene:'EIF4A3',region:'5′ UTR', type:'mendelian',  motif:'TCGGCA',motif_size:6,  score:0.69, qtl:1,   badges:['b-purple','Mendelian — RCPS'],  flags:{promoter:true, brain_se:false, ccre:true,  evntr:false}},
-  {id:'TR_1934561',chr:'chr13',start:102161574,end:102161724,gene:'FGF14',region:'Intronic', type:'mendelian',  motif:'GAA',   motif_size:3,  score:0.73, qtl:5,   badges:['b-purple','Mendelian — SCA27B'],flags:{promoter:false,brain_se:true,  ccre:false, evntr:false}},
-  {id:'TR_2045892',chr:'chr2', start:96197066, end:96197121, gene:'RALYL',region:'Intronic', type:'polymorphic', motif:'AAAAT',motif_size:5,  score:0.51, qtl:3,   badges:['b-gray','Polymorphic'],       flags:{promoter:false, brain_se:true,  ccre:false, evntr:true}},
-  {id:'TR_2198341',chr:'chr15',start:22786677, end:22786701, gene:'NIPA1',region:'5′ UTR',  type:'mendelian',  motif:'GCG',   motif_size:3,  score:0.67, qtl:0,   badges:['b-purple','Mendelian — ALS modifier'],flags:{promoter:true,brain_se:false,ccre:true,evntr:false}},
-  {id:'TR_2301892',chr:'chr18',start:55586155, end:55586227, gene:'TCF4', region:'Intronic', type:'mendelian',  motif:'CTG',   motif_size:3,  score:0.70, qtl:8,   badges:['b-purple','Mendelian — FECD'],  flags:{promoter:false,brain_se:false, ccre:false, evntr:true}},
-];
+const API = '';
+const PER_PAGE = 50;
 
-// ── State ─────────────────────────────────────────────────────────────────────
 let state = {
-  page: 1, perPage: 25,
-  sortKey: 'score', sortDir: 'desc',
+  page: 1,
+  sort: 'rexprt_desc',
   search: '',
-  filters: { type:[], region:[], reg:[], motif:[] },
+  filters: { type: null, region: null, motif: null },
+  flags: { in_promoter:0, in_brain_se:0, in_ccre:0, has_qtl:0, has_evntr:0 },
   rexprtMin: 0,
 };
 
-// ── Render table ──────────────────────────────────────────────────────────────
-function scoreClass(s){
-  if(s===null||s===undefined) return 'score-low';
-  if(s>=0.7) return 'score-high';
-  if(s>=0.4) return 'score-mid';
-  return 'score-low';
+let searchTimer = null;
+function debounceSearch(){
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.search = document.getElementById('search-input').value.trim();
+    state.page = 1;
+    loadData();
+  }, 400);
 }
 
-function renderRow(d){
-  const coord = `${d.chr}:${d.start.toLocaleString()}–${d.end.toLocaleString()}`;
-  const scoreVal = d.score !== null ? d.score.toFixed(2) : '—';
-  const sc = d.score !== null ? scoreClass(d.score) : 'score-low';
-  const barW = d.score !== null ? Math.round(d.score * 100) : 0;
-  const badge = `<span class="badge ${d.badges[0]}">${d.badges[1]}</span>`;
-  const flags = [];
-  if(d.flags.promoter) flags.push('<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--coral-l);color:var(--coral)">promoter</span>');
-  if(d.flags.brain_se) flags.push('<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--amber-l);color:var(--amber)">brain SE</span>');
-  if(d.flags.evntr)    flags.push('<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--blue-l);color:var(--blue)">eVNTR</span>');
-
-  return `<tr onclick="goToLocus('${d.id}')">
-    <td>
-      <div class="locus-coord">${coord}</div>
-    </td>
-    <td>
-      <div class="gene-name">${d.gene}</div>
-      <div class="gene-region">${d.region}</div>
-    </td>
-    <td class="motif-cell">${d.motif}</td>
-    <td>
-      <div style="display:flex;flex-direction:column;gap:2px">
-        ${badge}
-        <div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:1px">${flags.join('')}</div>
-      </div>
-    </td>
-    <td>
-      <div class="score-bar-wrap">
-        <div class="score-cell ${sc}">${scoreVal}</div>
-        <div class="score-bar" style="width:${barW}px;max-width:60px"></div>
-      </div>
-    </td>
-    <td class="qtl-cell">
-      ${d.qtl > 0 ? `<span class="qtl-n">${d.qtl}</span> hits` : '<span class="no">—</span>'}
-    </td>
-  </tr>`;
+// ── Build API URL ─────────────────────────────────────────────────────────────
+function buildUrl(){
+  const p = new URLSearchParams();
+  p.set('limit', PER_PAGE);
+  p.set('offset', (state.page - 1) * PER_PAGE);
+  p.set('sort', state.sort);
+  if(state.search)          p.set('q', state.search);
+  if(state.filters.type)    p.set('locus_type', state.filters.type);
+  if(state.filters.region)  p.set('gene_region', state.filters.region);
+  if(state.filters.motif)   p.set('motif_size', state.filters.motif);
+  if(state.flags.in_promoter) p.set('in_promoter', 1);
+  if(state.flags.in_brain_se) p.set('in_brain_se', 1);
+  if(state.flags.in_ccre)     p.set('in_ccre', 1);
+  if(state.flags.has_qtl)     p.set('has_qtl', 1);
+  if(state.flags.has_evntr)   p.set('has_evntr', 1);
+  if(state.rexprtMin > 0)   p.set('rexprt_min', state.rexprtMin);
+  return `${API}/api/loci/?${p}`;
 }
 
-function applyFilters(){
-  state.search = document.getElementById('search-input').value.toLowerCase();
-  state.page = 1;
-  renderTable();
-  renderActiveFilters();
-}
-
-function renderTable(){
-  let data = [...SAMPLE_DATA];
-
-  // search
-  if(state.search){
-    data = data.filter(d =>
-      d.gene.toLowerCase().includes(state.search) ||
-      d.motif.toLowerCase().includes(state.search) ||
-      d.badges[1].toLowerCase().includes(state.search) ||
-      d.region.toLowerCase().includes(state.search)
-    );
-  }
-
-  // type filter
-  if(state.filters.type.length > 0){
-    data = data.filter(d => state.filters.type.includes(d.type));
-  }
-
-  // reg filter
-  if(state.filters.reg.includes('in_promoter')) data = data.filter(d => d.flags.promoter);
-  if(state.filters.reg.includes('brain_se'))    data = data.filter(d => d.flags.brain_se);
-  if(state.filters.reg.includes('ccre'))         data = data.filter(d => d.flags.ccre);
-  if(state.filters.reg.includes('evntr'))        data = data.filter(d => d.flags.evntr);
-  if(state.filters.reg.includes('has_qtl'))      data = data.filter(d => d.qtl > 0);
-
-  // rexprt min
-  if(state.rexprtMin > 0){
-    data = data.filter(d => d.score !== null && d.score >= state.rexprtMin);
-  }
-
-  // motif filter
-  if(state.filters.motif.includes('str') && !state.filters.motif.includes('vntr'))
-    data = data.filter(d => d.motif_size <= 6);
-  if(state.filters.motif.includes('vntr') && !state.filters.motif.includes('str'))
-    data = data.filter(d => d.motif_size >= 7);
-
-  // sort
-  data.sort((a,b) => {
-    let av, bv;
-    switch(state.sortKey){
-      case 'score': av=a.score??-1; bv=b.score??-1; break;
-      case 'gene':  av=a.gene; bv=b.gene; break;
-      case 'qtl':   av=a.qtl; bv=b.qtl; break;
-      case 'sources': av=a.n_sources??1; bv=b.n_sources??1; break;
-      default: av=a.score??-1; bv=b.score??-1;
-    }
-    if(typeof av === 'string') return state.sortDir==='asc' ? av.localeCompare(bv) : bv.localeCompare(av);
-    return state.sortDir==='asc' ? av-bv : bv-av;
-  });
-
-  const total = data.length;
-  const start = (state.page-1)*state.perPage;
-  const page_data = data.slice(start, start+state.perPage);
-
-  document.getElementById('result-count').innerHTML =
-    `${total.toLocaleString()} <span>loci</span>`;
+// ── Fetch + render ────────────────────────────────────────────────────────────
+async function loadData(){
   document.getElementById('table-body').innerHTML =
-    page_data.length ? page_data.map(renderRow).join('') :
-    `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--text-3)">
-      No loci match current filters</td></tr>`;
+    '<tr class="loading-row"><td colspan="6">Loading…</td></tr>';
+  try {
+    const r = await fetch(buildUrl());
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    renderTable(d);
+    renderPagination(d.total);
+    renderActiveFilters();
+  } catch(e) {
+    document.getElementById('table-body').innerHTML =
+      `<tr class="no-data"><td colspan="6">Error: ${e.message}</td></tr>`;
+  }
+}
 
-  const totalPages = Math.ceil(total/state.perPage);
+// ── Render table ──────────────────────────────────────────────────────────────
+function scoreClass(s){ return s==null?'score-low':s>=0.7?'score-high':s>=0.4?'score-mid':'score-low'; }
+
+function typeBadge(t, disease){
+  const map = {
+    mendelian: ['b-purple', disease ? `Mendelian — ${disease.split(',')[0]}` : 'Mendelian'],
+    functional:['b-teal',   'Functional VNTR'],
+    clinvar:   ['b-blue',   'ClinVar'],
+    polymorphic:['b-gray',  'Polymorphic'],
+  };
+  const [cls, label] = map[t] || ['b-gray', t || 'Unknown'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function flagBadges(row){
+  const out = [];
+  if(row.in_promoter)            out.push(`<span class="badge b-coral" style="margin-top:2px">promoter</span>`);
+  if(row.in_brain_super_enhancer)out.push(`<span class="badge b-amber" style="margin-top:2px">brain SE</span>`);
+  if(row.has_eVNTR)              out.push(`<span class="badge b-blue"  style="margin-top:2px">eVNTR</span>`);
+  return out.join(' ');
+}
+
+function renderTable(d){
+  document.getElementById('result-count').innerHTML =
+    `${(d.total||0).toLocaleString()} <span>loci</span>`;
+
+  if(!d.results || !d.results.length){
+    document.getElementById('table-body').innerHTML =
+      '<tr class="no-data"><td colspan="6">No loci match current filters</td></tr>';
+    return;
+  }
+
+  document.getElementById('table-body').innerHTML = d.results.map(row => {
+    const coord = `${row.chr}:${(row.start||0).toLocaleString()}–${(row.end||0).toLocaleString()}`;
+    const score = row.rexprt_score;
+    const scoreVal = score != null ? (+score).toFixed(2) : '—';
+    const barW = score != null ? Math.round(score * 60) : 0;
+    return `<tr onclick="goToLocus('${row.tr_id}')">
+      <td><div class="locus-coord">${coord}</div></td>
+      <td>
+        <div class="gene-name">${row.gene_name || '—'}</div>
+        <div class="gene-region">${row.gene_region || ''}</div>
+      </td>
+      <td class="motif-cell">${row.canonical_motif || '—'}</td>
+      <td>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          ${typeBadge(row.locus_type, row.disease_name)}
+          <div>${flagBadges(row)}</div>
+        </div>
+      </td>
+      <td>
+        <div class="score-bar-wrap">
+          <span class="score-n ${scoreClass(score)}">${scoreVal}</span>
+          <div class="score-bar" style="width:${barW}px"></div>
+        </div>
+      </td>
+      <td class="qtl-cell">
+        ${row.n_qtl > 0 ? `<span class="qtl-n">${row.n_qtl}</span> hits` : '<span style="color:var(--text-3)">—</span>'}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────────
+function renderPagination(total){
+  const totalPages = Math.ceil(total / PER_PAGE);
+  const start = (state.page - 1) * PER_PAGE + 1;
+  const end = Math.min(state.page * PER_PAGE, total);
   document.getElementById('pg-info').textContent =
-    `Showing ${start+1}–${Math.min(start+state.perPage, total)} of ${total.toLocaleString()}`;
+    `Showing ${start.toLocaleString()}–${end.toLocaleString()} of ${(total||0).toLocaleString()}`;
   document.getElementById('pg-prev').disabled = state.page <= 1;
   document.getElementById('pg-next').disabled = state.page >= totalPages;
 }
 
-// ── Filter toggles ────────────────────────────────────────────────────────────
-function toggleFilter(group, key){
-  const arr = state.filters[group];
-  const idx = arr.indexOf(key);
-  if(idx > -1) arr.splice(idx,1); else arr.push(key);
-  const cb = document.getElementById('cb-'+key);
-  if(cb) cb.classList.toggle('checked', arr.includes(key));
-  applyFilters();
+function changePage(delta){ state.page += delta; loadData(); window.scrollTo(0,0); }
+
+// ── Filters ───────────────────────────────────────────────────────────────────
+function toggleFilter(group, val){
+  state.filters[group] = state.filters[group] === val ? null : val;
+  const cb = document.getElementById(`cb-${val}`);
+  if(cb) cb.classList.toggle('checked', state.filters[group] === val);
+  state.page = 1; loadData();
 }
-function clearFilter(group){
-  state.filters[group] = [];
-  document.querySelectorAll(`[id^="cb-"]`).forEach(cb => {
-    const key = cb.id.replace('cb-','');
-    const inGroup = {
-      type:['mendelian','functional','clinvar','polymorphic'],
-      region:['coding','utr5','intronic','promoter','intergenic'],
-      reg:['in_promoter','brain_se','ccre','has_qtl','evntr'],
-      motif:['str','vntr'],
-    }[group] || [];
-    if(inGroup.includes(key)) cb.classList.remove('checked');
+
+function toggleSingleRegion(val){
+  state.filters.region = state.filters.region === val ? null : val;
+  ['CodingExon','5UTR','Intronic','Promoter','Intergenic'].forEach(v => {
+    const cb = document.getElementById(`cb-${v}`);
+    if(cb) cb.classList.toggle('checked', state.filters.region === v);
   });
-  applyFilters();
+  state.page = 1; loadData();
+}
+
+function toggleFlag(key){
+  state.flags[key] = state.flags[key] ? 0 : 1;
+  const cb = document.getElementById(`cb-${key}`);
+  if(cb) cb.classList.toggle('checked', !!state.flags[key]);
+  state.page = 1; loadData();
+}
+
+function clearFilter(group){
+  if(group === 'type'){
+    state.filters.type = null;
+    ['mendelian','functional','clinvar','polymorphic'].forEach(v => {
+      document.getElementById(`cb-${v}`)?.classList.remove('checked');
+    });
+  } else if(group === 'region'){
+    state.filters.region = null;
+    ['CodingExon','5UTR','Intronic','Promoter','Intergenic'].forEach(v => {
+      document.getElementById(`cb-${v}`)?.classList.remove('checked');
+    });
+  }
+  state.page = 1; loadData();
+}
+
+// ── Sort ──────────────────────────────────────────────────────────────────────
+function sortBy(key){
+  state.sort = key; state.page = 1; loadData();
+}
+
+// ── Range ─────────────────────────────────────────────────────────────────────
+function updateRange(){
+  const v = parseFloat(document.getElementById('rexprt-slider').value);
+  state.rexprtMin = v;
+  document.getElementById('rexprt-num').value = v.toFixed(2);
+  document.getElementById('rexprt-display').textContent = `≥ ${v.toFixed(2)}`;
+  state.page = 1; loadData();
+}
+function syncRange(){
+  const v = Math.min(1, Math.max(0, parseFloat(document.getElementById('rexprt-num').value)||0));
+  state.rexprtMin = v;
+  document.getElementById('rexprt-slider').value = v;
+  document.getElementById('rexprt-display').textContent = `≥ ${v.toFixed(2)}`;
+  state.page = 1; loadData();
 }
 
 // ── Active filters display ────────────────────────────────────────────────────
@@ -504,84 +448,37 @@ function renderActiveFilters(){
   const bar = document.getElementById('active-filters-bar');
   const chips = [];
   const labels = {
-    mendelian:'Mendelian',functional:'Functional VNTR',clinvar:'ClinVar',polymorphic:'Polymorphic',
-    coding:'Coding',utr5:"5′ UTR",intronic:'Intronic',promoter:'Promoter',intergenic:'Intergenic',
-    in_promoter:'In promoter',brain_se:'Brain SE',ccre:'In cCRE',has_qtl:'Has QTL',evntr:'eVNTR',
-    str:'STR',vntr:'VNTR',
+    type:{mendelian:'Mendelian',functional:'Functional VNTR',clinvar:'ClinVar',polymorphic:'Polymorphic'},
+    region:{CodingExon:'Coding',['5UTR']:"5′ UTR",Intronic:'Intronic',Promoter:'Promoter',Intergenic:'Intergenic'},
+    motif:{str:'STR (1–6 bp)',vntr:'VNTR (≥7 bp)'},
+    flags:{in_promoter:'In promoter',in_brain_se:'Brain SE',in_ccre:'In cCRE',has_qtl:'Has QTL',has_evntr:'eVNTR'},
   };
-  for(const [group, keys] of Object.entries(state.filters)){
-    keys.forEach(k => {
-      chips.push(`<div class="af-chip">${labels[k]||k}
-        <button onclick="toggleFilter('${group}','${k}')">×</button></div>`);
-    });
-  }
-  if(state.rexprtMin > 0)
-    chips.push(`<div class="af-chip">RExPRT ≥ ${state.rexprtMin.toFixed(2)}
-      <button onclick="clearRexprt()">×</button></div>`);
-  if(state.search)
-    chips.push(`<div class="af-chip">Search: "${state.search}"
-      <button onclick="document.getElementById('search-input').value='';applyFilters()">×</button></div>`);
-
-  bar.innerHTML = chips.length ?
-    chips.join('') + `<span class="af-clear-all" onclick="clearAll()">Clear all</span>` : '';
+  if(state.filters.type)   chips.push(`<div class="af-chip">${labels.type[state.filters.type]}<button onclick="clearFilter('type')">×</button></div>`);
+  if(state.filters.region) chips.push(`<div class="af-chip">${labels.region[state.filters.region]||state.filters.region}<button onclick="clearFilter('region')">×</button></div>`);
+  if(state.filters.motif)  chips.push(`<div class="af-chip">${labels.motif[state.filters.motif]||state.filters.motif}<button onclick="toggleFilter('motif','${state.filters.motif}')">×</button></div>`);
+  Object.entries(state.flags).forEach(([k,v]) => {
+    if(v) chips.push(`<div class="af-chip">${labels.flags[k]||k}<button onclick="toggleFlag('${k}')">×</button></div>`);
+  });
+  if(state.rexprtMin > 0) chips.push(`<div class="af-chip">RExPRT ≥ ${state.rexprtMin.toFixed(2)}<button onclick="document.getElementById('rexprt-slider').value=0;document.getElementById('rexprt-num').value=0;state.rexprtMin=0;document.getElementById('rexprt-display').textContent='≥ 0.00';loadData()">×</button></div>`);
+  if(state.search) chips.push(`<div class="af-chip">Search: "${state.search}"<button onclick="document.getElementById('search-input').value='';state.search='';loadData()">×</button></div>`);
+  bar.innerHTML = chips.length ? chips.join('') + `<span class="af-clear-all" onclick="clearAll()">Clear all</span>` : '';
   bar.classList.toggle('visible', chips.length > 0);
 }
+
 function clearAll(){
-  Object.keys(state.filters).forEach(g => {
-    state.filters[g]=[];
-    document.querySelectorAll('[id^="cb-"]').forEach(cb=>cb.classList.remove('checked'));
-  });
-  state.rexprtMin=0;
-  document.getElementById('rexprt-min').value=0;
-  document.getElementById('rexprt-min-val').value=0;
-  document.getElementById('rexprt-display').textContent='≥ 0.00';
-  document.getElementById('search-input').value='';
-  state.search='';
-  applyFilters();
+  state = {...state, page:1, search:'', filters:{type:null,region:null,motif:null}, flags:{in_promoter:0,in_brain_se:0,in_ccre:0,has_qtl:0,has_evntr:0}, rexprtMin:0};
+  document.querySelectorAll('.cb').forEach(cb => cb.classList.remove('checked'));
+  document.getElementById('rexprt-slider').value = 0;
+  document.getElementById('rexprt-num').value = 0;
+  document.getElementById('rexprt-display').textContent = '≥ 0.00';
+  document.getElementById('search-input').value = '';
+  loadData();
 }
 
-// ── Sort ──────────────────────────────────────────────────────────────────────
-function sortBy(key){
-  if(state.sortKey===key) state.sortDir = state.sortDir==='asc'?'desc':'asc';
-  else { state.sortKey=key; state.sortDir='desc'; }
-  document.querySelectorAll('th').forEach(th=>th.classList.remove('sorted'));
-  const th = document.getElementById('th-'+key);
-  if(th){ th.classList.add('sorted'); th.querySelector('.sort-icon').textContent=state.sortDir==='asc'?'↑':'↓'; }
-  applyFilters();
-}
-
-// ── Pagination ────────────────────────────────────────────────────────────────
-function changePage(delta){ state.page += delta; renderTable(); }
-function goToPage(p){ state.page = p; renderTable(); }
-
-// ── Range slider ─────────────────────────────────────────────────────────────
-function updateRange(){
-  const v = parseFloat(document.getElementById('rexprt-min').value);
-  state.rexprtMin = v;
-  document.getElementById('rexprt-min-val').value = v.toFixed(2);
-  document.getElementById('rexprt-display').textContent = `≥ ${v.toFixed(2)}`;
-  applyFilters();
-}
-function syncRange(){
-  const v = parseFloat(document.getElementById('rexprt-min-val').value)||0;
-  state.rexprtMin = Math.min(1, Math.max(0, v));
-  document.getElementById('rexprt-min').value = state.rexprtMin;
-  document.getElementById('rexprt-display').textContent = `≥ ${state.rexprtMin.toFixed(2)}`;
-  applyFilters();
-}
-function clearRexprt(){
-  state.rexprtMin=0;
-  document.getElementById('rexprt-min').value=0;
-  document.getElementById('rexprt-min-val').value=0;
-  document.getElementById('rexprt-display').textContent='≥ 0.00';
-  applyFilters();
-}
-
-// ── Navigation ────────────────────────────────────────────────────────────────
-function goToLocus(id){ window.location.href = `locus.html?id=${id}`; }
+function goToLocus(id){ window.location.href = `/locus?id=${id}`; }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-renderTable();
+loadData();
 </script>
 </body>
 </html>
