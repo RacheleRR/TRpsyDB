@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from scipy import stats
 
-from backend.db.database import get_connection
+from backend.db.database import query, query_one, execute
 
 router = APIRouter()
 
@@ -24,7 +24,7 @@ class TRRecord(BaseModel):
     end: int
     motif: Optional[str] = None
     p_value: Optional[float] = None
-    odds_ratio: Optional[float] = None  # from user's own analysis
+
 
 class EnrichmentRequest(BaseModel):
     trs: List[TRRecord]
@@ -32,87 +32,77 @@ class EnrichmentRequest(BaseModel):
 
 
 # ── Helper: overlap with database loci ───────────────────────
-def find_database_matches(trs: List[TRRecord], conn) -> list:
-    """
-    For each input TR, check if it overlaps any locus in the database.
-    Simple coordinate overlap: input_start < db_end AND input_end > db_start
-    on the same chromosome.
-    """
-    matches = []
-    all_loci = conn.execute(
-        "SELECT locus_id, chrom, start, end, gene_symbol, evidence_tier, "
-        "in_schema, in_bipex, in_scz_gwas, in_bpd_gwas, in_asd_gwas "
-        "FROM loci"
-    ).fetchall()
+#? should we do only matchy matchy or also overlappy ?
+def find_database_matches(trs: List[TRRecord]) -> list:
+    all_loci = query("""
+        SELECT t.tr_id, t.chr, t.start, t.end, t.gene_name,
+               rx.ensembleScore as rexprt_score,
+               CASE WHEN e.tr_id IS NOT NULL THEN 1 ELSE 0 END as is_established,
+               e.disease_name
+        FROM trs t
+        LEFT JOIN tr_rexprt      rx ON t.tr_id = rx.tr_id
+        LEFT JOIN tr_established e  ON t.tr_id = e.tr_id
+        GROUP BY t.tr_id
+    """)
 
+    matches = []
     for tr in trs:
         hit = None
         for locus in all_loci:
-            if (locus["chrom"] == tr.chrom and
+            if (locus["chr"] == tr.chrom and
                     tr.start < locus["end"] and
                     tr.end > locus["start"]):
                 hit = dict(locus)
                 break
         matches.append({
-            "input": tr.dict(),
+            "input":    tr.dict(),
             "db_match": hit,
-            "novel": hit is None,
+            "novel":    hit is None,
         })
     return matches
 
-
 # ── Helper: gene set enrichment (Fisher's exact) ─────────────
-def gene_set_enrichment(input_genes: set, conn) -> list:
-    """
-    For each gene set in the database, compute:
-    - overlap between input genes and gene set
-    - Fisher's exact test vs genome background
-    """
-    genome_gene_count = conn.execute(
-        "SELECT COUNT(DISTINCT gene_symbol) FROM loci WHERE gene_symbol IS NOT NULL"
-    ).fetchone()[0]
+def gene_set_enrichment(input_genes: set) -> list:
+    genome_gene_count = (query_one(
+        "SELECT COUNT(DISTINCT gene_name) as n FROM trs WHERE gene_name IS NOT NULL"
+    ) or {}).get("n", 20000)
 
-    gene_sets = conn.execute("SELECT * FROM gene_sets").fetchall()
+    # build gene sets from gene_psychiatric_assoc
+    sources = query(
+        "SELECT DISTINCT source, phenotype FROM gene_psychiatric_assoc"
+    )
     results = []
-
-    for gs in gene_sets:
-        gs_genes = set(
-            row["gene_symbol"] for row in conn.execute(
-                "SELECT gene_symbol FROM gene_set_members WHERE gene_set_id = ?",
-                (gs["id"],)
-            ).fetchall()
-        )
+    for src in sources:
+        gs_genes = set(r["gene_name"] for r in query(
+            "SELECT gene_name FROM gene_psychiatric_assoc WHERE source=? AND phenotype=?",
+            (src["source"], src["phenotype"])
+        ))
         overlap = input_genes & gs_genes
-
-        # 2x2 contingency table for Fisher's exact
-        a = len(overlap)                                # input ∩ gene_set
-        b = len(input_genes) - a                        # input only
-        c = len(gs_genes) - a                           # gene_set only
-        d = genome_gene_count - a - b - c               # neither
-
+        a = len(overlap)
+        b = len(input_genes) - a
+        c = len(gs_genes) - a
+        d = genome_gene_count - a - b - c
         if a == 0:
             results.append({
-                "gene_set": gs["name"],
-                "phenotype": gs["phenotype"],
-                "n_overlap": 0,
-                "overlap_genes": [],
-                "odds_ratio": 0,
-                "p_value": 1.0,
-                "significant": False,
+                "gene_set":     f"{src['source']} ({src['phenotype']})",
+                "phenotype":    src["phenotype"],
+                "n_overlap":    0,
+                "overlap_genes":[],
+                "odds_ratio":   0,
+                "p_value":      1.0,
+                "significant":  False,
             })
             continue
-
         _, p_value = stats.fisher_exact([[a, b], [c, d]], alternative="greater")
         or_val = (a * d) / (b * c) if (b * c) > 0 else float("inf")
-
         results.append({
-            "gene_set": gs["name"],
-            "phenotype": gs["phenotype"],
-            "n_overlap": a,
-            "overlap_genes": sorted(overlap),
-            "odds_ratio": round(or_val, 3),
-            "p_value": round(p_value, 6),
-            "significant": p_value < 0.05,
+            "gene_set":     f"{src['source']} ({src['phenotype']})",
+            "phenotype":    src["phenotype"],
+            "n_overlap":    a,
+            "overlap_genes":sorted(overlap),
+            "odds_ratio":   round(or_val, 3),
+            "p_value":      round(p_value, 6),
+            "significant":  p_value < 0.05,
         })
 
     # Sort by p-value
@@ -121,24 +111,24 @@ def gene_set_enrichment(input_genes: set, conn) -> list:
 
 
 # ── Helper: TSS / splice proximity summary ───────────────────
-def proximity_summary(trs: List[TRRecord], conn) -> dict:
-    """
-    For each input TR, annotate TSS and splice junction proximity
-    by matching to nearest locus in database (or a pre-computed BED).
-    Returns a summary dict.
-    """
-    # For now: count how many input TRs are within 1kb of a TSS
-    # This will be extended once we have a full TSS BED file loaded
-    matched = find_database_matches(trs, conn)
-    known_with_tss = [
-        m["db_match"]["locus_id"]
-        for m in matched
-        if m["db_match"] and m["db_match"].get("tss_distance") is not None
-    ]
-    return {
-        "n_with_tss_annotation": len(known_with_tss),
-        "note": "Full TSS proximity for novel TRs requires genome annotation file (coming soon)"
-    }
+# def proximity_summary(trs: List[TRRecord], conn) -> dict:
+#     """
+#     For each input TR, annotate TSS and splice junction proximity
+#     by matching to nearest locus in database (or a pre-computed BED).
+#     Returns a summary dict.
+#     """
+#     # For now: count how many input TRs are within 1kb of a TSS
+#     # This will be extended once we have a full TSS BED file loaded
+#     matched = find_database_matches(trs, conn)
+#     known_with_tss = [
+#         m["db_match"]["locus_id"]
+#         for m in matched
+#         if m["db_match"] and m["db_match"].get("tss_distance") is not None
+#     ]
+#     return {
+#         "n_with_tss_annotation": len(known_with_tss),
+#         "note": "Full TSS proximity for novel TRs requires genome annotation file (coming soon)"
+#     }
 
 
 # ── Helper: ORA via g:Profiler public API ────────────────────
@@ -265,72 +255,58 @@ def submit_enrichment(req: EnrichmentRequest):
         raise HTTPException(status_code=400, detail="TR list is empty.")
 
     job_id = str(uuid.uuid4())
+    # 1. Match input TRs to database loci
+    matches = find_database_matches(req.trs)
+    # 2. Gene set enrichment
+    input_genes = set(
+        m["db_match"]["gene_name"]
+        for m in matches
+        if m["db_match"] and m["db_match"].get("gene_name")
+    )
 
-    with get_connection() as conn:
-        # 1. Match input TRs to database loci
-        matches = find_database_matches(req.trs, conn)
+    enrichment = gene_set_enrichment(input_genes) if input_genes else []
 
-        # 2. Gene set enrichment
-        input_genes = set(
-            m["db_match"]["gene_symbol"]
-            for m in matches
-            if m["db_match"] and m["db_match"]["gene_symbol"]
-        )
-        enrichment = gene_set_enrichment(input_genes, conn) if input_genes else []
+    # # 3. Proximity summary
+    # proximity = proximity_summary(req.trs, conn)
+    # 4. ORA via g:Profiler
+    ora        = run_gprofiler_ora(sorted(input_genes))
+    # 5. Novel vs known summary
+    n_novel   = sum(1 for m in matches if m["novel"])
+    n_known   = len(matches) - n_novel
+    n_estab   = sum(1 for m in matches if m["db_match"] and m["db_match"].get("is_established"))
 
-        # 3. Proximity summary
-        proximity = proximity_summary(req.trs, conn)
 
-        # 4. ORA via g:Profiler
-        ora = run_gprofiler_ora(sorted(input_genes))
+    result = {
+        "job_id": job_id, "label": req.label, "n_input": len(req.trs),
+        "summary": {
+            "n_known_in_db":    n_known,
+            "n_novel":          n_novel,
+            "n_established":    n_estab,
+            "n_unique_genes":   len(input_genes),
+        },
+        "matches":          matches,
+        "gene_set_enrichment": enrichment,
+        "ora":              ora,
+    }
 
-        # 5. Novel vs known summary
-        n_novel    = sum(1 for m in matches if m["novel"])
-        n_known    = len(matches) - n_novel
-        n_tier1_2  = sum(
-            1 for m in matches
-            if m["db_match"] and m["db_match"]["evidence_tier"] <= 2
-        )
-
-        result = {
-            "job_id": job_id,
-            "label": req.label,
-            "n_input": len(req.trs),
-            "summary": {
-                "n_known_in_db": n_known,
-                "n_novel": n_novel,
-                "n_tier1_2_overlap": n_tier1_2,
-                "n_unique_genes": len(input_genes),
-            },
-            "matches": matches,
-            "gene_set_enrichment": enrichment,
-            "proximity": proximity,
-            "ora": ora,
-        }
-
-        # Store result
-        conn.execute(
-            """INSERT INTO analysis_jobs (id, status, input_n_trs, completed_at, result_json)
-               VALUES (?, 'done', ?, datetime('now'), ?)""",
-            (job_id, len(req.trs), json.dumps(result)),
-        )
+    try:
+        execute("""
+            INSERT INTO analysis_jobs (id, status, input_n_trs, completed_at, result_json)
+            VALUES (?, 'done', ?, datetime('now'), ?)
+        """, (job_id, len(req.trs), json.dumps(result)))
+    except Exception:
+        pass  # analysis_jobs table may not exist — non-fatal
 
     return result
 
 
 @router.get("/{job_id}")
 def get_job_result(job_id: str):
-    with get_connection() as conn:
-        job = conn.execute(
-            "SELECT * FROM analysis_jobs WHERE id = ?", (job_id,)
-        ).fetchone()
-
+    job = query_one("SELECT * FROM analysis_jobs WHERE id = ?", (job_id,))
     if not job:
         raise HTTPException(status_code=404, detail="Job not found.")
-
     return {
         "job_id": job["id"],
         "status": job["status"],
-        "submitted_at": job["submitted_at"],
-        "result": json.loads(job["result_json"]) if job["result_json"] else None,
+        "result": json.loads(job["result_json"]) if job.get("result_json") else None,
     }
