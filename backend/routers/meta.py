@@ -12,10 +12,3 @@ router = APIRouter()
 def get_meta():
     return get_db_stats()
 
-@router.get("/gene_sets")
-def list_gene_sets():
-    with get_connection() as conn:
-        rows = conn.execute(
-            "SELECT name, description, phenotype, n_genes, source_url FROM gene_sets"
-        ).fetchall()
-    return [dict(r) for r in rows]
