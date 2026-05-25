@@ -30,26 +30,14 @@ def _is_turso() -> bool:
 
 # ── Connection ────────────────────────────────────────────────────────────────
 def get_connection():
-    """
-    Returns a database connection.
-    Turso cloud in production, local SQLite in development.
-    """
     if _is_turso():
-        conn = libsql.connect(
-            database=TURSO_URL,
-            auth_token=TURSO_AUTH_TOKEN,
-        )
-    else:
-        if not DB_PATH.exists():
-            raise FileNotFoundError(
-                f"Database not found at {DB_PATH}. "
-                f"Run 01_create_schema.py + 03_ingest_trexplorer.py first, "
-                f"or set TURSO_URL + TURSO_AUTH_TOKEN for Turso."
-            )
-        conn = sqlite3.connect(str(DB_PATH))
-        conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA foreign_keys = ON")
-        conn.execute("PRAGMA journal_mode = WAL")
+        return libsql.connect(database=TURSO_URL, auth_token=TURSO_AUTH_TOKEN)
+    if not DB_PATH.exists():
+        raise FileNotFoundError(f"DB not found at {DB_PATH}.")
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    conn.execute("PRAGMA journal_mode = WAL")
     return conn
 
 # ── Query helpers ─────────────────────────────────────────────────────────────
@@ -79,17 +67,20 @@ def execute(sql: str, params: tuple = ()) -> None:
 
 # ── Stats for /api/meta ───────────────────────────────────────────────────────
 def get_db_stats() -> dict:
-    """Quick stats for the /api/meta endpoint."""
+    def n(sql, p=()):
+        return (query_one(sql, p) or {}).get("n", 0)
     return {
-        "schema_version":     (query_one("SELECT value FROM db_meta WHERE key='schema_version'") or {}).get("value", "unknown"),
-        "n_loci":             (query_one("SELECT COUNT(*) as n FROM trs") or {}).get("n", 0),
-        "n_established":      (query_one("SELECT COUNT(*) as n FROM tr_established") or {}).get("n", 0),
-        "n_clinvar_functional":(query_one("SELECT COUNT(*) as n FROM tr_clinvar_functional") or {}).get("n", 0),
-        "n_with_rexprt":      (query_one("SELECT COUNT(*) as n FROM tr_rexprt") or {}).get("n", 0),
-        "n_with_qtl":         (query_one("SELECT COUNT(*) as n FROM tr_brain_qtl") or {}).get("n", 0),
-        "n_with_regulatory":  (query_one("SELECT COUNT(*) as n FROM tr_regulatory WHERE in_promoter=1 OR in_any_ccre=1") or {}).get("n", 0),
-        "using_turso":        _is_turso(),
-        "db_path":            str(TURSO_URL) if _is_turso() else str(DB_PATH),
+        "schema_version":      (query_one("SELECT value FROM db_meta WHERE key='schema_version'") or {}).get("value","1.0"),
+        "n_loci":              n("SELECT COUNT(*) as n FROM trs"),
+        "n_established":       n("SELECT COUNT(DISTINCT tr_id) as n FROM tr_established"),
+        "n_clinvar_functional":n("SELECT COUNT(DISTINCT tr_id) as n FROM tr_clinvar_functional"),
+        "n_with_rexprt":       n("SELECT COUNT(*) as n FROM tr_rexprt"),
+        "n_with_qtl":          n("SELECT COUNT(DISTINCT tr_id) as n FROM tr_brain_qtl"),
+        "n_in_promoter":       n("SELECT COUNT(*) as n FROM tr_regulatory WHERE in_promoter=1"),
+        "n_in_brain_se":       n("SELECT COUNT(*) as n FROM tr_regulatory WHERE in_brain_super_enhancer=1"),
+        "n_in_ccre":           n("SELECT COUNT(*) as n FROM tr_regulatory WHERE in_any_ccre=1"),
+        "using_turso":         _is_turso(),
+        "db_path":             str(TURSO_URL) if _is_turso() else str(DB_PATH),
     }
 
 if __name__ == "__main__":
