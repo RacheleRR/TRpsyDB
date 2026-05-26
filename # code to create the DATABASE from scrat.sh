@@ -28,16 +28,33 @@ done
 
 
 # 6. once RExPRT done — clean output (back in scripts/)
+
+cd ~/db_rex/results/rexprt
+
+head -1 chunk_000_rex_input_TRsAnnotated_RExPRTscores.txt \
+    > ~/TRpsyDB/scripts/data/processed/rexprt_all_merged.txt
+
+for i in $(seq -w 000 021); do
+    tail -n +2 chunk_${i}_rex_input_TRsAnnotated_RExPRTscores.txt \
+        >> ~/TRpsyDB/scripts/data/processed/rexprt_all_merged.txt
+done
+
+wc -l ~/TRpsyDB/scripts/data/processed/rexprt_all_merged.txt
+
 cd ~/TRpsyDB/scripts
+
 python 05_clean_rexprt_output.py \
-    --rexprt ~/test_TREX/TREX/results/rexprt/rexprt_input_all_rex_input_TRsAnnotated_RExPRTscores.txt \
-    --input data/processed/rexprt_input_all.tsv \
-    --out data/processed/rexprt_cleaned.tsv
+    --rexprt ~/TRpsyDB/scripts/data/processed/rexprt_all_merged.txt \
+    --input  data/processed/rexprt_input_all.tsv \
+    --out    data/processed/rexprt_cleaned.tsv
+
 
 # 7. ingest RExPRT scores
-python 06_ingest_rexprt.py --input data/processed/rexprt_cleaned.tsv --db data/trs.db
+python 06_ingest_rexprt.py \
+    --input data/processed/rexprt_cleaned.tsv \
+    --db    data/trs.db
 
-
+    
 # 8. download EPD promoters
 mkdir -p ~/TRpsyDB/data/raw/regulatory
 cd ~/TRpsyDB/data/raw/regulatory
