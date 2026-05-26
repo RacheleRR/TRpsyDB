@@ -1,5 +1,16 @@
 
 to do list
+# THINGS TO DO
+- find better set up 
+- mine literature for psychiatric loci 
+
+
+
+# things to correct 
+- the splicing distance has not been added...
+
+
+
 
 # things to add in version 2 
 -TF
