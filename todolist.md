@@ -1,6 +1,23 @@
 
 to do list
 # THINGS TO DO
+
+For website —> need to make it so that you can as well choose by disease  like browser either by tr location gene name or disease 
+
+
+The for finding trs 
+
+We should like separate the once like c9orf72 and yes like keep them but there are a lot of articles that are explaining the how and what it impacts so maybe in the future we can have that section for now we should give the people the access to them but I dont need to read them all 
+
+However I think we have to highlight the once that have a behavioural or psychiatric dimension to it like”C9orf72 repeat expansions that cause frontotemporal dementia are detectable among patients with psychosis” should be highlighted 
+
+
+d Okey
+
+Check out “ DRED: A Comprehensive Database of Genes Related to Repeat Expansion Diseases “<— see what they offer 
+
+
+
 - find better set up 
 - mine literature for psychiatric loci 
 

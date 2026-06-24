@@ -54,6 +54,8 @@ python 06_ingest_rexprt.py \
     --input data/processed/rexprt_cleaned.tsv \
     --db    data/trs.db
 
+
+
     
 # 8. download EPD promoters
 mkdir -p ~/TRpsyDB/data/raw/regulatory
