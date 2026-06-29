@@ -17,7 +17,8 @@ d Okey
 Check out “ DRED: A Comprehensive Database of Genes Related to Repeat Expansion Diseases “<— see what they offer 
 
 
-
+- potentially add my review and other reviews
+- add sites where you explain the mecanisms of the diffrent diseases 
 - find better set up 
 - mine literature for psychiatric loci 
 
