@@ -1,3 +1,156 @@
 #for paper
 
 how we selected stuff if in abstract or title no mention of spychiatry then they go into excldued or general if its an estbalished disorder
+
+
+rules
+
+after 17:35 do fragile X
+---
+
+## Inclusion Rules — Final Version
+
+---
+
+**Rule 1 — A genuine TR locus must be the tested variant**
+
+The paper must be testing a specific tandem repeat polymorphism as the candidate variant of interest — not SNPs, not chromosomal CNVs, not positional microsatellite markers.
+
+**What counts:**
+- Named VNTRs: `MAOA-uVNTR`, `DAT1/SLC6A3 40bp VNTR`, `DRD4 exon III 48bp VNTR`, `5-HTTLPR`, `STin2/Stin2 VNTR`, `AVPR1A RS1/RS3 microsatellite`, `NOS1 Ex1f-VNTR`, `TH tetranucleotide`, `PRODYN/PDYN 68bp VNTR`, `IL-1RN 86bp VNTR`, `CYTH4 GTTT repeat`, `SNCA REP1 microsatellite`, `PER3 VNTR`, `ZMYM3 GA-STR`, `AR CAG repeat`, `KCNN3 CAG repeat`, `PPP2R2B CAG repeat`, `TBP CAG repeat`, `CTG18.1`, `ERDA1`, `GRIN2A GT dinucleotide repeat`, `GABAA subunit SSRs`, `CCK compound STR`, `ESR1 dinucleotide repeat`, `CNR1 AAT trinucleotide repeat`
+- Named repeat expansions tested as candidates: `FMR1 CGG premutation (55-200)`, `C9orf72 GGGGCC expansion`, `HTT CAG intermediate alleles`, `ATXN2 CAG intermediate`, `SCA8/ATXN8 CTG`, `SCA17/TBP CAG`, `DRPLA/ATN1 CAG`
+- Any repeat where allele size or repeat length is the measured variable being associated with the outcome
+- Repeat notation explicitly tested: `(CAG)n`, `(CTG)n`, `(CGG)n`, `(GT)n`, `(CATT)n`, `(AAT)n`, `(86bp)n`, `(GTTT)n` etc.
+- Genome-wide TR screens where repeat length is the measured variable (RED method, ExpansionHunter/EHdn applied to psychiatric cohorts, long-read sequencing TR screens)
+
+**What does NOT count:**
+- SNPs: `rs...`, `Val158Met`, `Taq1A`, `-511C/T`, any single nucleotide variant
+- Plain `indel` without explicit repeat language
+- `copy number variants`, `microdeletions`, `microduplications` — chromosomal structural variants
+- Microsatellite markers used purely as positional tools to localize a chromosomal region
+- Haplotype/LD mapping when the actual markers are SNPs
+- Chromosomal duplications, translocations, inversions, uniparental disomy
+
+---
+
+**Rule 2 — The outcome must be a genuine human psychiatric, behavioral, neurodevelopmental, or personality disorder/phenotype**
+
+**Counts:**
+- Primary psychiatric disorders: schizophrenia, bipolar disorder, MDD/depression, anxiety disorders, panic disorder, OCD, PTSD, ADHD, autism/ASD, substance use disorders (alcohol dependence, drug dependence, nicotine dependence), personality disorders, suicidality, eating disorders, psychosis
+- Neurodevelopmental disorders: intellectual disability/mental retardation, learning disabilities, developmental delay — now explicitly in scope
+- Behavioral traits and personality measures: aggression, impulsivity, novelty seeking, harm avoidance, antisocial behavior, externalizing behavior, delay aversion, persistence, hostility — in scope under your updated rule that behavioral/personality traits count
+- Psychiatric endophenotypes: sensorimotor gating/prepulse inhibition, cognitive endophenotypes of ADHD, reward sensitivity in addiction context
+- Psychiatric comorbidity or overlap in established TR disorders — ONLY if the paper is actually studying the psychiatric finding, not just mentioning it in passing: psychosis/hallucinations/delusions in C9orf72 carriers, psychiatric misdiagnosis before genetic diagnosis, mood/behavioral symptoms correlated with repeat length in FMR1 premutation carriers, suicidality in HTT carriers, psychiatric onset in TBP/SCA17 carriers
+
+**Does NOT count:**
+- Pure motor symptoms, ataxia progression, movement disorder without psychiatric angle
+- Pure cognitive decline without a named psychiatric/neurodevelopmental disorder
+- Pure neurological outcomes: epilepsy, neuropathy, myopathy, cardiac, auditory
+- Animal behavioral testing (rotarod, open field, forced swim) — not human data
+- fMRI/ERP/neuroimaging brain activation endpoints without a behavioral/psychiatric disorder outcome — e.g. "DAT1 VNTR moderates striatal BOLD signal" is NOT an include unless the outcome is a diagnosed disorder or named behavioral trait
+- Non-psychiatric medical comorbidities: cardiovascular, cancer, pulmonary, reproductive, immune, metabolic, hearing loss, optic atrophy, skin disorders
+- Spatial cognition, mental rotation, academic achievement, language learning style, digit ratio, cycling performance, reading speed — non-psychiatric cognitive/educational outcomes
+- Sleep outcomes alone (unless explicitly tied to a named psychiatric disorder like MDD or bipolar)
+- Sexual function, reproductive outcomes, testosterone/hormonal outcomes alone
+- restless legs syndrome 
+---
+
+??dentatorubral-pallidoluysian atrophy in or out ??
+**Rule 3 — A positive association must have been found**
+
+Null results do not get a row in `tr_psychiatric`.
+
+**Positive signals (include):**
+`significantly associated with`, `association found`, `allele frequencies differed significantly`, `p = 0.0X` with significant p-value, odds ratio with CI not crossing 1, `risk allele`, `higher/lower rates in patients vs controls`, `associated with earlier onset`, `correlated with symptom severity`, `moderated the relationship between`, `predicted`, `influenced`
+
+**Null signals (exclude):**
+`no significant association`, `no evidence of`, `no differences`, `failure to find`, `we found no`, `lack of association`, `did not replicate`, `could not confirm`, `no support for`, `negative result`, `does not influence`, `do not affect`
+
+**Mixed results:** if positive for one outcome but null for another, or positive in one population but null in another → include, note population-specificity in extraction
+
+---
+
+**Rule 4 — Must be human data**
+
+- **Include:** case-control, family-based association, cohort, twin studies, quantitative trait analyses, meta-analyses, systematic reviews of human data
+- **Exclude:** animal models only (mouse, rat, Drosophila, pig, sheep), in vitro/cell line only
+- **Mixed (animal + human):** include if human association data is present and positive — treat animal data as context
+
+---
+
+**Rule 5 — Must not be a positional linkage/scaffolding study**
+
+The TR must be the subject being tested, not a ruler measuring chromosomal position.
+
+**Exclude on sight:**
+- `genome-wide scan`, `genome scan`, `genomewide linkage`
+- `N microsatellite markers` (plural unnamed markers used to scan a region)
+- `LOD score` as the primary result of a scan
+- `sib-pair linkage` without a named TR candidate gene
+- `multipoint NPL`
+- `fine mapping of` a chromosomal region (unless a named TR within that region is the candidate)
+- `haplotype analysis across chromosome X`
+
+**Include:** a specific named gene's repeat polymorphism is genotyped and the repeat length/allele size is the actual measured variable; OR a genome-wide TR screen where repeat length is the measured variable and the output is TR-disease association
+
+---
+
+**Rule 6 — Established TR disorders: exclude unless there is a genuine psychiatric finding in that paper**
+
+Papers about established TR disorders (HD, SCA1-7, FXS full mutation, DM1, FRDA, DRPLA, C9orf72 ALS/FTD etc.) are excluded by default unless the paper is actually studying:
+- Psychiatric symptoms as a primary finding (psychosis, depression, mania, anxiety, suicidality, behavioral variant)
+- Psychiatric misdiagnosis before genetic diagnosis
+- Repeat length correlated specifically with a psychiatric/behavioral outcome
+- A modifier locus affecting psychiatric phenotype in carriers
+- Intermediate/subclinical repeat lengths associated with psychiatric phenotype
+
+A one-sentence background mention that HD has psychiatric symptoms does NOT qualify. The psychiatric content must be what the paper is actually measuring and reporting.
+
+---
+
+## Credibility score — assign at extraction time
+
+| Score | Meaning |
+|---|---|
+| 1 | Single study, small cohort, single population, unreplicated, often candidate-gene era 90s/2000s |
+| 2 | Single study but larger cohort, or biologically well-motivated locus with mechanistic support |
+| 3 | Replicated in at least one independent sample, or multi-site study with reasonable power |
+| 4 | Multiple independent replications, consistent direction of effect across populations |
+| 5 | Meta-analyzed with formal statistical pooling, or consensus-level field evidence |
+
+---
+
+## Quick decision tree
+
+```
+Does the paper test a TR locus or TR class as the candidate variant
+(not positional scaffolding, not SNPs, not CNVs)?
+        |
+       NO → EXCLUDE
+        |
+       YES
+        |
+Is the outcome a genuine human psychiatric, behavioral,
+neurodevelopmental, or personality disorder/phenotype
+(not purely neurological, not animal only, not fMRI signal alone,
+not non-psychiatric medical condition)?
+        |
+       NO → EXCLUDE
+        |
+       YES
+        |
+Was a positive association found (not null)?
+        |
+       NO → EXCLUDE
+        |
+       YES
+        |
+If an established TR disorder is involved — is the paper actually
+studying a psychiatric/behavioral finding, not just mentioning one?
+        |
+       NO → EXCLUDE
+        |
+       YES → INCLUDE ✅
+              → assign credibility 1–5
+              → note locus, disorder, direction of effect
+```
